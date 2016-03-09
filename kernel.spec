@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort c5cbb66
+%define gitshort 4f7b097
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -25,7 +25,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 400
+%global baserelease 401
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -230,7 +230,7 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 %if !%{nopatches}
 # RasperryPi patch
-Patch100: patch-linux-rpi-4.4.4-c5cbb66.xz
+Patch100: patch-linux-rpi-4.4.4-4f7b097.xz
 
 # END OF PATCH DEFINITIONS
 
@@ -1219,10 +1219,11 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/new-kernel-pkg --package kernel --rpmposttrans %{KVERREL}%{?1:+%{1}} || exit $?\
-cp /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}} /%{image_install_path}/kernel7.img\
-cp /%{image_install_path}/dtb-%{KVERREL}/bcm2709-rpi-2-b.dtb /boot/\
-cp /%{image_install_path}/dtb-%{KVERREL}/bcm2710-rpi-3-b.dtb /boot/\
-cp /%{image_install_path}/dtb-%{KVERREL}/overlays/*.dtb /boot/overlays/\
+cp -f /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}} /%{image_install_path}/kernel7.img\
+cp -f /%{image_install_path}/dtb-%{KVERREL}/bcm2709-rpi-2-b.dtb /boot/\
+cp -f /%{image_install_path}/dtb-%{KVERREL}/bcm2710-rpi-3-b.dtb /boot/\
+rm -f /boot/overlays/*\
+cp /%{image_install_path}/dtb-%{KVERREL}/overlays/* /boot/overlays/\
 %{nil}
 
 #
@@ -1380,6 +1381,11 @@ fi
 #
 # 
 %changelog
+* Tue Mar 08 2016 Vaughan <devel at agrez dot net> - 4.4.4-401.4f7b097
+- Sync RPi patch to git revision: rpi-4.4.y 4f7b097a399b7d0ed275bca0ec72fb4d05c4094b
+- Clean /boot/overlays in %%posttrans to remove any stale *.dtb files.
+- Copy everything to /boot/overlays (not just .dbt files).
+
 * Mon Mar 07 2016 Vaughan <devel at agrez dot net> - 4.4.4-400.c5cbb66
 - Sync RPi patch to git revision: rpi-4.4.y c5cbb66686e7e289e8a7aff49a954f86893e628d
 - Stable kernel.org patch now referenced as a Source1
