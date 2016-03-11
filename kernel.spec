@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort 4f7b097
+%define gitshort 418177e
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -25,7 +25,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 401
+%global baserelease 400
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -37,7 +37,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 4
+%define stable_update 5
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -230,7 +230,7 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 %if !%{nopatches}
 # RasperryPi patch
-Patch100: patch-linux-rpi-4.4.4-4f7b097.xz
+Patch100: patch-linux-rpi-4.4.5-418177e.xz
 
 # END OF PATCH DEFINITIONS
 
@@ -1381,6 +1381,10 @@ fi
 #
 # 
 %changelog
+* Fri Mar 11 2016 Vaughan <devel at agrez dot net> - 4.4.5-400.418177e
+- Sync RPi patch to git revision: rpi-4.4.y 418177e2e57d3ac1248ced154fa1067ca42ba315
+- Update to stable kernel patch v4.4.5
+
 * Tue Mar 08 2016 Vaughan <devel at agrez dot net> - 4.4.4-401.4f7b097
 - Sync RPi patch to git revision: rpi-4.4.y 4f7b097a399b7d0ed275bca0ec72fb4d05c4094b
 - Clean /boot/overlays in %%posttrans to remove any stale *.dtb files.
