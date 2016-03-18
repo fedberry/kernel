@@ -241,7 +241,7 @@ Patch204: drm-vc4_Fix_the_clear_color_for_the_first_tile_rendered.patch
 Patch205: drm-vc4_Return_an_ERR_PTR_from_BO_creation_instead_of_NULL.patch
 Patch206: drm-vc4_Fix_-ERESTARTSYS_error_return_from_BO_waits.patch
 Patch207: drm-vc4_Drop_error_message_on_seqno_wait_timeouts.patch
-
+Patch208: bcm2835-sdhost-Workaround_for_slow_sectors.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1394,7 +1394,8 @@ fi
 - Update to stable kernel patch v4.4.6
 - Modify how we apply patches
 - Add support for BCM43341 wifi (patch 200)
-- Add upstream VC4 fixes (patches 201-207) 
+- Add upstream VC4 fixes (patches 201-207)
+- bcm2835-sdhost: Workaround for "slow" sectors (patch 208)
 
 * Fri Mar 11 2016 Vaughan <devel at agrez dot net> - 4.4.5-400.418177e
 - Sync RPi patch to git revision: rpi-4.4.y 418177e2e57d3ac1248ced154fa1067ca42ba315
