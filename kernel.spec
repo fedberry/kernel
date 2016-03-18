@@ -229,7 +229,7 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 
 %if !%{nopatches}
-# RasperryPi patch
+# RPi patch: A diff between kernel.org and https://github.com/raspberrypi/linux sources
 Patch100: patch-linux-rpi-4.4.5-418177e.xz
 
 # Various upstream RPi commits (https://github.com/raspberrypi/linux)
