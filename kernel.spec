@@ -232,6 +232,16 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 # RasperryPi patch
 Patch100: patch-linux-rpi-4.4.5-418177e.xz
 
+# Various upstream RPi commits (https://github.com/raspberrypi/linux)
+Patch200: brcm_adds_support_for_BCM43341_wifi.patch
+Patch201: drm-vc4_Add_a_debugfs_node_for_tracking_execution_state.patch
+Patch202: drm-vc4_Include_vc4_drm.h_in_uapi_in_downstream_build.patch
+Patch203: drm-vc4_Validate_that_WAIT_BO_padding_is_cleared.patch
+Patch204: drm-vc4_Fix_the_clear_color_for_the_first_tile_rendered.patch
+Patch205: drm-vc4_Return_an_ERR_PTR_from_BO_creation_instead_of_NULL.patch
+Patch206: drm-vc4_Fix_-ERESTARTSYS_error_return_from_BO_waits.patch
+Patch207: drm-vc4_Drop_error_message_on_seqno_wait_timeouts.patch
+
 
 # END OF PATCH DEFINITIONS
 
@@ -1383,6 +1393,8 @@ fi
 * Fri Mar 18 2016 Vaughan <devel at agrez dot net> - 4.4.6-400.418177e
 - Update to stable kernel patch v4.4.6
 - Modify how we apply patches
+- Add support for BCM43341 wifi (patch 200)
+- Add upstream VC4 fixes (patches 201-207) 
 
 * Fri Mar 11 2016 Vaughan <devel at agrez dot net> - 4.4.5-400.418177e
 - Sync RPi patch to git revision: rpi-4.4.y 418177e2e57d3ac1248ced154fa1067ca42ba315
