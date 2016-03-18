@@ -1390,7 +1390,7 @@ fi
 #
 # 
 %changelog
-* Fri Mar 18 2016 Vaughan <devel at agrez dot net> - 4.4.6-400.418177e
+* Sat Mar 19 2016 Vaughan <devel at agrez dot net> - 4.4.6-400.418177e
 - Update to stable kernel patch v4.4.6
 - Modify how we apply patches
 - Add support for BCM43341 wifi (patch 200)
