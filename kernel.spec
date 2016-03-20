@@ -37,7 +37,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 5
+%define stable_update 6
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -229,8 +229,19 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 
 %if !%{nopatches}
-# RasperryPi patch
+# RPi patch: A diff between kernel.org and https://github.com/raspberrypi/linux sources
 Patch100: patch-linux-rpi-4.4.5-418177e.xz
+
+# Various upstream RPi commits (https://github.com/raspberrypi/linux)
+Patch200: brcm_adds_support_for_BCM43341_wifi.patch
+Patch201: drm-vc4_Add_a_debugfs_node_for_tracking_execution_state.patch
+Patch202: drm-vc4_Include_vc4_drm.h_in_uapi_in_downstream_build.patch
+Patch203: drm-vc4_Validate_that_WAIT_BO_padding_is_cleared.patch
+Patch204: drm-vc4_Fix_the_clear_color_for_the_first_tile_rendered.patch
+Patch205: drm-vc4_Return_an_ERR_PTR_from_BO_creation_instead_of_NULL.patch
+Patch206: drm-vc4_Fix_-ERESTARTSYS_error_return_from_BO_waits.patch
+Patch207: drm-vc4_Drop_error_message_on_seqno_wait_timeouts.patch
+Patch208: bcm2835-sdhost-Workaround_for_slow_sectors.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -541,20 +552,14 @@ ApplyPatch()
 {
   local patch=$1
   shift
-  if [ ! -f $RPM_SOURCE_DIR/$patch ]; then
+  if [ ! -f $patch ]; then
     exit 1
   fi
-  if ! grep -E "^Patch[0-9]+: $patch\$" %{_specdir}/${RPM_PACKAGE_NAME%%%%%{?variant}}.spec ; then
-    if [ "${patch:0:8}" != "patch-4." ] ; then
-      echo "ERROR: Patch  $patch  not listed as a source patch in specfile"
-      exit 1
-    fi
-  fi 2>/dev/null
   case "$patch" in
-  *.bz2) bunzip2 < "$RPM_SOURCE_DIR/$patch" | $patch_command ${1+"$@"} ;;
-  *.gz)  gunzip  < "$RPM_SOURCE_DIR/$patch" | $patch_command ${1+"$@"} ;;
-  *.xz)  unxz    < "$RPM_SOURCE_DIR/$patch" | $patch_command ${1+"$@"} ;;
-  *) $patch_command ${1+"$@"} < "$RPM_SOURCE_DIR/$patch" ;;
+  *.bz2) bunzip2 < "$patch" | $patch_command ${1+"$@"} ;;
+  *.gz)  gunzip  < "$patch" | $patch_command ${1+"$@"} ;;
+  *.xz)  unxz    < "$patch" | $patch_command ${1+"$@"} ;;
+  *) $patch_command ${1+"$@"} < "$patch" ;;
   esac
 }
 
@@ -563,10 +568,10 @@ ApplyOptionalPatch()
 {
   local patch=$1
   shift
-  if [ ! -f $RPM_SOURCE_DIR/$patch ]; then
+  if [ ! -f $patch ]; then
     exit 1
   fi
-  local C=$(wc -l $RPM_SOURCE_DIR/$patch | awk '{print $1}')
+  local C=$(wc -l $patch | awk '{print $1}')
   if [ "$C" -gt 9 ]; then
     ApplyPatch $patch ${1+"$@"}
   fi
@@ -717,7 +722,11 @@ xzcat %{SOURCE1} | patch -p1 -F1 -s
 
 %if !%{nopatches}
 
-ApplyPatch patch-linux-rpi-4.%{base_sublevel}.%{stable_update}-%{gitshort}.xz
+
+for i in %{patches}; do
+    ApplyPatch $i
+done
+
 
 # END OF PATCH APPLICATIONS
 
@@ -1381,6 +1390,13 @@ fi
 #
 # 
 %changelog
+* Sat Mar 19 2016 Vaughan <devel at agrez dot net> - 4.4.6-400.418177e
+- Update to stable kernel patch v4.4.6
+- Modify how we apply patches
+- Add support for BCM43341 wifi (patch 200)
+- Add upstream VC4 fixes (patches 201-207)
+- bcm2835-sdhost: Workaround for "slow" sectors (patch 208)
+
 * Fri Mar 11 2016 Vaughan <devel at agrez dot net> - 4.4.5-400.418177e
 - Sync RPi patch to git revision: rpi-4.4.y 418177e2e57d3ac1248ced154fa1067ca42ba315
 - Update to stable kernel patch v4.4.5
