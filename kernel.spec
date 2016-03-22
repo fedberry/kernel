@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort 418177e
+%define gitshort d553aa6
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -25,19 +25,19 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 400
+%global baserelease 1
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 4
+%define base_sublevel 5
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 5
+%define stable_update 0
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -230,7 +230,8 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 %if !%{nopatches}
 # RasperryPi patch
-Patch100: patch-linux-rpi-4.4.5-418177e.xz
+Patch100: patch-linux-rpi-4.5.y-%{gitshort}.xz
+
 
 # END OF PATCH DEFINITIONS
 
@@ -256,6 +257,7 @@ Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
 Requires(pre): linux-firmware >= 20130724-29.git31f6b30\
 Requires(pre): bcm283x-firmware >= 20150909\
+Requires(pre): raspberrypi-vc-utils >= 20160321\
 Requires(preun): systemd >= 200\
 Conflicts: xorg-x11-drv-vmmouse < 13.0.99\
 %{expand:%%{?kernel%{?1:_%{1}}_conflicts:Conflicts: %%{kernel%{?1:_%{1}}_conflicts}}}\
@@ -541,20 +543,14 @@ ApplyPatch()
 {
   local patch=$1
   shift
-  if [ ! -f $RPM_SOURCE_DIR/$patch ]; then
+  if [ ! -f $patch ]; then
     exit 1
   fi
-  if ! grep -E "^Patch[0-9]+: $patch\$" %{_specdir}/${RPM_PACKAGE_NAME%%%%%{?variant}}.spec ; then
-    if [ "${patch:0:8}" != "patch-4." ] ; then
-      echo "ERROR: Patch  $patch  not listed as a source patch in specfile"
-      exit 1
-    fi
-  fi 2>/dev/null
   case "$patch" in
-  *.bz2) bunzip2 < "$RPM_SOURCE_DIR/$patch" | $patch_command ${1+"$@"} ;;
-  *.gz)  gunzip  < "$RPM_SOURCE_DIR/$patch" | $patch_command ${1+"$@"} ;;
-  *.xz)  unxz    < "$RPM_SOURCE_DIR/$patch" | $patch_command ${1+"$@"} ;;
-  *) $patch_command ${1+"$@"} < "$RPM_SOURCE_DIR/$patch" ;;
+  *.bz2) bunzip2 < "$patch" | $patch_command ${1+"$@"} ;;
+  *.gz)  gunzip  < "$patch" | $patch_command ${1+"$@"} ;;
+  *.xz)  unxz    < "$patch" | $patch_command ${1+"$@"} ;;
+  *) $patch_command ${1+"$@"} < "$patch" ;;
   esac
 }
 
@@ -563,10 +559,10 @@ ApplyOptionalPatch()
 {
   local patch=$1
   shift
-  if [ ! -f $RPM_SOURCE_DIR/$patch ]; then
+  if [ ! -f $patch ]; then
     exit 1
   fi
-  local C=$(wc -l $RPM_SOURCE_DIR/$patch | awk '{print $1}')
+  local C=$(wc -l $patch | awk '{print $1}')
   if [ "$C" -gt 9 ]; then
     ApplyPatch $patch ${1+"$@"}
   fi
@@ -717,7 +713,11 @@ xzcat %{SOURCE1} | patch -p1 -F1 -s
 
 %if !%{nopatches}
 
-ApplyPatch patch-linux-rpi-4.%{base_sublevel}.%{stable_update}-%{gitshort}.xz
+
+for i in %{patches}; do
+    ApplyPatch $i
+done
+
 
 # END OF PATCH APPLICATIONS
 
@@ -1131,6 +1131,9 @@ mkdir -p %{buildroot}/%{_mandir}/man1
 pushd %{buildroot}/%{_mandir}/man1
 tar -xf %{SOURCE10}
 popd
+
+# remove perf-tips dir
+rm -rf %{buildroot}%{_docdir}/perf-tip
 %endif
 
 %if %{with_tools}
@@ -1278,6 +1281,7 @@ fi
 %{_mandir}/man[1-8]/perf*
 %{_sysconfdir}/bash_completion.d/perf
 %doc linux-%{KVERREL}/tools/perf/Documentation/examples.txt
+%doc linux-%{KVERREL}/tools/perf/Documentation/tips.txt
 
 %files -n python-perf
 %defattr(-,root,root)
@@ -1340,7 +1344,7 @@ fi
 %dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}\
 /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/*.dtb\
 %dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays\
-/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/*.dtb\
+/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/*.dtb*\
 /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/README\
 %dir /%{image_install_path}/overlays\
 %attr(600,root,root) /%{image_install_path}/System.map-%{KVERREL}%{?2:+%{2}}\
@@ -1381,6 +1385,15 @@ fi
 #
 # 
 %changelog
+* Sun Mar 20 2016 Vaughan <devel at agrez dot net> - 4.5.0-1.d553aa6
+- Modify how we apply patches
+- Rebase to 4.5.y kernel branch
+- Sync RPi patch to git revision: rpi-4.5.y d553aa6b15b40562813eb5c0d1b640fb83e8fc50
+- Kernel now enables by default Device Tree Overlay ConfigFS interface (*.dtbo files)
+  Refer: https://github.com/raspberrypi/linux/commit/d95dcfb60819ec448273853e027766bdb241869c
+  Refer: https://www.raspberrypi.org/forums/viewtopic.php?f=107&t=139732
+- Add Requires: raspberrypi-vc-utils >= 20160321 (kernel now requires dtoverlay util)
+
 * Fri Mar 11 2016 Vaughan <devel at agrez dot net> - 4.4.5-400.418177e
 - Sync RPi patch to git revision: rpi-4.4.y 418177e2e57d3ac1248ced154fa1067ca42ba315
 - Update to stable kernel patch v4.4.5
