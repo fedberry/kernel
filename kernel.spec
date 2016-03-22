@@ -25,7 +25,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 400
+%global baserelease 1
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -257,6 +257,7 @@ Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
 Requires(pre): linux-firmware >= 20130724-29.git31f6b30\
 Requires(pre): bcm283x-firmware >= 20150909\
+Requires(pre): raspberrypi-vc-utils >= 20160321\
 Requires(preun): systemd >= 200\
 Conflicts: xorg-x11-drv-vmmouse < 13.0.99\
 %{expand:%%{?kernel%{?1:_%{1}}_conflicts:Conflicts: %%{kernel%{?1:_%{1}}_conflicts}}}\
@@ -1130,6 +1131,9 @@ mkdir -p %{buildroot}/%{_mandir}/man1
 pushd %{buildroot}/%{_mandir}/man1
 tar -xf %{SOURCE10}
 popd
+
+# remove perf-tips dir
+rm -rf %{buildroot}%{_docdir}/perf-tip
 %endif
 
 %if %{with_tools}
@@ -1277,6 +1281,7 @@ fi
 %{_mandir}/man[1-8]/perf*
 %{_sysconfdir}/bash_completion.d/perf
 %doc linux-%{KVERREL}/tools/perf/Documentation/examples.txt
+%doc linux-%{KVERREL}/tools/perf/Documentation/tips.txt
 
 %files -n python-perf
 %defattr(-,root,root)
@@ -1339,7 +1344,7 @@ fi
 %dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}\
 /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/*.dtb\
 %dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays\
-/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/*.dtb\
+/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/*.dtb*\
 /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/README\
 %dir /%{image_install_path}/overlays\
 %attr(600,root,root) /%{image_install_path}/System.map-%{KVERREL}%{?2:+%{2}}\
@@ -1380,10 +1385,14 @@ fi
 #
 # 
 %changelog
-* Sun Mar 20 2016 Vaughan <devel at agrez dot net> - 4.5-400.d553aa6
+* Sun Mar 20 2016 Vaughan <devel at agrez dot net> - 4.5.0-1.d553aa6
 - Modify how we apply patches
 - Rebase to 4.5.y kernel branch
 - Sync RPi patch to git revision: rpi-4.5.y d553aa6b15b40562813eb5c0d1b640fb83e8fc50
+- Kernel now enables by default Device Tree Overlay ConfigFS interface (*.dtbo files)
+  Refer: https://github.com/raspberrypi/linux/commit/d95dcfb60819ec448273853e027766bdb241869c
+  Refer: https://www.raspberrypi.org/forums/viewtopic.php?f=107&t=139732
+- Add Requires: raspberrypi-vc-utils >= 20160321 (kernel now requires dtoverlay util)
 
 * Fri Mar 11 2016 Vaughan <devel at agrez dot net> - 4.4.5-400.418177e
 - Sync RPi patch to git revision: rpi-4.4.y 418177e2e57d3ac1248ced154fa1067ca42ba315
