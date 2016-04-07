@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort 418177e
+%define gitshort a160443
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -25,7 +25,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 400
+%global baserelease 401
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -230,18 +230,10 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 %if !%{nopatches}
 # RPi patch: A diff between kernel.org and https://github.com/raspberrypi/linux sources
-Patch100: patch-linux-rpi-4.4.5-418177e.xz
+Patch100: patch-linux-rpi-4.4.y-%{gitshort}.xz
 
 # Various upstream RPi commits (https://github.com/raspberrypi/linux)
-Patch200: brcm_adds_support_for_BCM43341_wifi.patch
-Patch201: drm-vc4_Add_a_debugfs_node_for_tracking_execution_state.patch
-Patch202: drm-vc4_Include_vc4_drm.h_in_uapi_in_downstream_build.patch
-Patch203: drm-vc4_Validate_that_WAIT_BO_padding_is_cleared.patch
-Patch204: drm-vc4_Fix_the_clear_color_for_the_first_tile_rendered.patch
-Patch205: drm-vc4_Return_an_ERR_PTR_from_BO_creation_instead_of_NULL.patch
-Patch206: drm-vc4_Fix_-ERESTARTSYS_error_return_from_BO_waits.patch
-Patch207: drm-vc4_Drop_error_message_on_seqno_wait_timeouts.patch
-Patch208: bcm2835-sdhost-Workaround_for_slow_sectors.patch
+
 
 # END OF PATCH DEFINITIONS
 
@@ -1349,8 +1341,7 @@ fi
 %dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}\
 /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/*.dtb\
 %dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays\
-/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/*.dtb\
-/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/README\
+/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/*\
 %dir /%{image_install_path}/overlays\
 %attr(600,root,root) /%{image_install_path}/System.map-%{KVERREL}%{?2:+%{2}}\
 /%{image_install_path}/config-%{KVERREL}%{?2:+%{2}}\
@@ -1390,6 +1381,12 @@ fi
 #
 # 
 %changelog
+* Wed Mar 30 2016 Vaughan <devel at agrez dot net> - 4.4.6-401.a160443
+- Sync RPi patch to git revision: rpi-4.4.y a160443a0d967ea6394cd0d1b7a0ab8ef2da3ff1
+- Drop patches 200 - 207 (merged in upstream git snapshot patch)
+- Rename Patch100
+- Add support for Dynamic Device Tree changes.
+
 * Sat Mar 19 2016 Vaughan <devel at agrez dot net> - 4.4.6-400.418177e
 - Update to stable kernel patch v4.4.6
 - Modify how we apply patches
