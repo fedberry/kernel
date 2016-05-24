@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort a48bbc5
+%define gitshort 233755d
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -37,7 +37,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 10
+%define stable_update 11
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -1381,6 +1381,10 @@ fi
 #
 # 
 %changelog
+* Tue May 24 2016 Vaughan <devel at agrez dot net> - 4.4.11-400.233755d
+- Sync RPi patch to git revision: rpi-4.4.y 233755da0e7903fccb41f0b8c14e1da5244b69ec
+- Update to stable kernel patch v4.4.11
+
 * Sun May 15 2016 Vaughan <devel at agrez dot net> - 4.4.10-400.a48bbc5
 - Sync RPi patch to git revision: rpi-4.4.y a48bbc5489633901941d42701c201a1d19c1d8d3
 - Update to stable kernel patch v4.4.10
