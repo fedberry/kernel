@@ -29,13 +29,13 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 5
+%define base_sublevel 6
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 7
+%define stable_update 6
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -111,7 +111,7 @@
 
 %if %{with_bcm2709}
 %define bcm270x 1
-%define rpi_gitshort 2374021
+%define rpi_gitshort 2d4bf9a
 %define Flavour bcm2709
 %define buildid .%{rpi_gitshort}.%{Flavour}
 %endif
@@ -259,7 +259,7 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 Patch10: add_mkknlimg_knlinfo.patch
 %else
 # RasperryPi patch
-Patch100: patch-linux-rpi-4.5.y-%{rpi_gitshort}.xz
+Patch100: patch-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.xz
 %endif
 
 # END OF PATCH DEFINITIONS
@@ -1458,6 +1458,12 @@ fi
 #
 # 
 %changelog
+* Thu Aug 11 2016 Vaughan <devel at agrez dot net> - 4.6.6-1
+- Rebase to 4.6.y kernel branch
+- Update to stable kernel patch v4.6.6
+- Sync RPi patch to git revision: 2d4bf9aeaa3c6b002520ee37555d49d8a495bf20
+- RasperryPi foundation patch name should be using %%{base_sublevel}
+
 * Thu Aug 11 2016 Vaughan <devel at agrez dot net> - 4.5.7-1
 - Split bcm2709 linux kernel port into a separate build option (enabled by default)
 - Add a new kernel config for kernel.org (bcm2835) builds (bcm283x.config)
