@@ -6,8 +6,6 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort d553aa6
-%define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -37,7 +35,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 0
+%define stable_update 7
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -77,36 +75,24 @@
 # kernel-debuginfo
 %define with_debuginfo %{?_without_debuginfo: 1} %{?!_without_debuginfo: 0}
 
+
 #
 # Additional options for user-friendly one-off kernel building:
 #
 # Only build the base kernel (--with baseonly):
-%define with_baseonly  %{?_with_baseonly:     1} %{?!_with_baseonly:     0}
+%define with_baseonly   %{?_with_baseonly:      1} %{?!_with_baseonly:     0}
 #
 # Cross compile requested?
-%define with_cross    %{?_with_cross:         1} %{?!_with_cross:        0}
+%define with_cross      %{?_with_cross:         1} %{?!_with_cross:        0}
 #
 # build a release kernel on rawhide
-%define with_release   %{?_with_release:      1} %{?!_with_release:      0}
+%define with_release    %{?_with_release:       1} %{?!_with_release:      0}
 
 # Want to build a vanilla kernel build without any non-upstream patches?
-%define with_vanilla %{?_with_vanilla: 1} %{?!_with_vanilla: 0}
+%define with_vanilla    %{?_with_vanilla:       1} %{?!_with_vanilla: 0}
 
-# pkg_release is what we'll fill in for the rpm Release: field
-%define pkg_release %{fedora_build}%{?buildid}%{?dist}
-
-# The kernel tarball/base version
-%define kversion 4.%{base_sublevel}
-
-%define make_target bzImage
-%define kernel_image arch/arm/boot/zImage
-%define KVERREL %{version}-%{release}.%{_target_cpu}
-%define asmarch arm
-%define hdrarch arm
-%define Flavour bcm2709
-%define image_install_path boot
-# http://lists.infradead.org/pipermail/linux-arm-kernel/2012-March/091404.html
-%define kernel_mflags KALLSYMS_EXTRA_PASS=1
+# Build the RPi bcm2709 linux kernel port
+%define with_bcm2709    %{?_without_bcm2709:    0} %{?!_without_bcm2709: 1}
 
 
 %if 0%{!?nopatches:1}
@@ -120,6 +106,38 @@
 %if %{nopatches}
 %define variant -vanilla
 %endif
+
+%define bcm270x 0
+
+%if %{with_bcm2709}
+%define bcm270x 1
+%define rpi_gitshort 2374021
+%define Flavour bcm2709
+%define buildid .%{rpi_gitshort}.%{Flavour}
+%endif
+
+%if ! %{bcm270x}
+%define Flavour bcm283x
+%define buildid .%{Flavour}
+%endif
+
+
+# pkg_release is what we'll fill in for the rpm Release: field
+%define pkg_release %{fedora_build}%{?buildid}%{?dist}
+
+
+# The kernel tarball/base version
+%define kversion 4.%{base_sublevel}
+
+%define make_target bzImage
+%define kernel_image arch/arm/boot/zImage
+%define KVERREL %{version}-%{release}.%{_target_cpu}
+%define asmarch arm
+%define hdrarch arm
+%define image_install_path boot
+# http://lists.infradead.org/pipermail/linux-arm-kernel/2012-March/091404.html
+%define kernel_mflags KALLSYMS_EXTRA_PASS=1
+
 
 # Overrides for generic default options
 
@@ -150,8 +168,13 @@
 Name: kernel%{?variant}
 Group: System Environment/Kernel
 License: GPLv2 and Redistributable, no modification permitted
-Summary: The Linux kernel for the Raspberry Pi 2 (BCM2836 SOC)
+%if !%{bcm270x}
+Summary: The Linux kernel for the Raspberry Pi (BCM283x)
+URL: http://www.kernel.org
+%else
+Summary: The BCM270x Linux kernel port for the Raspberry Pi 2 and 3
 URL: https://github.com/raspberrypi/linux
+%endif
 Version: %{rpmversion}
 Release: %{pkg_release}
 ExclusiveArch: %{arm}
@@ -193,7 +216,8 @@ Source17: mod-extra.sh
 Source99: filter-modules.sh
 
 # kernel config modifications 
-Source1000: config-fedberry.cfg
+Source1000: bcm2709.cfg
+Source1100: bcm283x.config
 
 # Sources for kernel-tools
 Source2000: cpupower.service
@@ -229,12 +253,16 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 
 %if !%{nopatches}
-# RasperryPi patch
-Patch100: patch-linux-rpi-4.5.y-%{gitshort}.xz
 
+%if !%{bcm270x}
+#script for adding device tree trailer to the kernel img
+Patch10: add_mkknlimg_knlinfo.patch
+%else
+# RasperryPi patch
+Patch100: patch-linux-rpi-4.5.y-%{rpi_gitshort}.xz
+%endif
 
 # END OF PATCH DEFINITIONS
-
 %endif
 
 BuildRoot: %{_tmppath}/kernel-%{KVERREL}-root
@@ -509,17 +537,25 @@ Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
 %{nil}
 
 # The main -core package
-
-%define variant_summary The Linux kernel for the Raspberry Pi 2 (BCM2836 SOC)
+%if %{bcm270x}
+%define variant_summary The Linux kernel for the Raspberry Pi 2/3)
 %kernel_variant_package 
 %description core
 This package includes a patched version of the Linux kernel built for
-Raspberry Pi 2 devices that use the Broadcom BCM2836 SOC. The
+Raspberry Pi devices that use the Broadcom BCM27XX SOC. The
 kernel package contains the Linux kernel (vmlinuz), the core of any
 Linux operating system.  The kernel handles the basic functions
 of the operating system: memory allocation, process allocation, device
 input and output, etc.
-
+%else
+%define variant_summary The Linux kernel
+%kernel_variant_package 
+%description core
+The kernel package contains the Linux kernel (vmlinuz), the core of any
+Linux operating system.  The kernel handles the basic functions
+of the operating system: memory allocation, process allocation, device
+input and output, etc.
+%endif
 
 %prep
 
@@ -784,7 +820,7 @@ BuildKernel() {
       CopyKernel=cp
     fi
 
-#    KernelVer=%{version}-%{release}.%{_target_cpu}${Flav}
+    #KernelVer=%{version}-%{release}.%{_target_cpu}${Flav}
     KernelVer=%{version}-%{release}.%{_target_cpu}
     echo BUILDING A KERNEL FOR ${Flavour} %{_target_cpu}...
 
@@ -805,51 +841,64 @@ BuildKernel() {
 
     # and now to start the build process
     make -s mrproper
+    %if !%{bcm270x}
+    #make bcm2835_defconfig
+    cp %{SOURCE1100} .config
+    %endif
+    %if %{with_bcm2709}
     make bcm2709_defconfig
     cp %{SOURCE1000} .
-    # merge kernel config changes 
-    scripts/kconfig/merge_config.sh -m -r .config config-fedberry.cfg
+    # merge fedberry kernel config fragments 
+    scripts/kconfig/merge_config.sh -m -r .config bcm2709.cfg
+    %endif
         
     echo USING ARCH=$Arch
-    make ARCH=$Arch .config >/dev/null
+    #make ARCH=$Arch oldnoconfig >/dev/null
+    make ARCH=$Arch oldconfig
     %{make} ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
     %{make} ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
-        
-    # Device Tree / Overlay
-    %{make} ARCH=$Arch dtbs dtbs_install INSTALL_DTBS_PATH=$RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer
-    mkdir -p $RPM_BUILD_ROOT/%{image_install_path}/overlays
-    cp -p arch/$Arch/boot/dts/overlays/README $RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer/overlays/
-
+    
     # Start installing the results
-%if %{with_debuginfo}
+    %if %{with_debuginfo}
     mkdir -p $RPM_BUILD_ROOT%{debuginfodir}/boot
     mkdir -p $RPM_BUILD_ROOT%{debuginfodir}/%{image_install_path}
-%endif
+    %endif
     mkdir -p $RPM_BUILD_ROOT/%{image_install_path}
+    mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer
+    
+    # Device Tree / Overlay
+    %{make} ARCH=$Arch dtbs dtbs_install INSTALL_DTBS_PATH=$RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer
+    cp -r $RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer $RPM_BUILD_ROOT/lib/modules/$KernelVer/dtb
+    %if %{bcm270x}
+    cp -p arch/$Arch/boot/dts/overlays/README $RPM_BUILD_ROOT/lib/modules/$KernelVer/dtb/overlays/
+    mkdir -p $RPM_BUILD_ROOT/%{image_install_path}/overlays
+    %endif
+    
+    # Start installing the results
     install -m 644 .config $RPM_BUILD_ROOT/boot/config-$KernelVer
+    install -m 644 .config $RPM_BUILD_ROOT/lib/modules/$KernelVer/config
     install -m 644 System.map $RPM_BUILD_ROOT/boot/System.map-$KernelVer
-
+    install -m 644 System.map $RPM_BUILD_ROOT/lib/modules/$KernelVer/System.map
+    
     # We estimate the size of the initramfs because rpm needs to take this size
     # into consideration when performing disk space calculations. (See bz #530778)
     dd if=/dev/zero of=$RPM_BUILD_ROOT/boot/initramfs-$KernelVer.img bs=1M count=20
 
-    if [ -f arch/$Arch/boot/zImage.stub ]; then
-      cp arch/$Arch/boot/zImage.stub $RPM_BUILD_ROOT/%{image_install_path}/zImage.stub-$KernelVer || :
-    fi
-
-    #$CopyKernel $KernelImage $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
-    #chmod 755 $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
-
     # add the device tree trailer to the kernel img
     chmod +x scripts/mkknlimg
-    scripts/mkknlimg --dtok $KernelImage $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
-    #scripts/mkknlimg --dtok $KernelImage $RPM_BUILD_ROOT/%{image_install_path}/kernel-$KernelVer.img
+    %if !%{bcm270x}
+    scripts/mkknlimg --dtok --283x $KernelImage $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
+    %else
+    scripts/mkknlimg --dtok --270x $KernelImage $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
+    %endif
     chmod 755 $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
+    cp $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer $RPM_BUILD_ROOT/lib/modules/$KernelVer/$InstallName
     
     # hmac sign the kernel for FIPS
     echo "Creating hmac file: $RPM_BUILD_ROOT/%{image_install_path}/.vmlinuz-$KernelVer.hmac"
     ls -l $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
     sha512hmac $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer | sed -e "s,$RPM_BUILD_ROOT,," > $RPM_BUILD_ROOT/%{image_install_path}/.vmlinuz-$KernelVer.hmac;
+    cp $RPM_BUILD_ROOT/%{image_install_path}/.vmlinuz-$KernelVer.hmac $RPM_BUILD_ROOT/lib/modules/$KernelVer/.vmlinuz.hmac
 
     mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer
     # Override $(mod-fw) because we don't want it to install any firmware
@@ -894,12 +943,18 @@ BuildKernel() {
     if [ -d arch/%{asmarch}/include ]; then
       cp -a --parents arch/%{asmarch}/include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
     fi
-    # include the machine specific headers for bcm2386 build
+    
+    # include the machine specific headers
     if [ -d arch/%{asmarch}/mach-${Flavour}/include ]; then
       cp -a --parents arch/%{asmarch}/mach-${Flavour}/include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
     fi
+    
+    # include a few files for 'make prepare'
+    cp -a --parents arch/arm/tools/gen-mach-types $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
+    cp -a --parents arch/arm/tools/mach-types $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
+    
     cp -a include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include
-
+    
     # Make sure the Makefile and version.h have a matching timestamp so that
     # external modules can be built
     touch -r $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/Makefile $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include/generated/uapi/linux/version.h
@@ -1043,7 +1098,7 @@ mkdir -p $RPM_BUILD_ROOT%{_libexecdir}
 
 cd linux-%{KVERREL}
 
-BuildKernel %make_target %kernel_image %Flavour
+BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
   make %{?cross_opts} %{?_smp_mflags} -C tools/perf WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 prefix=%{_prefix}
@@ -1222,11 +1277,18 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/new-kernel-pkg --package kernel --rpmposttrans %{KVERREL}%{?1:+%{1}} || exit $?\
-cp -f /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}} /%{image_install_path}/kernel7.img\
-cp -f /%{image_install_path}/dtb-%{KVERREL}/bcm2709-rpi-2-b.dtb /boot/\
-cp -f /%{image_install_path}/dtb-%{KVERREL}/bcm2710-rpi-3-b.dtb /boot/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}}\
+%if %{bcm270x}\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/*.dtb /boot/\
 rm -f /boot/overlays/*\
-cp /%{image_install_path}/dtb-%{KVERREL}/overlays/* /boot/overlays/\
+cp /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
+%else\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm283* /boot/\
+%endif\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/config /%{image_install_path}/config-%{KVERREL}%{?1:+%{1}}\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/System.map /%{image_install_path}/System.map-%{KVERREL}%{?1:+%{1}}\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.vmlinuz.hmac-%{KVERREL}%{?1:+%{1}}\
 %{nil}
 
 #
@@ -1340,16 +1402,27 @@ fi
 %{!?_licensedir:%global license %%doc}\
 %license linux-%{KVERREL}/COPYING\
 /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
-/%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac \
-%dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}\
-/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/*.dtb\
-%dir /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays\
-/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/*.dtb*\
-/%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}/overlays/README\
-%dir /%{image_install_path}/overlays\
-%attr(600,root,root) /%{image_install_path}/System.map-%{KVERREL}%{?2:+%{2}}\
-/%{image_install_path}/config-%{KVERREL}%{?2:+%{2}}\
-%ghost /%{image_install_path}/initramfs-%{KVERREL}%{?2:+%{2}}.img\
+%ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/.vmlinuz.hmac \
+%ghost /%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac \
+/lib/modules/%{KVERREL}%{?2:+%{2}}/dtb \
+%ghost /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}} \
+%{!?_licensedir:%global license %%doc}\
+%license linux-%{KVERREL}/COPYING\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/%{?-k:%{-k*}}%{!?-k:vmlinuz}\
+%ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/.vmlinuz.hmac \
+%ghost /%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac \
+/lib/modules/%{KVERREL}%{?2:+%{2}}/dtb \
+%ghost /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}} \
+%attr(600,root,root) /lib/modules/%{KVERREL}%{?2:+%{2}}/System.map\
+%ghost /boot/System.map-%{KVERREL}%{?2:+%{2}}\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/config\
+%ghost /boot/config-%{KVERREL}%{?2:+%{2}}\
+%ghost /boot/initramfs-%{KVERREL}%{?2:+%{2}}.img\
+%if %{bcm270x}\
+%ghost /%{image_install_path}/overlays\
+%endif\
 %dir /lib/modules\
 %dir /lib/modules/%{KVERREL}%{?2:+%{2}}\
 %dir /lib/modules/%{KVERREL}%{?2:+%{2}}/kernel\
@@ -1385,6 +1458,16 @@ fi
 #
 # 
 %changelog
+* Thu Aug 11 2016 Vaughan <devel at agrez dot net> - 4.5.7-1
+- Split bcm2709 linux kernel port into a separate build option (enabled by default)
+- Add a new kernel config for kernel.org (bcm2835) builds (bcm283x.config)
+- Add mkknlimg to the bcm283x build (Patch10)
+- vmlinuz, System.map, config & .hmac files now installed to '/lib/modules/$KernelVer/'
+- Updated kernel %%files & %%posttrans to relfect relocation of kernel files
+- Sync RPi patch to git revision: 237402141fd74ca989bd86ebb76d834cb6fa5454
+- Update to stable kernel patch v4.5.7
+- Misc spec file cleanups
+
 * Sun Mar 20 2016 Vaughan <devel at agrez dot net> - 4.5.0-1.d553aa6
 - Modify how we apply patches
 - Rebase to 4.5.y kernel branch
