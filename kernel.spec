@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort 7547e72
+%define gitshort fea4885
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -37,7 +37,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 17
+%define stable_update 19
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -234,6 +234,8 @@ Patch100: patch-linux-rpi-4.4.y-%{gitshort}.xz
 
 # Various upstream RPi commits (https://github.com/raspberrypi/linux)
 
+#FedBerry logo
+Patch200: video-logo-fedberry.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1381,6 +1383,11 @@ fi
 #
 # 
 %changelog
+* Mon Aug 22 2016 Vaughan <devel at agrez dot net> - 4.4.19-400.fea4885
+- Update to stable kernel patch v4.4.19
+- Sync RPi patch to git revision: rpi-4.4.y fea4885d11d2578e7552940cf0b8ad652e4110d9
+- Add fedberry logo (patch 200)
+
 * Mon Aug 15 2016 Vaughan <devel at agrez dot net> - 4.4.17-400.7547e72
 - Update to stable kernel patch v4.4.17
 - Sync RPi patch to git revision: rpi-4.4.y 7547e72d51b51267e6a1450c33e3ca9818f3abd7
