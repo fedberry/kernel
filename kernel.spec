@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort 5ba1281
+%define gitshort 73bada5
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -25,7 +25,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 401
+%global baserelease 400
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -37,7 +37,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 19
+%define stable_update 20
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -1383,6 +1383,10 @@ fi
 #
 # 
 %changelog
+* Sat Sep 10 2016 Vaughan <devel at agrez dot net> - 4.4.20-400.73bada5
+- Update to stable kernel patch v4.4.20
+- Sync RPi patch to git revision: rpi-4.4.y 73bada585aa9b896d2af124457141280f8cae19e
+
 * Sat Aug 27 2016 Vaughan <devel at agrez dot net> - 4.4.19-401.5ba1281
 - Enable SECCOMP filter options (config-fedberry.cfg)
 - Sync RPi patch to git revision: rpi-4.4.y 5ba1281cbd7f1d8db419f41919a51dedc4d5afa3
