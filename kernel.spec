@@ -29,13 +29,13 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 6
+%define base_sublevel 7
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 6
+%define stable_update 3
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -111,7 +111,7 @@
 
 %if %{with_bcm2709}
 %define bcm270x 1
-%define rpi_gitshort 2d4bf9a
+%define rpi_gitshort cb03c80
 %define Flavour bcm2709
 %define buildid .%{rpi_gitshort}.%{Flavour}
 %endif
