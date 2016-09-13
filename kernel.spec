@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort 73bada5
+%define gitshort 7b8f544
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -25,7 +25,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 400
+%global baserelease 401
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -143,8 +143,8 @@
 # Packages that need to be installed before the kernel is, because the %%post
 # scripts use them.
 #
-%define kernel_prereq  fileutils, systemd >= 203-2
-%define initrd_prereq  dracut >= 027
+%define kernel_prereq  fileutils, systemd, grubby
+%define initrd_prereq  dracut
 
 
 Name: kernel%{?variant}
@@ -1383,6 +1383,10 @@ fi
 #
 # 
 %changelog
+* Tue Sep 13 2016 Vaughan <devel at agrez dot net> - 4.4.20-401.7b8f544
+- Add grubby to kernel_prereq (it provides /sbin/new-kernel-pkg)
+- Sync RPi patch to git revision: rpi-4.4.y 7b8f544027a15df8b01d97ca9d9ec76f07e78db7
+
 * Sat Sep 10 2016 Vaughan <devel at agrez dot net> - 4.4.20-400.73bada5
 - Update to stable kernel patch v4.4.20
 - Sync RPi patch to git revision: rpi-4.4.y 73bada585aa9b896d2af124457141280f8cae19e
