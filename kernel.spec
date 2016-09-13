@@ -161,8 +161,8 @@
 # Packages that need to be installed before the kernel is, because the %%post
 # scripts use them.
 #
-%define kernel_prereq  fileutils, systemd >= 203-2
-%define initrd_prereq  dracut >= 027
+%define kernel_prereq  fileutils, systemd, grubby
+%define initrd_prereq  dracut
 
 
 Name: kernel%{?variant}
@@ -261,6 +261,9 @@ Patch10: add_mkknlimg_knlinfo.patch
 # RasperryPi patch
 Patch100: patch-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.xz
 %endif
+
+#FedBerry logo
+Patch200: video-logo-fedberry.patch
 
 # END OF PATCH DEFINITIONS
 %endif
@@ -1282,7 +1285,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-
 %if %{bcm270x}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/*.dtb /boot/\
 rm -f /boot/overlays/*\
-cp /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm283* /boot/\
 %endif\
@@ -1375,7 +1378,7 @@ fi
 
 %files -n kernel-tools-libs
 %{_libdir}/libcpupower.so.0
-%{_libdir}/libcpupower.so.0.0.0
+%{_libdir}/libcpupower.so.0.0.1
 
 %files -n kernel-tools-libs-devel
 %{_libdir}/libcpupower.so
@@ -1458,6 +1461,15 @@ fi
 #
 # 
 %changelog
+* Mon Sep 12 2016 Vaughan <devel at agrez dot net> - 4.7.3-1
+- Rebase to 4.7.y kernel branch
+- Update to stable kernel patch v4.7.3
+- Sync RPi patch to git revision: cb03c80f44aeff4dfb8930bee5bbfbd032d07f0a
+- Add custom FedBerry boot logo
+- Enable SECCOMP filter options and CONFIG_AUDITSYSCALL
+- Add grubby to kernel_prereq (it provides /sbin/new-kernel-pkg)
+- Fix copying of .dbto's to /boot/overlays/
+
 * Thu Aug 11 2016 Vaughan <devel at agrez dot net> - 4.6.6-1
 - Rebase to 4.6.y kernel branch
 - Update to stable kernel patch v4.6.6
