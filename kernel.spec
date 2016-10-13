@@ -847,22 +847,22 @@ BuildKernel() {
     %if !%{bcm270x}
     make multi_v7_defconfig
     cp %{SOURCE1100} .config
-    # merge fedberry kernel config fragments 
+    # merge fedberry kernel config fragments
     scripts/kconfig/merge_config.sh -m -r .config bcm283x.cfg
     %endif
     %if %{with_bcm2709}
     make bcm2709_defconfig
     cp %{SOURCE1000} .
-    # merge fedberry kernel config fragments 
+    # merge fedberry kernel config fragments
     scripts/kconfig/merge_config.sh -m -r .config bcm2709.cfg
     %endif
-        
+
     echo USING ARCH=$Arch
     #make ARCH=$Arch oldnoconfig >/dev/null
     make ARCH=$Arch oldconfig
     %{make} ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
     %{make} ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
-    
+
     # Start installing the results
     %if %{with_debuginfo}
     mkdir -p $RPM_BUILD_ROOT%{debuginfodir}/boot
@@ -870,7 +870,7 @@ BuildKernel() {
     %endif
     mkdir -p $RPM_BUILD_ROOT/%{image_install_path}
     mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer
-    
+
     # Device Tree / Overlay
     %{make} ARCH=$Arch dtbs dtbs_install INSTALL_DTBS_PATH=$RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer
     cp -r $RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer $RPM_BUILD_ROOT/lib/modules/$KernelVer/dtb
@@ -878,13 +878,13 @@ BuildKernel() {
     cp -p arch/$Arch/boot/dts/overlays/README $RPM_BUILD_ROOT/lib/modules/$KernelVer/dtb/overlays/
     mkdir -p $RPM_BUILD_ROOT/%{image_install_path}/overlays
     %endif
-    
+
     # Start installing the results
     install -m 644 .config $RPM_BUILD_ROOT/boot/config-$KernelVer
     install -m 644 .config $RPM_BUILD_ROOT/lib/modules/$KernelVer/config
     install -m 644 System.map $RPM_BUILD_ROOT/boot/System.map-$KernelVer
     install -m 644 System.map $RPM_BUILD_ROOT/lib/modules/$KernelVer/System.map
-    
+
     # We estimate the size of the initramfs because rpm needs to take this size
     # into consideration when performing disk space calculations. (See bz #530778)
     dd if=/dev/zero of=$RPM_BUILD_ROOT/boot/initramfs-$KernelVer.img bs=1M count=20
@@ -898,7 +898,7 @@ BuildKernel() {
     %endif
     chmod 755 $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
     cp $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer $RPM_BUILD_ROOT/lib/modules/$KernelVer/$InstallName
-    
+
     # hmac sign the kernel for FIPS
     echo "Creating hmac file: $RPM_BUILD_ROOT/%{image_install_path}/.vmlinuz-$KernelVer.hmac"
     ls -l $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
@@ -948,18 +948,18 @@ BuildKernel() {
     if [ -d arch/%{asmarch}/include ]; then
       cp -a --parents arch/%{asmarch}/include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
     fi
-    
+
     # include the machine specific headers
     if [ -d arch/%{asmarch}/mach-${Flavour}/include ]; then
       cp -a --parents arch/%{asmarch}/mach-${Flavour}/include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
     fi
-    
+
     # include a few files for 'make prepare'
     cp -a --parents arch/arm/tools/gen-mach-types $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
     cp -a --parents arch/arm/tools/mach-types $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
-    
+
     cp -a include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include
-    
+
     # Make sure the Makefile and version.h have a matching timestamp so that
     # external modules can be built
     touch -r $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/Makefile $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include/generated/uapi/linux/version.h
@@ -1461,7 +1461,8 @@ fi
 # plz don't put in a version string unless you're going to tag
 # and build.
 #
-# 
+#
+
 %changelog
 * Sat Sep 17 2016 Vaughan <devel at agrez dot net> - 4.7.4-1
 - Update to stable kernel patch v4.7.4
