@@ -35,7 +35,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 4
+%define stable_update 7
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -111,7 +111,7 @@
 
 %if %{with_bcm2709}
 %define bcm270x 1
-%define rpi_gitshort 3e1b1ad
+%define rpi_gitshort a45a35c
 %define Flavour bcm2709
 %define buildid .%{rpi_gitshort}.%{Flavour}
 %endif
@@ -1461,6 +1461,10 @@ fi
 #
 # 
 %changelog
+* Thu Oct 13 2016 Vaughan <devel at agrez dot net> - 4.7.7-1
+- Update to stable kernel patch v4.7.7
+- Sync RPi patch to git revision: a45a35c08598b23f9fd82e49c83b46c7d536244f
+
 * Sat Sep 17 2016 Vaughan <devel at agrez dot net> - 4.7.4-1
 - Update to stable kernel patch v4.7.4
 - Sync RPi patch to git revision: 3e1b1adce79b673ef890cf5a7379697c5b4ba724
