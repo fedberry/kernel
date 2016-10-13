@@ -111,7 +111,7 @@
 
 %if %{with_bcm2709}
 %define bcm270x 1
-%define rpi_gitshort 3e1b1ad
+%define rpi_gitshort 5b7970b
 %define Flavour bcm2709
 %define buildid .%{rpi_gitshort}.%{Flavour}
 %endif
