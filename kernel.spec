@@ -217,7 +217,7 @@ Source99: filter-modules.sh
 
 # kernel config modifications 
 Source1000: bcm2709.cfg
-Source1100: bcm283x.config
+Source1100: bcm283x.cfg
 
 # Sources for kernel-tools
 Source2000: cpupower.service
@@ -845,8 +845,10 @@ BuildKernel() {
     # and now to start the build process
     make -s mrproper
     %if !%{bcm270x}
-    #make bcm2835_defconfig
+    make multi_v7_defconfig
     cp %{SOURCE1100} .config
+    # merge fedberry kernel config fragments 
+    scripts/kconfig/merge_config.sh -m -r .config bcm283x.cfg
     %endif
     %if %{with_bcm2709}
     make bcm2709_defconfig
