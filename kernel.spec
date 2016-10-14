@@ -843,7 +843,7 @@ BuildKernel() {
     make -s mrproper
     %if !%{bcm270x}
     make multi_v7_defconfig
-    cp %{SOURCE1100} .config
+    cp %{SOURCE1100} .
     # merge fedberry kernel config fragments
     scripts/kconfig/merge_config.sh -m -r .config bcm283x.cfg
     %endif
