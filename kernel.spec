@@ -253,16 +253,13 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 
 %if !%{nopatches}
-
-%if !%{bcm270x}
-#script for adding device tree trailer to the kernel img
+# Script for adding device tree trailer to the kernel img
 Patch10: add_mkknlimg_knlinfo.patch
-%else
+
 # RasperryPi patch
 Patch100: patch-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.xz
-%endif
 
-#FedBerry logo
+# FedBerry logo
 Patch200: video-logo-fedberry.patch
 
 # END OF PATCH DEFINITIONS
