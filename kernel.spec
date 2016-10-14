@@ -5,7 +5,7 @@
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
 %global released_kernel 1
-
+%define rpi_gitshort 5b7970b
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -111,7 +111,6 @@
 
 %if %{with_bcm2709}
 %define bcm270x 1
-%define rpi_gitshort 5b7970b
 %define Flavour bcm2709
 %define buildid .%{rpi_gitshort}.%{Flavour}
 %endif
