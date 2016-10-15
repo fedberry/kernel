@@ -1470,6 +1470,14 @@ fi
 #
 
 %changelog
+* Sat Oct 15 2016 Vaughan <devel at agrez dot net> - 4.8.1-1
+- Rebase to 4.8 kernel branch
+- Update to stable kernel patch v4.8.1
+- Sync RPi patch to git revision: 5b7970b19bbb2ea1620591bfb6517848696ed0b9
+- Use kernel config fragments file for bcm283x builds (as per the bcm2709 build)
+- Update how patches are applied for each build
+- Rename patches 10 & 100
+
 * Sat Sep 17 2016 Vaughan <devel at agrez dot net> - 4.7.4-1
 - Update to stable kernel patch v4.7.4
 - Sync RPi patch to git revision: 3e1b1adce79b673ef890cf5a7379697c5b4ba724
