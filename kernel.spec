@@ -252,13 +252,16 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git
 
 
 %if !%{nopatches}
-# Script for adding device tree trailer to the kernel img
-Patch10: add_mkknlimg_knlinfo.patch
+## Patches for bcm283x builds (append patches with bcm283x)
+#script for adding device tree trailer to the kernel img
+Patch10: bcm283x-add-mkknlimg-knlinfo.patch
 
-# RasperryPi patch
-Patch100: patch-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.xz
+## Patches for bcm270x builds (append patches with bcm270x)
+#RasperryPi patch
+Patch100: bcm270x-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 
-# FedBerry logo
+## Patches for both builds (bcm2709 & bcm283x)
+#FedBerry logo
 Patch200: video-logo-fedberry.patch
 
 # END OF PATCH DEFINITIONS
@@ -748,14 +751,21 @@ xzcat %{SOURCE1} | patch -p1 -F1 -s
 
 %if !%{nopatches}
 
-
 for i in %{patches}; do
-    ApplyPatch $i
+%if !%{bcm270x}
+    if [ ! $(echo $i |grep "/bcm270x") ]; then
+        ApplyPatch $i
+    fi
+%endif
+
+%if %{bcm270x}
+    if [ ! $(echo $i |grep "/bcm283x") ]; then
+        ApplyPatch $i
+    fi
+%endif
 done
 
-
 # END OF PATCH APPLICATIONS
-
 %endif
 
 # Any further pre-build tree manipulations happen here.
