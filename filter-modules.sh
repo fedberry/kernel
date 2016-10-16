@@ -16,8 +16,6 @@
 # Set the default dirs/modules to filter out
 driverdirs="atm auxdisplay bcma bluetooth extcon fmc infiniband isdn media memstick message nfc ntb pcmcia platform ssb staging uio uwb"
 
-#driverdirs="atm auxdisplay bcma bluetooth fmc iio infiniband isdn leds media memstick mmc mtd nfc ntb pcmcia platform power ssb staging uio uwb"
-
 netdrvs="appletalk dsa hamradio ieee802154 irda ppp slip usb wireless"
 
 ethdrvs="3com adaptec alteon amd atheros broadcom cadence calxeda chelsio cisco dec dlink emulex icplus marvell mellanox neterion nvidia oki-semi packetengines qlogic rdc renesas sfc silan sis smsc stmicro sun tehuti ti wiznet xircom"
@@ -34,9 +32,7 @@ netprots="appletalk atm ax25 batman-adv bluetooth dccp dsa ieee802154 irda l2tp 
 
 drmdrvs="ast gma500 mgag200 via nouveau"
 
-singlemods="ntb_netdev iscsi_ibft iscsi_boot_sysfs iscsi_tcp megaraid pmcraid qla1280 9pnet_rdma svcrdma xprtrdma hid-picolcd hid-prodikeys hwa-hc hwpoison-inject target_core_user ucb1400_core"
-
-#singlemods="ntb_netdev iscsi_ibft iscsi_boot_sysfs iscsi_tcp megaraid pmcraid qla1280 9pnet_rdma svcrdma xprtrdma hid-picolcd hid-prodikeys hwa-hc hwpoison-inject hid-sensor-hub target_core_user"
+singlemods="ntb_netdev iscsi_ibft iscsi_boot_sysfs iscsi_tcp megaraid pmcraid qla1280 9pnet_rdma svcrdma xprtrdma hid-picolcd hid-prodikeys hwa-hc hwpoison-inject target_core_user ucb1400_core wm97xx-ts"
 
 # Grab the arch-specific filter list overrides
 #source ./filter-$2.sh
