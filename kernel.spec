@@ -91,8 +91,8 @@
 # Want to build a vanilla kernel build without any non-upstream patches?
 %define with_vanilla    %{?_with_vanilla:       1} %{?!_with_vanilla: 0}
 
-# Build the RPi bcm2709 linux kernel port
-%define with_bcm2709    %{?_without_bcm2709:    0} %{?!_without_bcm2709: 1}
+# Build the RPi bcm270x linux kernel port
+%define with_bcm270x    %{?_without_bcm270x:    0} %{?!_without_bcm270x: 1}
 
 
 %if 0%{!?nopatches:1}
@@ -107,11 +107,13 @@
 %define variant -vanilla
 %endif
 
-%define bcm270x 0
-
-%if %{with_bcm2709}
+%if %{with_bcm270x}
 %define bcm270x 1
+%if %{_target_cpu} == armv7hl
 %define Flavour bcm2709
+%else
+%define Flavour bcm2708
+%endif
 %define buildid .%{rpi_gitshort}.%{Flavour}
 %endif
 
@@ -171,7 +173,11 @@ License: GPLv2 and Redistributable, no modification permitted
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
 URL: http://www.kernel.org
 %else
-Summary: The BCM270x Linux kernel port for the Raspberry Pi 2 and 3
+%if %{_target_cpu} == armv7hl
+Summary: The BCM2709 Linux kernel port for the Raspberry Pi 2 and 3 Model B
+%else
+Summary: The BCM2708 Linux kernel port for the Raspberry Pi Model A, B and Zero
+%endif
 URL: https://github.com/raspberrypi/linux
 %endif
 Version: %{rpmversion}
@@ -215,7 +221,7 @@ Source17: mod-extra.sh
 Source99: filter-modules.sh
 
 # kernel config modifications 
-Source1000: bcm2709.cfg
+Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
 # Sources for kernel-tools
@@ -260,7 +266,7 @@ Patch10: bcm283x-add-mkknlimg-knlinfo.patch
 #RasperryPi patch
 Patch100: bcm270x-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 
-## Patches for both builds (bcm2709 & bcm283x)
+## Patches for both builds (bcm270x & bcm283x)
 #FedBerry logo
 Patch200: video-logo-fedberry.patch
 
@@ -540,7 +546,11 @@ Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
 
 # The main -core package
 %if %{bcm270x}
-%define variant_summary The Linux kernel for the Raspberry Pi 2/3)
+%if %{_target_cpu} == armv7hl
+%define variant_summary The Linux kernel for the Raspberry Pi 2/3 Model B
+%else
+%define variant_summary The Linux kernel for the Raspberry Pi Model A, B & Zero
+%endif
 %kernel_variant_package 
 %description core
 This package includes a patched version of the Linux kernel built for
@@ -856,11 +866,15 @@ BuildKernel() {
     # merge fedberry kernel config fragments
     scripts/kconfig/merge_config.sh -m -r .config bcm283x.cfg
     %endif
-    %if %{with_bcm2709}
+    %if %{bcm270x}
+    %if %{_target_cpu} == armv7hl
     make bcm2709_defconfig
+    %else
+    make bcmrpi_defconfig
+    %endif
     cp %{SOURCE1000} .
     # merge fedberry kernel config fragments
-    scripts/kconfig/merge_config.sh -m -r .config bcm2709.cfg
+    scripts/kconfig/merge_config.sh -m -r .config bcm270x.cfg
     %endif
 
     echo USING ARCH=$Arch
@@ -1288,7 +1302,11 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/new-kernel-pkg --package kernel --rpmposttrans %{KVERREL}%{?1:+%{1}} || exit $?\
+%if %{_target_cpu} == armv7hl\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7.img\
+%else\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel.img\
+%endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}}\
 %if %{bcm270x}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/*.dtb /boot/\
@@ -1470,6 +1488,8 @@ fi
 #
 
 %changelog
+- Add build support for bcm2708 kernels
+
 * Tue Oct 25 2016 Vaughan <devel at agrez dot net> - 4.8.4-1
 - Update to stable kernel patch v4.8.4
 - Sync RPi patch to git revision: e262d8182b373999a7630ddcafcbbbcc878e64ba
