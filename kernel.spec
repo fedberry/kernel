@@ -5,7 +5,7 @@
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
 %global released_kernel 1
-%define rpi_gitshort e262d81
+%define rpi_gitshort 6abac13
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -35,7 +35,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 4
+%define stable_update 6
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -1488,7 +1488,10 @@ fi
 #
 
 %changelog
+* Wed Nov 02 2016 Vaughan <devel at agrez dot net> - 4.8.6-1
 - Add build support for bcm2708 kernels
+- Update to stable kernel patch v4.8.6
+- Sync RPi patch to git revision: 6abac13566786086cd912d87e4f1a922e2a391b2
 
 * Tue Oct 25 2016 Vaughan <devel at agrez dot net> - 4.8.4-1
 - Update to stable kernel patch v4.8.4
