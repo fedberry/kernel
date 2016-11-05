@@ -6,7 +6,7 @@
 # be 0.
 %global released_kernel 1
 
-%define gitshort bc6f89e
+%define gitshort c1f53f1
 %define buildid .%{gitshort}.bcm2709
 
 # baserelease defines which build revision of this kernel version we're
@@ -37,7 +37,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 27
+%define stable_update 30
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -1383,6 +1383,10 @@ fi
 #
 # 
 %changelog
+* Fri Nov 04 2016 Vaughan <devel at agrez dot net> - 4.4.30-400.c1f53f1
+- Update to stable kernel patch v4.4.30
+- Sync RPi patch to git revision: rpi-4.4.y c1f53f11eda0dbc733e7ecef1c1af0885a3537a3
+
 * Sun Oct 23 2016 Vaughan <devel at agrez dot net> - 4.4.27-400.bc6f89e
 - Update to stable kernel patch v4.4.27
   Includes fix for “Dirty Cow” Vulnerability (CVE-2016-5195)
