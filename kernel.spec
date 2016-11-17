@@ -5,7 +5,7 @@
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
 %global released_kernel 1
-%define rpi_gitshort c1f53f1
+%define rpi_gitshort b0f4a7c
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -23,7 +23,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 401
+%global baserelease 400
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -35,7 +35,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 30
+%define stable_update 32
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -1488,6 +1488,10 @@ fi
 #
 
 %changelog
+* Tue Nov 15 2016 Vaughan <devel at agrez dot net> - 4.4.32-400.b0f4a7c
+- Update to stable kernel patch v4.4.32
+- Sync RPi patch to git revision: rpi-4.4.y b0f4a7c8449eb77faa5a178ae4e9bc89193e4278
+
 * Sun Nov 06 2016 Vaughan <devel at agrez dot net> - 4.4.30-401.c1f53f1
 - Merge/backport numerous changes from master branch. Major changes include:
   New bcm2708 (armv6hl support) and bcm283x builds
