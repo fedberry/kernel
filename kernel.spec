@@ -64,10 +64,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 %if %{with_rt_preempt}
-%global rtrelease rt5
+%global rtrelease rt7
 %global fedora_build %{baserelease}.%{rtrelease}
 %else
 %global fedora_build %{baserelease}
@@ -82,7 +82,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 6
+%define stable_update 11
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -237,8 +237,10 @@ Source1100: bcm283x.cfg
 
 %if %{with_rt_preempt}
 # rt kernel config modification
-Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/patches-%{rpmversion}-%{rtrelease}.tar.xz
+Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-%{rpmversion}-%{rtrelease}.tar.xz
 Source1501: config-fedberry-rt.cfg
+# Fix for FIQ issue, see also: https://wiki.linuxfoundation.org/realtime/documentation/known_limitations
+Source1502: usb-dwc_otg-fix-system-lockup-when-interrupts-are-threaded.patch
 %endif
 
 # Sources for kernel-tools
@@ -798,6 +800,7 @@ unxz -c %{SOURCE1500} | tar -xf - -C .
 # we don't want to use the localversion.patch
 sed -i 's/\(localversion.patch\)/# \1/g' patches/series
 quilt push -a
+patch -p1 < %{SOURCE1502}
 %endif
 
 # END OF PATCH APPLICATIONS
@@ -1518,6 +1521,10 @@ fi
 #
 
 %changelog
+* Thu Dec 01 2016 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.8.11-1
+- Update to stable kernel patch v4.8.11
+- Update to RT PREEMPT kernel v4.8.11-rt7
+
 * Wed Nov 23 2016 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.8.6-2
 - Add support for building RT PREEMPT kernel version
 
