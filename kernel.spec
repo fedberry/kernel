@@ -45,7 +45,7 @@
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
-%global released_kernel 1
+%global released_kernel 2
 %define rpi_gitshort 6abac13
 
 # baserelease defines which build revision of this kernel version we're
@@ -1519,6 +1519,9 @@ fi
 #
 
 %changelog
+* Wed Dec 07 2016 Vaughan <devel at agrez dot net> - 4.8.11-2
+- Allow spectool to pull all rt sources / patches
+
 * Thu Dec 01 2016 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.8.11-1
 - Update to stable kernel patch v4.8.11
 - Update to RT PREEMPT kernel v4.8.11-rt7
