@@ -66,9 +66,11 @@
 #
 %global baserelease 1
 
-%global rtrelease rt7
+# Real-Time kernel defines
+%global rtrelease 9
+%global rt_stable_update 14
 %if %{with_rt_preempt}
-%global fedora_build %{baserelease}.%{rtrelease}
+%global fedora_build %{baserelease}.rt%{rtrelease}
 %else
 %global fedora_build %{baserelease}
 %endif
@@ -236,7 +238,7 @@ Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
 # rt kernel config modification
-Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-%{rpmversion}-%{rtrelease}.tar.xz
+Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-4.%{base_sublevel}.%{rt_stable_update}-rt%{rtrelease}.tar.xz
 Source1501: config-fedberry-rt.cfg
 # Fix for FIQ issue, see also: https://wiki.linuxfoundation.org/realtime/documentation/known_limitations
 Source1502: usb-dwc_otg-fix-system-lockup-when-interrupts-are-threaded.patch
