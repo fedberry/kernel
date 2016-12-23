@@ -45,8 +45,8 @@
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
-%global released_kernel 2
-%define rpi_gitshort 6abac13
+%global released_kernel 1
+%define rpi_gitshort c8af0c2
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -1522,6 +1522,10 @@ fi
 #
 
 %changelog
+* Fri Dec 23 2016 Vaughan <devel at agrez dot net> - 4.8.15-1
+- Update to stable kernel patch v4.8.15
+- Sync RPi patch to git revision: c8af0c2f515556ef052913d552b6b11501c71996
+
 * Wed Dec 07 2016 Vaughan <devel at agrez dot net> - 4.8.11-2
 - Allow spectool to pull all rt sources / patches
 
