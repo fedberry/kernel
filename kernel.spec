@@ -45,8 +45,8 @@
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
-%global released_kernel 2
-%define rpi_gitshort 6abac13
+%global released_kernel 1
+%define rpi_gitshort aa5014a
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -78,13 +78,14 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 8
+%define base_sublevel 9
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 11
+%define stable_update 0
+
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -890,9 +891,8 @@ BuildKernel() {
     make -s mrproper
     %if !%{bcm270x}
     make multi_v7_defconfig
-    cp %{SOURCE1100} .
     # merge fedberry kernel config fragments
-    scripts/kconfig/merge_config.sh -m -r .config bcm283x.cfg
+    scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1100}
     %endif
     %if %{bcm270x}
     %if %{_target_cpu} == armv7hl
@@ -900,9 +900,8 @@ BuildKernel() {
     %else
     make bcmrpi_defconfig
     %endif
-    cp %{SOURCE1000} .
     # merge fedberry kernel config fragments
-    scripts/kconfig/merge_config.sh -m -r .config bcm270x.cfg
+    scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1000}
     %endif
 
     %if %{with_rt_preempt}
