@@ -1524,6 +1524,11 @@ fi
 #
 
 %changelog
+* Tue Jan 03 2017 Vaughan <devel at agrez dot net> - 4.9-1
+- Rebase to 4.9 kernel branch
+- Update to RT PREEMPT kernel v4.9-rt1
+- Sync RPi patch to git revision: aa5014ae84c80ceac1561ceb30e060c88d9598d4
+
 * Wed Dec 07 2016 Vaughan <devel at agrez dot net> - 4.8.11-2
 - Allow spectool to pull all rt sources / patches
 
