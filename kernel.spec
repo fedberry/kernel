@@ -1347,6 +1347,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-
 %if %{bcm270x}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/*.dtb /boot/\
 rm -f /boot/overlays/*\
+mkdir -p /boot/overlays\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm283* /boot/\
