@@ -46,7 +46,6 @@
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
 %global released_kernel 1
-%define rpi_gitshort aa5014a
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -64,7 +63,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
+
+# RaspberryPi foundation git snapshot (short)
+%global rpi_gitshort aa5014a
 
 # Real-Time kernel defines
 %global rtrelease 1
@@ -1525,6 +1527,12 @@ fi
 #
 
 %changelog
+* Thu Jan 05 2017 Vaughan <devel at agrez dot net> - 4.9-2
+- Update bcm270x.cfg
+- Update %%posttrans script
+  * Ensure /boot/overlays always exists
+  * Be more specific when copying over *.dtb files
+
 * Tue Jan 03 2017 Vaughan <devel at agrez dot net> - 4.9-1
 - Rebase to 4.9 kernel branch
 - Update to RT PREEMPT kernel v4.9-rt1
