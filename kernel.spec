@@ -1347,10 +1347,15 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel.i
 %endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}}\
 %if %{bcm270x}\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm27* /boot/\
 rm -f /boot/overlays/*\
 mkdir -p /boot/overlays\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
+%if %{_target_cpu} == armv7hl\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /boot/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2710* /boot/\
+%else\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2708* /boot/\
+%endif\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /boot/\
 %endif\
