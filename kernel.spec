@@ -63,10 +63,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort aa5014a
+%global rpi_gitshort 8d9edc8
 
 # Real-Time kernel defines
 %global rtrelease 1
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 0
+%define stable_update 2
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -241,7 +241,7 @@ Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
 # rt kernel config modification
-%if 0%{?stable_update}
+%if 0%{?rt_stable_update}
 Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-4.%{base_sublevel}.%{rt_stable_update}-rt%{rtrelease}.tar.xz
 %else
 Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-4.%{base_sublevel}-rt%{rtrelease}.tar.xz
@@ -1532,6 +1532,11 @@ fi
 #
 
 %changelog
+* Mon Jan 09 2017 Vaughan <devel at agrez dot net> - 4.9.2-1
+- Further improve copying of *.dtb files to /boot after install
+- Update to stable kernel patch v4.9.2
+- Sync RPi patch to git revision: 8d9edc8eb8c882e312ee57f9464b1a6b43df5b89
+
 * Thu Jan 05 2017 Vaughan <devel at agrez dot net> - 4.9-2
 - Update bcm270x.cfg
 - Update %%posttrans script
