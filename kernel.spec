@@ -66,7 +66,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 8d9edc8
+%global rpi_gitshort f60564c
 
 # Real-Time kernel defines
 %global rtrelease 1
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 2
+%define stable_update 3
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1532,6 +1532,10 @@ fi
 #
 
 %changelog
+* Sun Jan 15 2017 Vaughan <devel at agrez dot net> - 4.9.3-1
+- Update to stable kernel patch v4.9.3
+- Sync RPi patch to git revision: f60564ce83ebf7937e465423e11aa5b5393762ff
+
 * Mon Jan 09 2017 Vaughan <devel at agrez dot net> - 4.9.2-1
 - Further improve copying of *.dtb files to /boot after install
 - Update to stable kernel patch v4.9.2
