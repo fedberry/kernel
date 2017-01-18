@@ -5,7 +5,7 @@
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
 %global released_kernel 1
-%define rpi_gitshort 4897c5c
+%define rpi_gitshort 17ca1c9
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -35,7 +35,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 41
+%define stable_update 43
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -1341,6 +1341,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.v
 %define kernel_variant_preun() \
 %{expand:%%preun %{?1:%{1}-}core}\
 /bin/kernel-install remove %{KVERREL}%{?1:+%{1}} /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}} || exit $?\
+rm -rf /boot/dtb-%{KVERREL}%{?1:+%{1}}\
 %{nil}
 
 %kernel_variant_preun
@@ -1488,6 +1489,11 @@ fi
 #
 
 %changelog
+* Wed Jan 18 2017 Vaughan <devel at agrez dot net> - 4.4.43-400.17ca1c9
+- Update to stable kernel patch v4.4.43
+- Sync RPi patch to git revision: rpi-4.4.y 17ca1c930978a9ea6ddfec61fd0e2043e8ab3b17
+- Ensure /boot/dtb-* dir is removed when kernel is uninstalled.
+
 * Wed Jan 11 2017 Vaughan <devel at agrez dot net> - 4.4.41-400.4897c5c
 - Update to stable kernel patch v4.4.41
 - Sync RPi patch to git revision: rpi-4.4.y 4897c5c2f7adb4f77d638121e9959174dff87b9c
