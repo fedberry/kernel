@@ -66,7 +66,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 7158cd0
+%global rpi_gitshort a5204ea
 
 # Real-Time kernel defines
 %global rtrelease 4
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 8
+%define stable_update 9
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -317,11 +317,11 @@ Provides: kernel-drm-nouveau = 16\
 Provides: kernel-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
 Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
-Requires(pre): linux-firmware >= 20130724-29.git31f6b30\
-Requires(pre): bcm283x-firmware >= 20150909\
-Requires(pre): raspberrypi-vc-utils >= 20160321\
-Requires(preun): systemd >= 200\
-Conflicts: xorg-x11-drv-vmmouse < 13.0.99\
+Suggests: linux-firmware\
+Requires(pre): bcm283x-firmware\
+Requires(pre): raspberrypi-vc-utils\
+Requires(preun): systemd\
+Conflicts: xorg-x11-drv-vmmouse\
 %{expand:%%{?kernel%{?1:_%{1}}_conflicts:Conflicts: %%{kernel%{?1:_%{1}}_conflicts}}}\
 %{expand:%%{?kernel%{?1:_%{1}}_obsoletes:Obsoletes: %%{kernel%{?1:_%{1}}_obsoletes}}}\
 %{expand:%%{?kernel%{?1:_%{1}}_provides:Provides: %%{kernel%{?1:_%{1}}_provides}}}\
@@ -1532,6 +1532,12 @@ fi
 #
 
 %changelog
+* Fri Feb 10 2017 Vaughan <devel at agrez dot net> - 4.9.9-1
+- Update to stable kernel patch v4.9.9
+- Sync RPi patch to git revision: a5204ea3b15aa8eaaf2c3c7db7dfb177a84af730
+- Use Suggests: linux-firmware
+- Update filter-modules.sh
+
 * Sun Feb 05 2017 Vaughan <devel at agrez dot net> - 4.9.8-1
 - Update to stable kernel patch v4.9.8
 - Sync RPi patch to git revision: 7158cd0f806c91291c4f8e7c2e2b7e5be3023d30

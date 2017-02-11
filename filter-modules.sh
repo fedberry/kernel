@@ -14,7 +14,7 @@
 # listed here.
 
 # Set the default dirs/modules to filter out
-driverdirs="atm auxdisplay bcma bluetooth extcon fmc infiniband isdn media memstick message nfc ntb pcmcia platform ssb staging uio uwb"
+driverdirs="atm auxdisplay bcma bluetooth extcon fmc infiniband isdn media memstick message nfc ntb pcmcia platform regulator ssb staging uio uwb"
 
 netdrvs="appletalk dsa hamradio ieee802154 irda ppp slip usb wireless"
 
