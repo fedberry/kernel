@@ -5,7 +5,7 @@
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
 %global released_kernel 1
-%define rpi_gitshort fb50a27
+%define rpi_gitshort 8d1dd63
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -35,7 +35,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 48
+%define stable_update 50
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
@@ -1489,6 +1489,10 @@ fi
 #
 
 %changelog
+* Mon Feb 20 2017 Vaughan <devel at agrez dot net> - 4.4.50-400.8d1dd63
+- Update to stable kernel patch v4.4.50
+- Sync RPi patch to git revision: rpi-4.4.y 8d1dd639a4db6ccc416bb0a00afc7a8888018b3d
+
 * Sun Feb 12 2017 Vaughan <devel at agrez dot net> - 4.4.48-400.fb50a27
 - Update to stable kernel patch v4.4.48
 - Sync RPi patch to git revision: rpi-4.4.y fb50a274e277b6e25588bf96fd8ed8814f4d95c6
