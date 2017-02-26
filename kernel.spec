@@ -1386,6 +1386,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.v
 %define kernel_variant_preun() \
 %{expand:%%preun %{?1:%{1}-}core}\
 /bin/kernel-install remove %{KVERREL}%{?1:+%{1}} /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}} || exit $?\
+rm -f /%{image_install_path}/.vmlinuz.hmac-%{KVERREL}%{?1:+%{1}}\
 %{nil}
 
 %kernel_variant_preun
