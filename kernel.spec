@@ -66,7 +66,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 204050d
+%global rpi_gitshort 883de20
 
 # Real-Time kernel defines
 %global rtrelease 9
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 11
+%define stable_update 13
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1535,6 +1535,12 @@ fi
 #
 
 %changelog
+* Mon Feb 27 2017 Vaughan <devel at agrez dot net> - 4.9.13-1
+- Fix bcm283x build (kernel upstream)
+- Ensure /boot/.vmlinuz.hmac-%{KVERREL} is removed when uninstalling
+- Update to stable kernel patch v4.9.13
+- Sync RPi patch to git revision: 883de20e54e16f89a878c9957fd265e352ebf5c3
+
 * Tue Feb 21 2017 Vaughan <devel at agrez dot net> - 4.9.11-1
 - Update to stable kernel patch v4.9.11
 - Sync RPi patch to git revision: 204050d0eafb565b68abf512710036c10ef1bd23
