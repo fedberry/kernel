@@ -66,11 +66,11 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 883de20
+%global rpi_gitshort a599f69
 
 # Real-Time kernel defines
-%global rtrelease 9
-%global rt_stable_update 11
+%global rtrelease 12
+%global rt_stable_update 13
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
 %else
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 13
+%define stable_update 14
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -232,7 +232,7 @@ BuildRequires: binutils-%{_build_arch}-linux-gnu, gcc-%{_build_arch}-linux-gnu
 %define cross_opts CROSS_COMPILE=%{_build_arch}-linux-gnu-
 %endif
 
-Source0: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/linux-%{kversion}.tar.xz
+Source0: https://www.kernel.org/pub/linux/kernel/v4.x/linux-%{kversion}.tar.xz
 Source10: perf-man-%{kversion}.tar.gz
 Source16: mod-extra.list
 Source17: mod-extra.sh
@@ -261,7 +261,7 @@ Source2001: cpupower.config
 # For a stable release kernel
 %if 0%{?stable_update}
 %if 0%{?stable_base}
-Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}.%{stable_base}.xz
+Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}.%{stable_base}.xz
 %endif
 
 # non-released_kernel case
@@ -269,14 +269,14 @@ Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}.%{s
 # near the top of this spec file.
 %else
 %if 0%{?rcrev}
-Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{upstream_sublevel}-rc%{rcrev}.xz
+Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{upstream_sublevel}-rc%{rcrev}.xz
 %if 0%{?gitrev}
-Source2: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{upstream_sublevel}-rc%{rcrev}-git%{gitrev}.xz
+Source2: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{upstream_sublevel}-rc%{rcrev}-git%{gitrev}.xz
 %endif
 %else
 # pre-{base_sublevel+1}-rc1 case
 %if 0%{?gitrev}
-Source1: ftp://ftp.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git%{gitrev}.xz
+Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git%{gitrev}.xz
 %endif
 %endif
 %endif
@@ -1535,6 +1535,11 @@ fi
 #
 
 %changelog
+* Tue Mar 14 2017 Vaughan <devel at agrez dot net> - 4.9.14-1
+- Update to stable kernel patch v4.9.14
+- Sync RPi patch to git revision: a599f69212b051db4cd00a02f9312dc897beba70
+- Update main source urls to use https
+
 * Mon Feb 27 2017 Vaughan <devel at agrez dot net> - 4.9.13-1
 - Fix bcm283x build (kernel upstream)
 - Ensure /boot/.vmlinuz.hmac-%{KVERREL} is removed when uninstalling
