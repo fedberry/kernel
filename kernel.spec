@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 14
+%define stable_update 15
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1526,6 +1526,13 @@ fi
 #
 
 %changelog
+* Fri Mar 17 2017 Vaughan <devel at agrez dot net> - 4.9.15-1
+- Drop gitshort append from kernel name
+- Drop append for 'bcm283x' Flavour with upstream builds
+- Append with 'rpi' Flavour for any downstream builds
+- Update to stable kernel patch v4.9.15
+- Sync RPi patch to git revision: 95452744c5ebcaa0f5d4eaff7313b2b4cd51bd9f
+
 * Tue Mar 14 2017 Vaughan <devel at agrez dot net> - 4.9.14-1
 - Update to stable kernel patch v4.9.14
 - Sync RPi patch to git revision: a599f69212b051db4cd00a02f9312dc897beba70
