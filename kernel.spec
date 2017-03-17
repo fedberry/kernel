@@ -122,19 +122,10 @@
 
 %if %{with_bcm270x}
  %define bcm270x 1
- %if %{_target_cpu} == armv7hl
-  %define Flavour bcm2709
- %else
-  %define Flavour bcm2708
- %endif
- %define buildid .%{rpi_gitshort}.%{Flavour}
+ %define Flavour rpi
+ %define buildid .%{Flavour}
 %else
  %define bcm270x 0
-%endif
-
-%if ! %{bcm270x}
-%define Flavour bcm283x
-%define buildid .%{Flavour}
 %endif
 
 
