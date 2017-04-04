@@ -66,7 +66,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 9545274
+%global rpi_gitshort cd6413a
 
 # Real-Time kernel defines
 %global rtrelease 12
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 15
+%define stable_update 17
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1526,6 +1526,10 @@ fi
 #
 
 %changelog
+* Fri Mar 24 2017 Vaughan <devel at agrez dot net> - 4.9.17-1
+- Update to stable kernel patch v4.9.17
+- Sync RPi patch to git revision: cd6413a82a66de6ecce828ce67df4f6e3290ea86
+
 * Fri Mar 17 2017 Vaughan <devel at agrez dot net> - 4.9.15-1
 - Drop gitshort append from kernel name
 - Drop append for 'bcm283x' Flavour with upstream builds
