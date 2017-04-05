@@ -66,11 +66,11 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort cd6413a
+%global rpi_gitshort 3f53e78
 
 # Real-Time kernel defines
-%global rtrelease 12
-%global rt_stable_update 13
+%global rtrelease 16
+%global rt_stable_update 20
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
 %else
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 17
+%define stable_update 20
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1526,6 +1526,11 @@ fi
 #
 
 %changelog
+* Tue Apr 04 2017 Vaughan <devel at agrez dot net> - 4.9.20-1
+- Update to stable kernel patch v4.9.20
+- Sync RPi patch to git revision: 3f53e7886737a975e3fe76bc8ae6cc78f33c8cf8
+- Update to RT PREEMPT kernel v4.9.20-rt16 patchset release
+
 * Fri Mar 24 2017 Vaughan <devel at agrez dot net> - 4.9.17-1
 - Update to stable kernel patch v4.9.17
 - Sync RPi patch to git revision: cd6413a82a66de6ecce828ce67df4f6e3290ea86
