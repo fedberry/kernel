@@ -66,7 +66,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 3f53e78
+%global rpi_gitshort 5e4ee83
 
 # Real-Time kernel defines
 %global rtrelease 16
@@ -86,7 +86,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 20
+%define stable_update 21
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1526,6 +1526,11 @@ fi
 #
 
 %changelog
+* Tue Apr 11 2017 Vaughan <devel at agrez dot net> - 4.9.21-1
+- Update to stable kernel patch v4.9.21
+- Sync RPi patch to git revision: 5e4ee836560d4c0371e109bf469e1ad808ae7a44
+- Build ipv6 support into kernel
+
 * Tue Apr 04 2017 Vaughan <devel at agrez dot net> - 4.9.20-1
 - Update to stable kernel patch v4.9.20
 - Sync RPi patch to git revision: 3f53e7886737a975e3fe76bc8ae6cc78f33c8cf8
