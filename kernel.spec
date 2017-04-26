@@ -66,7 +66,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 5e4ee83
+%global rpi_gitshort dc44db6
 
 # Real-Time kernel defines
 %global rtrelease 16
