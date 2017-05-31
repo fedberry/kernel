@@ -42,6 +42,9 @@
 # By default build without rt-preempt version
 %define with_rt_preempt %{?_with_rt_preempt:    1} %{?!_with_rt_preempt: 0}
 
+# Enable Large Physical Address Extension support
+%define with_lpae   %{?_with_lpae:       1} %{?!_with_lpae: 0}
+
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
@@ -63,18 +66,23 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 3
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 9a5f215
 
+%global fedora_build %{baserelease}
+
 # Real-Time kernel defines
 %global rtrelease 16
 %global rt_stable_update 20
+
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
-%else
-%global fedora_build %{baserelease}
+%endif
+
+%if %{with_lpae}
+%global fedora_build %{baserelease}.lpae
 %endif
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -906,6 +914,13 @@ BuildKernel() {
     %if %{with_rt_preempt}
     # merge rt-preempt kernel config changes
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1501}
+    %endif
+
+    %if %{with_lpae}
+    sed -i 's/# CONFIG_ARM_LPAE is not set/CONFIG_ARM_LPAE=y/' .config
+    sed -i 's/# CONFIG_ARCH_PHYS_ADDR_T_64BIT is not set/CONFIG_ARCH_PHYS_ADDR_T_64BIT=y/' .config
+    sed -i 's/CONFIG_VMSPLIT_2G=y/# CONFIG_VMSPLIT_2G is not set/' .config
+    sed -i 's/# CONFIG_VMSPLIT_3G is not set/CONFIG_VMSPLIT_3G=y/' .config
     %endif
 
     echo USING ARCH=$Arch
