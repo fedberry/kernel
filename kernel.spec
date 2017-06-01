@@ -66,10 +66,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 3
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 9a5f215
+%global rpi_gitshort e5bd734
 
 %global fedora_build %{baserelease}
 
@@ -94,7 +94,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 27
+%define stable_update 30
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1541,6 +1541,11 @@ fi
 #
 
 %changelog
+* Thu Jun 01 2017 Vaughan <devel at agrez dot net> - 4.9.30-1
+- Update to stable kernel patch v4.9.30
+- Sync RPi patch to git revision: e5bd734340e6871e4e9ef5ff66e61197eb8ece30
+- Update to RT PREEMPT kernel v4.9.30-rt20 patchset release
+
 * Fri May 12 2017 Vaughan <devel at agrez dot net> - 4.9.27-1
 - Update to stable kernel patch v4.9.27
 - Sync RPi patch to git revision: 9a5f215eda12bad29b35040dff00d0346fe517e2
