@@ -66,7 +66,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort e5bd734
@@ -1541,6 +1541,9 @@ fi
 #
 
 %changelog
+* Mon Jun 05 2017 Vaughan <devel at agrez dot net> - 4.9.30-2
+- Enable support for zSWAP
+
 * Thu Jun 01 2017 Vaughan <devel at agrez dot net> - 4.9.30-1
 - Update to stable kernel patch v4.9.30
 - Sync RPi patch to git revision: e5bd734340e6871e4e9ef5ff66e61197eb8ece30
