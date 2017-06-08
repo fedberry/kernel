@@ -1483,28 +1483,18 @@ fi
 %defattr(-,root,root)\
 %{!?_licensedir:%global license %%doc}\
 %license linux-%{KVERREL}/COPYING\
-/%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
 %ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
-/lib/modules/%{KVERREL}%{?2:+%{2}}/.vmlinuz.hmac \
-%ghost /%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac \
-/lib/modules/%{KVERREL}%{?2:+%{2}}/dtb \
-%ghost /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}} \
-%{!?_licensedir:%global license %%doc}\
-%license linux-%{KVERREL}/COPYING\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/.vmlinuz.hmac\
+%ghost /%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/dtb\
+%ghost /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/%{?-k:%{-k*}}%{!?-k:vmlinuz}\
-%ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
-/lib/modules/%{KVERREL}%{?2:+%{2}}/.vmlinuz.hmac \
-%ghost /%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac \
-/lib/modules/%{KVERREL}%{?2:+%{2}}/dtb \
-%ghost /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}} \
 %attr(600,root,root) /lib/modules/%{KVERREL}%{?2:+%{2}}/System.map\
 %ghost /boot/System.map-%{KVERREL}%{?2:+%{2}}\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/config\
 %ghost /boot/config-%{KVERREL}%{?2:+%{2}}\
 %ghost /boot/initramfs-%{KVERREL}%{?2:+%{2}}.img\
-%if %{bcm270x}\
-%ghost /%{image_install_path}/overlays\
-%endif\
+%{?_bcm270x:%ghost /%{image_install_path}/overlays}\
 %dir /lib/modules\
 %dir /lib/modules/%{KVERREL}%{?2:+%{2}}\
 %dir /lib/modules/%{KVERREL}%{?2:+%{2}}/kernel\
