@@ -1547,6 +1547,9 @@ fi
 - Rebase to 4.11 kernel branch
 - Update to stable kernel patch v4.11.4
 - Sync RPi patch to git revision: 46d26b7bf221352b299aec39f468df30c4150119
+- Disable rt-preempt build support (no patches for 4.11.x series)
+- Clean up %%files macro
+
 * Mon Jun 05 2017 Vaughan <devel at agrez dot net> - 4.9.30-2
 - Enable support for zSWAP
 
