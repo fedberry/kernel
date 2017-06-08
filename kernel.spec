@@ -88,7 +88,7 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 9
+%define base_sublevel 11
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
