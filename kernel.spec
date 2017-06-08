@@ -73,12 +73,18 @@
 
 %global fedora_build %{baserelease}
 
+# Enable rt preempt build support
+# Only enable if there are available patches
+%global enable_preempt 0
+
+%if %{enable_preempt}
 # Real-Time kernel defines
 %global rtrelease 20
 %global rt_stable_update 30
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
+%endif
 %endif
 
 %if %{with_lpae}
@@ -241,11 +247,13 @@ Source99: filter-modules.sh
 Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
+%if %{enable_preempt}
 # rt kernel config modification
 %if 0%{?rt_stable_update}
 Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-4.%{base_sublevel}.%{rt_stable_update}-rt%{rtrelease}.tar.xz
 %else
 Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-4.%{base_sublevel}-rt%{rtrelease}.tar.xz
+%endif
 %endif
 Source1501: config-fedberry-rt.cfg
 # Fix for FIQ issue, see also: https://wiki.linuxfoundation.org/realtime/documentation/known_limitations
@@ -802,6 +810,7 @@ for i in %{patches}; do
 %endif
 done
 
+%if %{enable_preempt}
 %if %{with_rt_preempt}
 # apply rt kernel patches
 unxz -c %{SOURCE1500} | tar -xf - -C .
@@ -809,6 +818,7 @@ unxz -c %{SOURCE1500} | tar -xf - -C .
 sed -i 's/\(localversion.patch\)/# \1/g' patches/series
 quilt push -a
 patch -p1 < %{SOURCE1502}
+%endif
 %endif
 
 # END OF PATCH APPLICATIONS
@@ -911,9 +921,11 @@ BuildKernel() {
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1000}
     %endif
 
+    %if %{enable_preempt}
     %if %{with_rt_preempt}
     # merge rt-preempt kernel config changes
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1501}
+    %endif
     %endif
 
     %if %{with_lpae}
