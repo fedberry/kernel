@@ -66,10 +66,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort e5bd734
+%global rpi_gitshort 46d26b7
 
 %global fedora_build %{baserelease}
 
@@ -94,7 +94,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 30
+%define stable_update 4
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1541,6 +1541,10 @@ fi
 #
 
 %changelog
+* Wed Jun 07 2017 Vaughan <devel at agrez dot net> - 4.11.4-1
+- Rebase to 4.11 kernel branch
+- Update to stable kernel patch v4.11.4
+- Sync RPi patch to git revision: 46d26b7bf221352b299aec39f468df30c4150119
 * Mon Jun 05 2017 Vaughan <devel at agrez dot net> - 4.9.30-2
 - Enable support for zSWAP
 
