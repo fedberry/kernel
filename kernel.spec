@@ -100,7 +100,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 4
+%define stable_update 8
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1543,6 +1543,11 @@ fi
 #
 
 %changelog
+* Tue Jul 03 2017 Vaughan <devel at agrez dot net> - 4.11.8-1
+- Update to stable kernel patch v4.11.8
+- Sync RPi patch to git revision: 64b5f5825a998d745801c2682e686423e88a0e93
+- Build in CRYPTO_LZ4 & CRYPTO_LZ4HC
+
 * Wed Jun 07 2017 Vaughan <devel at agrez dot net> - 4.11.4-1
 - Rebase to 4.11 kernel branch
 - Update to stable kernel patch v4.11.4
