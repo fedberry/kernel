@@ -74,8 +74,8 @@
 %global fedora_build %{baserelease}
 
 # Real-Time kernel defines
-%global rtrelease 25
-%global rt_stable_update 35
+%global rtrelease 30
+%global rt_stable_update 40
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
