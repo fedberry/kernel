@@ -224,7 +224,7 @@ BuildRequires: elfutils-devel zlib-devel binutils-devel newt-devel python-devel 
 BuildRequires: audit-libs-devel
 %endif
 %if %{with_tools}
-BuildRequires: pciutils-devel gettext ncurses-devel
+BuildRequires: pciutils-devel gettext ncurses-devel asciidoc
 %endif
 BuildConflicts: rhbuildsys(DiskFree) < 500Mb
 %if %{with_debuginfo}
@@ -1198,6 +1198,15 @@ chmod +x tools/power/cpupower/utils/version-gen.sh
 pushd tools/thermal/tmon/
 %{make}
 popd
+pushd tools/iio/
+%{make}
+popd
+pushd tools/gpio/
+%{make}
+popd
+pushd tools/kvm/kvm_stat
+%{make}
+popd
 %endif
 
 
@@ -1268,6 +1277,9 @@ rm -f %{buildroot}%{_bindir}/trace
 mkdir -p %{buildroot}/%{_mandir}/man1
 pushd %{buildroot}/%{_mandir}/man1
 tar -xf %{SOURCE10}
+%if !%{with_tools}
+    rm -f kvm_stat.1
+%endif
 popd
 
 # remove perf-tips dir
@@ -1285,6 +1297,15 @@ install -m644 %{SOURCE2000} %{buildroot}%{_unitdir}/cpupower.service
 install -m644 %{SOURCE2001} %{buildroot}%{_sysconfdir}/sysconfig/cpupower
 pushd tools/thermal/tmon
 make INSTALL_ROOT=%{buildroot} install
+popd
+pushd tools/iio
+make INSTALL_ROOT=%{buildroot} install
+popd
+pushd tools/gpio
+make DESTDIR=%{buildroot} install
+popd
+pushd tools/kvm/kvm_stat
+make INSTALL_ROOT=%{buildroot} install-tools
 popd
 %endif
 
@@ -1460,6 +1481,14 @@ fi
 %{_mandir}/man[1-8]/cpupower*
 %config(noreplace) %{_sysconfdir}/sysconfig/cpupower
 %{_bindir}/tmon
+%{_bindir}/iio_event_monitor
+%{_bindir}/iio_generic_buffer
+%{_bindir}/lsiio
+%{_bindir}/lsgpio
+%{_bindir}/gpio-hammer
+%{_bindir}/gpio-event-mon
+%{_mandir}/man1/kvm_stat*
+%{_bindir}/kvm_stat
 
 
 %if %{with_debuginfo}
@@ -1474,7 +1503,6 @@ fi
 %files -n kernel-tools-libs-devel
 %{_libdir}/libcpupower.so
 %{_includedir}/cpufreq.h
-
 %endif # with_perf
 
 # empty meta-package
