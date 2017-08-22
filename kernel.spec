@@ -43,7 +43,7 @@
 %define with_rt_preempt %{?_with_rt_preempt:    1} %{?!_with_rt_preempt: 0}
 
 # Enable Large Physical Address Extension support
-%define with_lpae   %{?_with_lpae:       1} %{?!_with_lpae: 0}
+%define with_lpae       %{?_with_lpae:       1} %{?!_with_lpae: 0}
 
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
@@ -1571,7 +1571,13 @@ fi
 #
 
 %changelog
-* Tue Jul 03 2017 Vaughan <devel at agrez dot net> - 4.11.8-1
+* Mon Aug 21 2017 Vaughan <devel at agrez dot net> - 4.12.8-1
+- Rebase to 4.12 kernel branch
+- Update to stable kernel patch v4.12.8
+- Sync RPi patch to git revision: 0d9ed68fbe6e4e8a5f8a580a211f962304395089
+- Build more kernel tools (iio, gpio & kvm_stat)
+
+* Mon Jul 03 2017 Vaughan <devel at agrez dot net> - 4.11.8-1
 - Update to stable kernel patch v4.11.8
 - Sync RPi patch to git revision: 64b5f5825a998d745801c2682e686423e88a0e93
 - Build in CRYPTO_LZ4 & CRYPTO_LZ4HC
