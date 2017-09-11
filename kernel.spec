@@ -69,7 +69,6 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort ef79e7bb
 %global rpi_gitshort 8f82f552
 
 %global fedora_build %{baserelease}
@@ -101,7 +100,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 10
+%define stable_update 12
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1572,6 +1571,10 @@ fi
 #
 
 %changelog
+* Mon Sep 11 2017 Vaughan <devel at agrez dot net> - 4.12.12-1
+- Update to stable kernel patch v4.12.12
+- Sync RPi patch to git revision: 8f82f552b53e0961f666291b4934e771e3ea6b6a
+
 * Wed Aug 30 2017 Vaughan <devel at agrez dot net> - 4.12.10-1
 - Update to stable kernel patch v4.12.10
 - Sync RPi patch to git revision: ef79e7bb67c80f0b20a8327692f590a54568eda5
