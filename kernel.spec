@@ -1571,6 +1571,11 @@ fi
 #
 
 %changelog
+* Thu Sep 21 2017 Vaughan <devel at agrez dot net> - 4.13.3-1
+- Rebase to 4.13 kernel branch
+- Update to stable kernel patch v4.13.3
+- Sync RPi patch to git revision: 871ca96d47106ef72c54b0ebd6620c8e24343ff0
+
 * Mon Sep 11 2017 Vaughan <devel at agrez dot net> - 4.12.12-1
 - Update to stable kernel patch v4.12.12
 - Sync RPi patch to git revision: 8f82f552b53e0961f666291b4934e771e3ea6b6a
