@@ -69,7 +69,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 46e2d4d1
+%global rpi_gitshort 7dc3bd00
 
 %global fedora_build %{baserelease}
 
@@ -94,7 +94,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 50
+%define stable_update 52
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1531,6 +1531,10 @@ fi
 #
 
 %changelog
+* Mon Oct 02 2017 Vaughan <devel at agrez dot net> - 4.9.52-1
+- Update to stable kernel patch v4.9.52
+- Update RPi patch to git commit: 7dc3bd00d62130ef7f09759a8c0ec9d65f58c987
+
 * Mon Sep 18 2017 Vaughan <devel at agrez dot net> - 4.9.50-1
 - Update to stable kernel patch v4.9.50
 - Update to RT PREEMPT kernel v4.9.47-rt37 patchset release
