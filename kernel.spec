@@ -75,12 +75,12 @@
 
 # Enable rt preempt build support
 # Only enable if there are available patches
-%global enable_preempt 0
+%global enable_preempt 1
 
 %if %{enable_preempt}
 # Real-Time kernel defines
-%global rtrelease 20
-%global rt_stable_update 30
+%global rtrelease 3
+%global rt_stable_update 10
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
