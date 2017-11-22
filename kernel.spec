@@ -94,7 +94,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 59
+%define stable_update 64
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1531,6 +1531,10 @@ fi
 #
 
 %changelog
+* Tue Nov 21 2017 Vaughan <devel at agrez dot net> - 4.9.64-1
+- Update to stable kernel patch v4.9.64
+- Update RPi patch to git commit: daba3ae3d09309e6d769c2679109812a760c3cd5
+
 * Wed Nov 01 2017 Vaughan <devel at agrez dot net> - 4.9.59-1
 - Update to stable kernel patch v4.9.59
 - Update RPi patch to git commit: 90d58142df6e71192cf16a9a57e376d38b685bb4
