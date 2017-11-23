@@ -75,7 +75,7 @@
 
 # Enable rt preempt build support
 # Only enable if there are available patches
-%global enable_preempt 1
+%global enable_preempt 0
 
 %if %{enable_preempt}
 # Real-Time kernel defines
