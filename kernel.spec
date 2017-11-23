@@ -1571,6 +1571,13 @@ fi
 #
 
 %changelog
+* Thu Nov 23 2017 Vaughan <devel at agrez dot net> - 4.14.1-1
+- Rebase to 4.14 kernel branch
+- Update to stable kernel patch v4.14.1
+- Sync RPi patch to git revision: 54a036e96437fa2e0f152080a09b19f347d73cc2
+- Temporarily disable rt-preempt build
+- Fix building of tools/iio
+
 * Fri Nov 17 2017 Vaughan <devel at agrez dot net> - 4.13.13-1
 - Update to stable kernel patch v4.13.13
 - Sync RPi patch to git revision: 1a7e8f39e4cce192379353deb8ea435748332443
