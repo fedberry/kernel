@@ -1299,7 +1299,7 @@ pushd tools/thermal/tmon
 make INSTALL_ROOT=%{buildroot} install
 popd
 pushd tools/iio
-make INSTALL_ROOT=%{buildroot} install
+make DESTDIR=%{buildroot} install
 popd
 pushd tools/gpio
 make DESTDIR=%{buildroot} install
