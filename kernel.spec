@@ -100,7 +100,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 1
+%define stable_update 3
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1562,15 +1562,15 @@ fi
 %endif\
 %{nil}
 
-
 %kernel_variant_files
 
-# plz don't put in a version string unless you're going to tag
-# and build.
-#
-#
 
 %changelog
+* Sat Dec 02 2017 Vaughan <devel at agrez dot net> - 4.14.3-1
+- Update to stable kernel patch v4.14.3
+- Sync RPi patch to git revision: d055ee99d3eb3b1c17e17b9ea1138e3db5a46b1c
+- Re-enable rt-preempt build
+
 * Thu Nov 23 2017 Vaughan <devel at agrez dot net> - 4.14.1-1
 - Rebase to 4.14 kernel branch
 - Update to stable kernel patch v4.14.1
