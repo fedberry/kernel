@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 3
+%define stable_update 4
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -236,6 +236,7 @@ BuildRequires: quilt
 BuildRequires: elfutils-devel zlib-devel binutils-devel newt-devel python-devel perl(ExtUtils::Embed) bison flex
 BuildRequires: audit-libs-devel
 %endif
+
 %if %{with_tools}
 BuildRequires: pciutils-devel gettext ncurses-devel asciidoc
 %endif
@@ -1579,6 +1580,12 @@ fi
 
 
 %changelog
+* Sat Dec 09 2017 Vaughan <devel at agrez dot net> - 4.14.4-1
+- Update to stable kernel patch v4.14.4
+- Sync RPi patch to git revision: d47bf375c59d4906fcaf3ad2c51cabb52c22e29e
+- Fix debuginfo packaging
+- Compress all kernel modules (xz)
+
 * Sat Dec 02 2017 Vaughan <devel at agrez dot net> - 4.14.3-1
 - Update to stable kernel patch v4.14.3
 - Sync RPi patch to git revision: d055ee99d3eb3b1c17e17b9ea1138e3db5a46b1c
