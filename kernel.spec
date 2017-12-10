@@ -73,6 +73,8 @@
 
 %global fedora_build %{baserelease}
 
+%global zipmodules 1
+
 # Enable rt preempt build support
 # Only enable if there are available patches
 %global enable_preempt 1
@@ -154,6 +156,9 @@
 # pkg_release is what we'll fill in for the rpm Release: field
 %define pkg_release %{fedora_build}%{?buildid}%{?dist}
 
+%if %{zipmodules}
+%global zipsed -e 's/\.ko$/\.ko.xz/'
+%endif
 
 # The kernel tarball/base version
 %define kversion 4.%{base_sublevel}
@@ -1213,6 +1218,12 @@ pushd tools/kvm/kvm_stat
 %{make}
 popd
 %endif
+
+
+if [ "%{zipmodules}" -eq "1" ]; then \
+    find $RPM_BUILD_ROOT/lib/modules/ -type f -name '*.ko' | xargs xz; \
+fi
+
 
 
 ###
