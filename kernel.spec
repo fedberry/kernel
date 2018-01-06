@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 9
+%define stable_update 12
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1580,6 +1580,10 @@ fi
 
 
 %changelog
+* Sat Jan 06 2018 Vaughan <devel at agrez dot net> - 4.14.12-1
+- Update to stable kernel patch v4.14.12
+- Sync RPi patch to git revision: dc74d9fc628af8c731d70569ef16bd288762fd04
+
 * Tue Dec 26 2017 Vaughan <devel at agrez dot net> - 4.14.9-1
 - Update to stable kernel patch v4.14.9
 - Sync RPi patch to git revision: 7140d20e421cce974204e4328484e24120156496
