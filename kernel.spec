@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 18
+%define stable_update 19
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1580,6 +1580,11 @@ fi
 
 
 %changelog
+* Fri Feb 16 2018 Vaughan <devel at agrez dot net> - 4.14.19-1
+- Update to stable kernel patch v4.14.19
+- Sync RPi patch to git revision: 7ba7fbcc45b49da54b7dfee9b68b52f2beca909b
+- Update to RT PREEMPT kernel v4.14.18-rt15 patchset release
+
 * Thu Feb 08 2018 Vaughan <devel at agrez dot net> - 4.14.18-1
 - Update to stable kernel patch v4.14.18
 - Sync RPi patch to git revision: d0e2493b168a7909494697340243b23949bae447
