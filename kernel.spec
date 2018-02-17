@@ -81,8 +81,8 @@
 
 %if %{enable_preempt}
 # Real-Time kernel defines
-%global rtrelease 13
-%global rt_stable_update 15
+%global rtrelease 15
+%global rt_stable_update 18
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
