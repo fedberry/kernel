@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 27
+%define stable_update 29
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1580,6 +1580,11 @@ fi
 
 
 %changelog
+* Sat Mar 24 2018 Vaughan <devel at agrez dot net> - 4.14.29-1
+- Update to stable kernel patch v4.14.29
+- Sync RPi patch to git revision: c117a8bccf37bfba323065b566cf999ed4629a4a
+- Update to RT PREEMPT kernel v4.14.29-rt24 patchset release
+
 * Sun Mar 18 2018 Vaughan <devel at agrez dot net> - 4.14.27-1
 - Update to stable kernel patch v4.14.27
 - Sync RPi patch to git revision: 4d78845fd711bdd7c0f20aafb3c976073d86b4e3
