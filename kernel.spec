@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 29
+%define stable_update 31
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1580,6 +1580,11 @@ fi
 
 
 %changelog
+* Sat Mar 31 2018 Vaughan <devel at agrez dot net> - 4.14.31-1
+- Update to stable kernel patch v4.14.31
+- Sync RPi patch to git revision: b36f4e9e198477803d29861e02d3ea00fe5e09ab
+- Refactor bcm270x.cfg & bcm283x.cfg files
+
 * Sat Mar 24 2018 Vaughan <devel at agrez dot net> - 4.14.29-1
 - Update to stable kernel patch v4.14.29
 - Sync RPi patch to git revision: c117a8bccf37bfba323065b566cf999ed4629a4a
