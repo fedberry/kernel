@@ -69,7 +69,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort c2eb30683
+%global rpi_gitshort d7a4ec8c9
 
 %global fedora_build %{baserelease}
 
@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 32
+%define stable_update 33
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1580,6 +1580,10 @@ fi
 
 
 %changelog
+* Tue Apr 10 2018 Vaughan <devel at agrez dot net> - 4.14.33-1
+- Update to stable kernel patch v4.14.33
+- Sync RPi patch to git revision: d7a4ec8c9cb5a05b5650d3489a5c54eacaf20880
+
 * Sun Apr 08 2018 Vaughan <devel at agrez dot net> - 4.14.32-1
 - Update to stable kernel patch v4.14.32
 - Sync RPi patch to git revision: c2eb30683b43b13b931bd9cfef6a2a09ac7b7c1e
