@@ -1611,6 +1611,17 @@ fi
 
 
 %changelog
+* Sun May 13 2018 Vaughan <devel at agrez dot net> - 4.16.7-1
+- Rebase to 4.16 kernel branch
+- Update to stable kernel patch v4.16.7
+- Sync RPi patch to git revision: 15c2c072b6dc8cb54270e1f5a74e290b7c69f6f9
+- Update to RT PREEMPT kernel v4.16.7-rt1 patchset release
+- Rename python-perf to python2-perf
+- Drop perf-man-4.x.tar.gz source (Source10)
+- Update BuildRequires
+- Remove %%clean
+- Misc spec file adjustments
+
 * Fri May 11 2018 Vaughan <devel at agrez dot net> - 4.14.39-1
 - Update to stable kernel patch v4.14.39
 - Sync RPi patch to git revision: 70608893d8081e2ec4fee1b6112f7d839ae308f3
