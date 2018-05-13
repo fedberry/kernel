@@ -265,7 +265,6 @@ BuildRequires: binutils-%{_build_arch}-linux-gnu, gcc-%{_build_arch}-linux-gnu
 %endif
 
 Source0: https://www.kernel.org/pub/linux/kernel/v4.x/linux-%{kversion}.tar.xz
-Source10: perf-man-%{kversion}.tar.gz
 Source16: mod-extra.list
 Source17: mod-extra.sh
 Source99: filter-modules.sh
@@ -1201,6 +1200,9 @@ BuildKernel %make_target %kernel_image %{?Flavour}
 %if %{with_perf}
 # perf
 %{perf_make} DESTDIR=$RPM_BUILD_ROOT all
+
+# perf-man
+%{make} -C tools/perf/Documentation man
 %endif
 
 %if %{with_tools}
@@ -1289,14 +1291,8 @@ rm -f %{buildroot}%{_bindir}/trace
 # python-perf extension
 %{perf_make} DESTDIR=$RPM_BUILD_ROOT install-python_ext
 
-# perf man pages (note: implicit rpm magic compresses them later)
-mkdir -p %{buildroot}/%{_mandir}/man1
-pushd %{buildroot}/%{_mandir}/man1
-tar -xf %{SOURCE10}
-%if !%{with_tools}
-    rm -f kvm_stat.1
-%endif
-popd
+# perf man pages
+%{make} prefix=%{_prefix} DESTDIR=$RPM_BUILD_ROOT -C tools/perf/Documentation install-man
 
 # remove perf-tips dir
 rm -rf %{buildroot}%{_docdir}/perf-tip
@@ -1321,7 +1317,7 @@ pushd tools/gpio
 make DESTDIR=%{buildroot} install
 popd
 pushd tools/kvm/kvm_stat
-make INSTALL_ROOT=%{buildroot} install-tools
+make INSTALL_ROOT=%{buildroot} install
 popd
 %endif
 
