@@ -292,7 +292,7 @@ Source16: mod-extra.list
 Source17: mod-extra.sh
 Source99: filter-modules.sh
 
-# kernel config modifications 
+# kernel config modifications
 Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
@@ -312,7 +312,6 @@ Source1502: usb-dwc_otg-fix-system-lockup-when-interrupts-are-threaded.patch
 Source2000: cpupower.service
 Source2001: cpupower.config
 
-# Here should be only the patches up to the upstream canonical Linus tree.
 
 # For a stable release kernel
 %if 0%{?stable_update}
@@ -337,10 +336,6 @@ Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-g
 %endif
 %endif
 
-# we also need compile fixes for -vanilla
-#Patch04: compile-fixes.patch
-
-
 %if !%{nopatches}
 ## Patches for bcm283x builds (append patches with bcm283x)
 #script for adding device tree trailer to the kernel img
@@ -359,9 +354,10 @@ Patch200: video-logo-fedberry.patch
 
 BuildRoot: %{_tmppath}/kernel-%{KVERREL}-root
 
+
+
 %description
 The kernel meta package
-
 #
 # This macro does requires, provides, conflicts, obsoletes for a kernel package.
 #	%%kernel_reqprovconf <subpackage>
@@ -390,6 +386,7 @@ AutoReq: no\
 AutoProv: yes\
 %{nil}
 
+
 %package headers
 Summary: Header files for the Linux kernel for use by glibc
 Group: Development/System
@@ -399,6 +396,7 @@ Provides: glibc-kernheaders = 3.0-46
 Obsoletes: kernel-headers < %{rpmversion}-%{pkg_release}
 Provides: kernel-headers = %{rpmversion}-%{pkg_release}
 %endif
+
 %description headers
 Kernel-headers includes the C header files that specify the interface
 between the Linux kernel and userspace libraries and programs.  The
@@ -406,27 +404,33 @@ header files define structures and constants that are needed for
 building most standard programs and are also needed for rebuilding the
 glibc package.
 
+
 %package debuginfo-common-%{_target_cpu}
 Summary: Kernel source files used by %{name}-debuginfo packages
 Group: Development/Debug
+
 %description debuginfo-common-%{_target_cpu}
 This package is required by %{name}-debuginfo subpackages.
 It provides the kernel source files common to all builds.
+
 
 %if %{with_perf}
 %package -n perf
 Summary: Performance monitoring for the Linux kernel
 Group: Development/System
 License: GPLv2
+
 %description -n perf
 This package contains the perf tool, which enables performance monitoring
 of the Linux kernel.
+
 
 %package -n perf-debuginfo
 Summary: Debug information for package perf
 Group: Development/Debug
 Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}
 AutoReqProv: no
+
 %description -n perf-debuginfo
 This package provides debug information for the perf package.
 
@@ -462,6 +466,7 @@ This package provides debug information for the perf python bindings.
 %{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{python_sitearch}/perf.so(\.debug)?|XXX' -o python2-perf-debuginfo.list}
 %endif # with_perf
 
+
 %if %{with_tools}
 %package -n kernel-tools
 Summary: Assortment of tools for the Linux kernel
@@ -475,17 +480,21 @@ Obsoletes: cpufreq-utils < 1:009-0.6.p1
 Obsoletes: cpufrequtils < 1:009-0.6.p1
 Obsoletes: cpuspeed < 1:1.5-16
 Requires: kernel-tools-libs = %{version}-%{release}
+
 %description -n kernel-tools
 This package contains the tools/ directory from the kernel source
 and the supporting documentation.
+
 
 %package -n kernel-tools-libs
 Summary: Libraries for the kernels-tools
 Group: Development/System
 License: GPLv2
+
 %description -n kernel-tools-libs
 This package contains the libraries built from the tools/ directory
 from the kernel source.
+
 
 %package -n kernel-tools-libs-devel
 Summary: Assortment of tools for the Linux kernel
@@ -496,15 +505,18 @@ Provides:  cpupowerutils-devel = 1:009-0.6.p1
 Obsoletes: cpupowerutils-devel < 1:009-0.6.p1
 Requires: kernel-tools-libs = %{version}-%{release}
 Provides: kernel-tools-devel
+
 %description -n kernel-tools-libs-devel
 This package contains the development files for the tools/ directory from
 the kernel source.
+
 
 %package -n kernel-tools-debuginfo
 Summary: Debug information for package kernel-tools
 Group: Development/Debug
 Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}
 AutoReqProv: no
+
 %description -n kernel-tools-debuginfo
 This package provides debug information for package kernel-tools.
 
@@ -513,7 +525,6 @@ This package provides debug information for package kernel-tools.
 # the leading .*, because of find-debuginfo.sh's buggy handling
 # of matching the pattern against the symlinks file.
 %{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{_bindir}/cpupower(\.debug)?|.*%%{_libdir}/libcpupower.*|.*%%{_bindir}/turbostat(\.debug)?|.*%%{_bindir}/tmon(\.debug)?|.*%%{_bindir}/lsgpio(\.debug)?|.*%%{_bindir}/gpio-hammer(\.debug)?|.*%%{_bindir}/gpio-event-mon(\.debug)?|.*%%{_bindir}/iio_event_monitor(\.debug)?|.*%%{_bindir}/iio_generic_buffer(\.debug)?|.*%%{_bindir}/lsiio(\.debug)?|XXX' -o kernel-tools-debuginfo.list}
-
 %endif # with_tools
 
 
@@ -637,7 +648,7 @@ Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
 %else
 %define variant_summary The Linux kernel for the Raspberry Pi Model A, B & Zero
 %endif
-%kernel_variant_package 
+%kernel_variant_package
 %description core
 This package includes a patched version of the Linux kernel built for
 Raspberry Pi devices that use the Broadcom BCM27XX SOC. The
@@ -647,7 +658,7 @@ of the operating system: memory allocation, process allocation, device
 input and output, etc.
 %else
 %define variant_summary The Linux kernel
-%kernel_variant_package 
+%kernel_variant_package
 %description core
 The kernel package contains the Linux kernel (vmlinuz), the core of any
 Linux operating system.  The kernel handles the basic functions
@@ -655,8 +666,12 @@ of the operating system: memory allocation, process allocation, device
 input and output, etc.
 %endif
 
-%prep
 
+###
+### prep
+###
+
+%prep
 %if "%{baserelease}" == "0"
 echo "baserelease must be greater than zero"
 exit 1
@@ -815,23 +830,16 @@ if [ ! -d kernel-%{kversion}%{?dist}/vanilla-%{vanillaversion} ]; then
     xzcat %{SOURCE1} | patch -p1 -F1 -s
 %endif
 %endif
-
     cd ..
-
   fi
-
 %endif
-
 else
-
   # We already have all vanilla dirs, just change to the top-level directory.
   cd kernel-%{kversion}%{?dist}
-
 fi
 
 # Now build the fedora kernel tree.
 cp -al vanilla-%{vanillaversion} linux-%{KVERREL}
-
 cd linux-%{KVERREL}
 
 # released_kernel with possible stable updates
@@ -876,7 +884,6 @@ patch -p1 < %{SOURCE1502}
 %endif
 
 # Any further pre-build tree manipulations happen here.
-
 chmod +x scripts/checkpatch.pl
 
 # This Prevents scripts/setlocalversion from mucking with our version numbers.
@@ -892,9 +899,12 @@ find . -name .gitignore -exec rm -f {} \; >/dev/null
 
 cd ..
 
+
+
 ###
 ### build
 ###
+
 %build
 
 %ifnarch %{arm}
@@ -1165,6 +1175,7 @@ BuildKernel() {
     else
         rm depmod.out
     fi
+
     # remove files that will be auto generated by depmod at rpm -i time
     pushd $RPM_BUILD_ROOT/lib/modules/$KernelVer/
         rm -f modules.{alias*,builtin.bin,dep*,*map,symbols*,devname,softdep}
@@ -1205,8 +1216,10 @@ BuildKernel() {
     find $RPM_BUILD_ROOT/usr/src/kernels -name ".*.cmd" -exec rm -f {} \;
 }
 
+
+
 ###
-# DO it...
+### DO it...
 ###
 
 # prepare directories
@@ -1220,6 +1233,7 @@ BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
   make EXTRA_CFLAGS="${RPM_OPT_FLAGS}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf V=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+
 %if %{with_perf}
 # perf
 %{perf_make} DESTDIR=$RPM_BUILD_ROOT all
@@ -1281,6 +1295,7 @@ fi
   %{?__debug_package:%{__debug_install_post}}\
   %{__arch_install_post}\
   %{__os_install_post}
+
 
 
 ###
@@ -1465,6 +1480,8 @@ then
     /sbin/ldconfig -X || exit $?
 fi
 
+
+
 ###
 ### file lists
 ###
@@ -1518,7 +1535,6 @@ fi
 %{_bindir}/gpio-event-mon
 %{_mandir}/man1/kvm_stat*
 %{_bindir}/kvm_stat
-
 
 %if %{with_debuginfo}
 %files -f kernel-tools-debuginfo.list -n kernel-tools-debuginfo
