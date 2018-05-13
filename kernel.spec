@@ -991,51 +991,51 @@ BuildKernel() {
     %{make} ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
 
     # Start installing the results
-    mkdir -p $RPM_BUILD_ROOT/%{image_install_path}
-    mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer
+    mkdir -p %{buildroot}/%{image_install_path}
+    mkdir -p %{buildroot}/lib/modules/$KernelVer
 
     %if %{with_debuginfo}
-    mkdir -p $RPM_BUILD_ROOT%{debuginfodir}/%{image_install_path}
+    mkdir -p %{buildroot}%{debuginfodir}/%{image_install_path}
     %endif
 
     # Device Tree / Overlay
-    %{make} ARCH=$Arch dtbs dtbs_install INSTALL_DTBS_PATH=$RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer
-    cp -r $RPM_BUILD_ROOT/%{image_install_path}/dtb-$KernelVer $RPM_BUILD_ROOT/lib/modules/$KernelVer/dtb
+    %{make} ARCH=$Arch dtbs dtbs_install INSTALL_DTBS_PATH=%{buildroot}/%{image_install_path}/dtb-$KernelVer
+    cp -r %{buildroot}/%{image_install_path}/dtb-$KernelVer %{buildroot}/lib/modules/$KernelVer/dtb
     %if %{bcm270x}
-    cp -p arch/$Arch/boot/dts/overlays/README $RPM_BUILD_ROOT/lib/modules/$KernelVer/dtb/overlays/
-    mkdir -p $RPM_BUILD_ROOT/%{image_install_path}/overlays
+    cp -p arch/$Arch/boot/dts/overlays/README %{buildroot}/lib/modules/$KernelVer/dtb/overlays/
+    mkdir -p %{buildroot}/%{image_install_path}/overlays
     %endif
 
     # Start installing the results
-    install -m 644 .config $RPM_BUILD_ROOT/boot/config-$KernelVer
-    install -m 644 .config $RPM_BUILD_ROOT/lib/modules/$KernelVer/config
-    install -m 644 System.map $RPM_BUILD_ROOT/boot/System.map-$KernelVer
-    install -m 644 System.map $RPM_BUILD_ROOT/lib/modules/$KernelVer/System.map
+    install -m 644 .config %{buildroot}/boot/config-$KernelVer
+    install -m 644 .config %{buildroot}/lib/modules/$KernelVer/config
+    install -m 644 System.map %{buildroot}/boot/System.map-$KernelVer
+    install -m 644 System.map %{buildroot}/lib/modules/$KernelVer/System.map
 
     # We estimate the size of the initramfs because rpm needs to take this size
     # into consideration when performing disk space calculations. (See bz #530778)
-    dd if=/dev/zero of=$RPM_BUILD_ROOT/boot/initramfs-$KernelVer.img bs=1M count=20
+    dd if=/dev/zero of=%{buildroot}/boot/initramfs-$KernelVer.img bs=1M count=20
 
     # add the device tree trailer to the kernel img
     chmod +x scripts/mkknlimg
     %if !%{bcm270x}
-    scripts/mkknlimg --dtok --283x $KernelImage $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
+    scripts/mkknlimg --dtok --283x $KernelImage %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
     %else
-    scripts/mkknlimg --dtok --270x $KernelImage $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
+    scripts/mkknlimg --dtok --270x $KernelImage %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
     %endif
-    chmod 755 $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
-    cp $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer $RPM_BUILD_ROOT/lib/modules/$KernelVer/$InstallName
+    chmod 755 %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
+    cp %{buildroot}/%{image_install_path}/$InstallName-$KernelVer %{buildroot}/lib/modules/$KernelVer/$InstallName
 
     # hmac sign the kernel for FIPS
-    echo "Creating hmac file: $RPM_BUILD_ROOT/%{image_install_path}/.vmlinuz-$KernelVer.hmac"
-    ls -l $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer
-    sha512hmac $RPM_BUILD_ROOT/%{image_install_path}/$InstallName-$KernelVer | sed -e "s,$RPM_BUILD_ROOT,," > $RPM_BUILD_ROOT/%{image_install_path}/.vmlinuz-$KernelVer.hmac;
-    cp $RPM_BUILD_ROOT/%{image_install_path}/.vmlinuz-$KernelVer.hmac $RPM_BUILD_ROOT/lib/modules/$KernelVer/.vmlinuz.hmac
+    echo "Creating hmac file: %{buildroot}/%{image_install_path}/.vmlinuz-$KernelVer.hmac"
+    ls -l %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
+    sha512hmac %{buildroot}/%{image_install_path}/$InstallName-$KernelVer | sed -e "s,%{buildroot},," > %{buildroot}/%{image_install_path}/.vmlinuz-$KernelVer.hmac;
+    cp %{buildroot}/%{image_install_path}/.vmlinuz-$KernelVer.hmac %{buildroot}/lib/modules/$KernelVer/.vmlinuz.hmac
 
-    mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer
+    mkdir -p %{buildroot}/lib/modules/$KernelVer
     # Override $(mod-fw) because we don't want it to install any firmware
     # we'll get it from the linux-firmware package and we don't want conflicts
-    %{make} ARCH=$Arch INSTALL_MOD_PATH=$RPM_BUILD_ROOT modules_install KERNELRELEASE=$KernelVer mod-fw=
+    %{make} ARCH=$Arch INSTALL_MOD_PATH=%{buildroot} modules_install KERNELRELEASE=$KernelVer mod-fw=
 
     # And save the headers/makefiles etc for building modules against
     #
@@ -1044,68 +1044,68 @@ BuildKernel() {
     # * all Makefile/Kconfig files
     # * all script/ files
 
-    rm -f $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
-    rm -f $RPM_BUILD_ROOT/lib/modules/$KernelVer/source
-    mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
-    (cd $RPM_BUILD_ROOT/lib/modules/$KernelVer ; ln -s build source)
+    rm -f %{buildroot}/lib/modules/$KernelVer/build
+    rm -f %{buildroot}/lib/modules/$KernelVer/source
+    mkdir -p %{buildroot}/lib/modules/$KernelVer/build
+    (cd %{buildroot}/lib/modules/$KernelVer ; ln -s build source)
     # dirs for additional modules per module-init-tools, kbuild/modules.txt
-    mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer/extra
-    mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer/updates
+    mkdir -p %{buildroot}/lib/modules/$KernelVer/extra
+    mkdir -p %{buildroot}/lib/modules/$KernelVer/updates
     # first copy everything
-    cp --parents `find  -type f -name "Makefile*" -o -name "Kconfig*"` $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
-    cp Module.symvers $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
-    cp System.map $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
+    cp --parents `find  -type f -name "Makefile*" -o -name "Kconfig*"` %{buildroot}/lib/modules/$KernelVer/build
+    cp Module.symvers %{buildroot}/lib/modules/$KernelVer/build
+    cp System.map %{buildroot}/lib/modules/$KernelVer/build
     if [ -s Module.markers ]; then
-      cp Module.markers $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
+      cp Module.markers %{buildroot}/lib/modules/$KernelVer/build
     fi
     # then drop all but the needed Makefiles/Kconfig files
-    rm -rf $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/Documentation
-    rm -rf $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/scripts
-    rm -rf $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include
-    cp .config $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
-    cp -a scripts $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
+    rm -rf %{buildroot}/lib/modules/$KernelVer/build/Documentation
+    rm -rf %{buildroot}/lib/modules/$KernelVer/build/scripts
+    rm -rf %{buildroot}/lib/modules/$KernelVer/build/include
+    cp .config %{buildroot}/lib/modules/$KernelVer/build
+    cp -a scripts %{buildroot}/lib/modules/$KernelVer/build
     if [ -d arch/$Arch/scripts ]; then
-      cp -a arch/$Arch/scripts $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/arch/%{_arch} || :
+      cp -a arch/$Arch/scripts %{buildroot}/lib/modules/$KernelVer/build/arch/%{_arch} || :
     fi
     if [ -f arch/$Arch/*lds ]; then
-      cp -a arch/$Arch/*lds $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/arch/%{_arch}/ || :
+      cp -a arch/$Arch/*lds %{buildroot}/lib/modules/$KernelVer/build/arch/%{_arch}/ || :
     fi
-    rm -f $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/scripts/*.o
-    rm -f $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/scripts/*/*.o
+    rm -f %{buildroot}/lib/modules/$KernelVer/build/scripts/*.o
+    rm -f %{buildroot}/lib/modules/$KernelVer/build/scripts/*/*.o
     if [ -d arch/%{asmarch}/include ]; then
-      cp -a --parents arch/%{asmarch}/include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
+      cp -a --parents arch/%{asmarch}/include %{buildroot}/lib/modules/$KernelVer/build/
     fi
 
     # include the machine specific headers
     if [ -d arch/%{asmarch}/mach-${Flavour}/include ]; then
-      cp -a --parents arch/%{asmarch}/mach-${Flavour}/include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
+      cp -a --parents arch/%{asmarch}/mach-${Flavour}/include %{buildroot}/lib/modules/$KernelVer/build/
     fi
 
     # include a few files for 'make prepare'
-    cp -a --parents arch/arm/tools/gen-mach-types $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
-    cp -a --parents arch/arm/tools/mach-types $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
+    cp -a --parents arch/arm/tools/gen-mach-types %{buildroot}/lib/modules/$KernelVer/build/
+    cp -a --parents arch/arm/tools/mach-types %{buildroot}/lib/modules/$KernelVer/build/
 
-    cp -a include $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include
+    cp -a include %{buildroot}/lib/modules/$KernelVer/build/include
 
     # Make sure the Makefile and version.h have a matching timestamp so that
     # external modules can be built
-    touch -r $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/Makefile $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include/generated/uapi/linux/version.h
+    touch -r %{buildroot}/lib/modules/$KernelVer/build/Makefile %{buildroot}/lib/modules/$KernelVer/build/include/generated/uapi/linux/version.h
 
     # Copy .config to include/config/auto.conf so "make prepare" is unnecessary.
-    cp $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/.config $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/include/config/auto.conf
+    cp %{buildroot}/lib/modules/$KernelVer/build/.config %{buildroot}/lib/modules/$KernelVer/build/include/config/auto.conf
 
 %if %{with_debuginfo}
     eu-readelf -n vmlinux | grep "Build ID" | awk '{print $NF}' > vmlinux.id
-    cp vmlinux.id $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/vmlinux.id
+    cp vmlinux.id %{buildroot}/lib/modules/$KernelVer/build/vmlinux.id
 
     #
     # save the vmlinux file for kernel debugging into the kernel-debuginfo rpm
     #
-    mkdir -p $RPM_BUILD_ROOT%{debuginfodir}/lib/modules/$KernelVer
-    cp vmlinux $RPM_BUILD_ROOT%{debuginfodir}/lib/modules/$KernelVer
+    mkdir -p %{buildroot}%{debuginfodir}/lib/modules/$KernelVer
+    cp vmlinux %{buildroot}%{debuginfodir}/lib/modules/$KernelVer
 %endif
 
-    find $RPM_BUILD_ROOT/lib/modules/$KernelVer -name "*.ko" -type f >modnames
+    find %{buildroot}/lib/modules/$KernelVer -name "*.ko" -type f >modnames
 
     # mark modules executable so that strip-to-file can strip them
     xargs --no-run-if-empty chmod u+x < modnames
@@ -1118,9 +1118,9 @@ BuildKernel() {
     collect_modules_list()
     {
       sed -r -n -e "s/^([^ ]+) \\.?($2)\$/\\1/p" drivers.undef |
-        LC_ALL=C sort -u > $RPM_BUILD_ROOT/lib/modules/$KernelVer/modules.$1
+        LC_ALL=C sort -u > %{buildroot}/lib/modules/$KernelVer/modules.$1
       if [ ! -z "$3" ]; then
-        sed -r -e "/^($3)\$/d" -i $RPM_BUILD_ROOT/lib/modules/$KernelVer/modules.$1
+        sed -r -e "/^($3)\$/d" -i %{buildroot}/lib/modules/$KernelVer/modules.$1
       fi
     }
 
@@ -1134,16 +1134,16 @@ BuildKernel() {
     			 'drm_crtc_init'
 
     # detect missing or incorrect license tags
-    ( find $RPM_BUILD_ROOT/lib/modules/$KernelVer -name '*.ko' | xargs /sbin/modinfo -l | \
+    ( find %{buildroot}/lib/modules/$KernelVer -name '*.ko' | xargs /sbin/modinfo -l | \
         grep -E -v 'GPL( v2)?$|Dual BSD/GPL$|Dual MPL/GPL$|GPL and additional rights$' ) && exit 1
 
     # remove files that will be auto generated by depmod at rpm -i time
-    pushd $RPM_BUILD_ROOT/lib/modules/$KernelVer/
+    pushd %{buildroot}/lib/modules/$KernelVer/
         rm -f modules.{alias*,builtin.bin,dep*,*map,symbols*,devname,softdep}
     popd
 
     # Call the modules-extra script to move things around
-    %{SOURCE17} $RPM_BUILD_ROOT/lib/modules/$KernelVer %{SOURCE16}
+    %{SOURCE17} %{buildroot}/lib/modules/$KernelVer %{SOURCE16}
 
     #
     # Generate the kernel-core and kernel-modules files lists
@@ -1151,8 +1151,8 @@ BuildKernel() {
 
     # Copy the System.map file for depmod to use, and create a backup of the
     # full module tree so we can restore it after we're done filtering
-    cp System.map $RPM_BUILD_ROOT/.
-    pushd $RPM_BUILD_ROOT
+    cp System.map %{buildroot}/.
+    pushd %{buildroot}
     mkdir restore
     cp -r lib/modules/$KernelVer/* restore/.
 
@@ -1177,7 +1177,7 @@ BuildKernel() {
     fi
 
     # remove files that will be auto generated by depmod at rpm -i time
-    pushd $RPM_BUILD_ROOT/lib/modules/$KernelVer/
+    pushd %{buildroot}/lib/modules/$KernelVer/
         rm -f modules.{alias*,builtin.bin,dep*,*map,symbols*,devname,softdep}
     popd
 
@@ -1193,27 +1193,27 @@ BuildKernel() {
 
     # Make sure the files lists start with absolute paths or rpmbuild fails.
     # Also add in the dir entries
-    sed -e 's/^lib*/\/lib/' %{?zipsed} $RPM_BUILD_ROOT/k-d.list > ../kernel-modules.list
-    sed -e 's/^lib*/%dir \/lib/' %{?zipsed} $RPM_BUILD_ROOT/module-dirs.list > ../kernel-core.list
-    sed -e 's/^lib*/\/lib/' %{?zipsed} $RPM_BUILD_ROOT/modules.list >> ../kernel-core.list
+    sed -e 's/^lib*/\/lib/' %{?zipsed} %{buildroot}/k-d.list > ../kernel-modules.list
+    sed -e 's/^lib*/%dir \/lib/' %{?zipsed} %{buildroot}/module-dirs.list > ../kernel-core.list
+    sed -e 's/^lib*/\/lib/' %{?zipsed} %{buildroot}/modules.list >> ../kernel-core.list
 
     # Cleanup
-    rm -f $RPM_BUILD_ROOT/k-d.list
-    rm -f $RPM_BUILD_ROOT/modules.list
-    rm -f $RPM_BUILD_ROOT/module-dirs.list
+    rm -f %{buildroot}/k-d.list
+    rm -f %{buildroot}/modules.list
+    rm -f %{buildroot}/module-dirs.list
 
     # Move the devel headers out of the root file system
-    mkdir -p $RPM_BUILD_ROOT/usr/src/kernels
-    mv $RPM_BUILD_ROOT/lib/modules/$KernelVer/build $RPM_BUILD_ROOT/$DevelDir
+    mkdir -p %{buildroot}/usr/src/kernels
+    mv %{buildroot}/lib/modules/$KernelVer/build %{buildroot}/$DevelDir
 
     # This is going to create a broken link during the build, but we don't use
     # it after this point.  We need the link to actually point to something
     # when kernel-devel is installed, and a relative link doesn't work across
     # the F17 UsrMove feature.
-    ln -sf $DevelDir $RPM_BUILD_ROOT/lib/modules/$KernelVer/build
+    ln -sf $DevelDir %{buildroot}/lib/modules/$KernelVer/build
 
     # prune junk from kernel-devel
-    find $RPM_BUILD_ROOT/usr/src/kernels -name ".*.cmd" -exec rm -f {} \;
+    find %{buildroot}/usr/src/kernels -name ".*.cmd" -exec rm -f {} \;
 }
 
 
@@ -1223,20 +1223,20 @@ BuildKernel() {
 ###
 
 # prepare directories
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/boot
-mkdir -p $RPM_BUILD_ROOT%{_libexecdir}
+rm -rf %{buildroot}
+mkdir -p %{buildroot}/boot
+mkdir -p %{buildroot}%{_libexecdir}
 
 cd linux-%{KVERREL}
 
 BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
-  make EXTRA_CFLAGS="${RPM_OPT_FLAGS}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf V=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+  make EXTRA_CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf V=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
 
 %if %{with_perf}
 # perf
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT all
+%{perf_make} DESTDIR=%{buildroot} all
 
 # perf-man
 %{make} -C tools/perf/Documentation man
@@ -1263,7 +1263,7 @@ popd
 
 
 if [ "%{zipmodules}" -eq "1" ]; then \
-    find $RPM_BUILD_ROOT/lib/modules/ -type f -name '*.ko' | xargs xz; \
+    find %{buildroot}/lib/modules/ -type f -name '*.ko' | xargs xz; \
 fi
 
 
@@ -1312,9 +1312,9 @@ cd linux-%{KVERREL}
 
 %if %{with_headers}
 # Install kernel headers
-make ARCH=%{hdrarch} INSTALL_HDR_PATH=$RPM_BUILD_ROOT/usr headers_install
+make ARCH=%{hdrarch} INSTALL_HDR_PATH=%{buildroot}/usr headers_install
 
-find $RPM_BUILD_ROOT/usr/include \
+find %{buildroot}/usr/include \
      \( -name .install -o -name .check -o \
      	-name ..install.cmd -o -name ..check.cmd \) | xargs rm -f
 
@@ -1322,22 +1322,22 @@ find $RPM_BUILD_ROOT/usr/include \
 
 %if %{with_perf}
 # perf tool binary and supporting scripts/binaries
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT lib=%{_lib} install-bin install-traceevent-plugins
+%{perf_make} DESTDIR=%{buildroot} lib=%{_lib} install-bin install-traceevent-plugins
 # remove the 'trace' symlink.
 rm -f %{buildroot}%{_bindir}/trace
 
 # python-perf extension
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT install-python_ext
+%{perf_make} DESTDIR=%{buildroot} install-python_ext
 
 # perf man pages
-%{make} prefix=%{_prefix} DESTDIR=$RPM_BUILD_ROOT -C tools/perf/Documentation install-man
+%{make} prefix=%{_prefix} DESTDIR=%{buildroot} -C tools/perf/Documentation install-man
 
 # remove perf-tips dir
 rm -rf %{buildroot}%{_docdir}/perf-tip
 %endif
 
 %if %{with_tools}
-%{make} -C tools/power/cpupower DESTDIR=$RPM_BUILD_ROOT libdir=%{_libdir} mandir=%{_mandir} CPUFREQ_BENCH=false install
+%{make} -C tools/power/cpupower DESTDIR=%{buildroot} libdir=%{_libdir} mandir=%{_mandir} CPUFREQ_BENCH=false install
 rm -f %{buildroot}%{_libdir}/*.{a,la}
 %find_lang cpupower
 mv cpupower.lang ../
