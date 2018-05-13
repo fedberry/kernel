@@ -96,13 +96,13 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 14
+%define base_sublevel 16
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 39
+%define stable_update 7
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
