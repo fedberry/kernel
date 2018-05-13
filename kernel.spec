@@ -414,28 +414,30 @@ This package provides debug information for the perf package.
 # of matching the pattern against the symlinks file.
 %{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{_bindir}/perf(\.debug)?|.*%%{_libexecdir}/perf-core/.*|.*%%{_libdir}/traceevent/plugins/.*|XXX' -o perf-debuginfo.list}
 
-%package -n python-perf
+
+%package -n python2-perf
 Summary: Python bindings for apps which will manipulate perf events
 Group: Development/Libraries
-%description -n python-perf
-The python-perf package contains a module that permits applications
+
+%description -n python2-perf
+The python2-perf package contains a module that permits applications
 written in the Python programming language to use the interface
 to manipulate perf events.
 
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-%package -n python-perf-debuginfo
+
+%package -n python2-perf-debuginfo
 Summary: Debug information for package perf python bindings
 Group: Development/Debug
 Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}
 AutoReqProv: no
-%description -n python-perf-debuginfo
+
+%description -n python2-perf-debuginfo
 This package provides debug information for the perf python bindings.
 
 # the python_sitearch macro should already be defined from above
-%{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{python_sitearch}/perf.so(\.debug)?|XXX' -o python-perf-debuginfo.list}
-
-
+%{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{python_sitearch}/perf.so(\.debug)?|XXX' -o python2-perf-debuginfo.list}
 %endif # with_perf
 
 %if %{with_tools}
@@ -1474,7 +1476,7 @@ fi
 %doc linux-%{KVERREL}/tools/perf/Documentation/examples.txt
 %doc linux-%{KVERREL}/tools/perf/Documentation/tips.txt
 
-%files -n python-perf
+%files -n python2-perf
 %defattr(-,root,root)
 %{python_sitearch}
 
@@ -1482,7 +1484,7 @@ fi
 %files -f perf-debuginfo.list -n perf-debuginfo
 %defattr(-,root,root)
 
-%files -f python-perf-debuginfo.list -n python-perf-debuginfo
+%files -f python2-perf-debuginfo.list -n python2-perf-debuginfo
 %defattr(-,root,root)
 %endif
 %endif # with_perf
