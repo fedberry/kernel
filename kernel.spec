@@ -1345,12 +1345,6 @@ popd
 %endif
 
 
-###
-### clean
-###
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 ###
 ### scripts
