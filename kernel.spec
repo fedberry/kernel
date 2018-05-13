@@ -195,7 +195,7 @@
 # Packages that need to be installed before the kernel is, because the %%post
 # scripts use them.
 #
-%define kernel_prereq  fileutils, systemd, grubby
+%define kernel_prereq  coreutils, systemd, grubby
 %define initrd_prereq  dracut
 
 
@@ -216,32 +216,55 @@ URL: https://github.com/raspberrypi/linux
 Version: %{rpmversion}
 Release: %{pkg_release}
 ExclusiveArch: %{arm}
-ExclusiveOS: Linux
+
 Requires: kernel-core-uname-r = %{KVERREL}%{?variant}
 Requires: kernel-modules-uname-r = %{KVERREL}%{?variant}
 
-
-#
-# List the packages used during the kernel build
-#
-BuildRequires: kmod, patch, bash, tar
-BuildRequires: bzip2, xz, findutils, gzip, m4, perl-interpreter, perl-Carp, perl-devel, perl-generators, make, diffutils, gawk
-BuildRequires: gcc, binutils, redhat-rpm-config, hmaccalc
-BuildRequires: net-tools, hostname, bc
+BuildRequires: kmod
+BuildRequires: patch
+BuildRequires: bash
+BuildRequires: tar
+BuildRequires: bzip2
+BuildRequires: xz
+BuildRequires: findutils
+BuildRequires: gzip
+BuildRequires: m4
+BuildRequires: perl-interpreter
+BuildRequires: perl-Carp
+BuildRequires: perl-devel
+BuildRequires: perl-generators
+BuildRequires: make
+BuildRequires: diffutils
+BuildRequires: gawk
+BuildRequires: gcc
+BuildRequires: binutils
+BuildRequires: redhat-rpm-config
+BuildRequires: hmaccalc
+BuildRequires: net-tools
+BuildRequires: hostname
+BuildRequires: bc
+BuildRequires: openssl-devel
 %if %{with_rt_preempt}
 BuildRequires: quilt
 %endif
-
 %if %{with_perf}
-BuildRequires: elfutils-devel zlib-devel binutils-devel newt-devel python-devel perl(ExtUtils::Embed) bison flex
+BuildRequires: elfutils-devel
+BuildRequires: zlib-devel
+BuildRequires: binutils-devel
+BuildRequires: newt-devel
+BuildRequires: python-devel
+BuildRequires: perl(ExtUtils::Embed)
+BuildRequires: bison
+BuildRequires: flex
 BuildRequires: audit-libs-devel
+BuildRequires: xmlto
 %endif
-
 %if %{with_tools}
-BuildRequires: pciutils-devel gettext ncurses-devel asciidoc
+BuildRequires: pciutils-devel
+BuildRequires: gettext
+BuildRequires: ncurses-devel
+BuildRequires: asciidoc
 %endif
-BuildConflicts: rhbuildsys(DiskFree) < 500Mb
-
 %if %{with_debuginfo}
 BuildRequires: rpm-build, elfutils
 BuildConflicts: rpm < 4.13.0.1-19
@@ -258,9 +281,9 @@ BuildConflicts: rpm < 4.13.0.1-19
 %global _missing_build_ids_terminate_build 1
 %global _no_recompute_build_ids 1
 %endif
-
 %if %{with_cross}
-BuildRequires: binutils-%{_build_arch}-linux-gnu, gcc-%{_build_arch}-linux-gnu
+BuildRequires: binutils-%{_build_arch}-linux-gnu
+BuildRequires: gcc-%{_build_arch}-linux-gnu
 %define cross_opts CROSS_COMPILE=%{_build_arch}-linux-gnu-
 %endif
 
