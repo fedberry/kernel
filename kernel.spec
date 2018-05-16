@@ -66,7 +66,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 2a6adf636
@@ -260,7 +260,7 @@ Source16: mod-extra.list
 Source17: mod-extra.sh
 Source99: filter-modules.sh
 
-# kernel config modifications 
+# kernel config modifications
 Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
@@ -1557,6 +1557,13 @@ fi
 
 
 %changelog
+* Tue May 15 2018 Vaughan <devel at agrez dot net> - 4.14.39-2
+- Sync RPi patch to git revision: 2a6adf636ba83c450f0140b2dbcda5fc66e6b0de
+- Refactor RT PREEMPT kernel build support (generate patch against upstream)
+  Refer: https://github.com/raspberrypi/linux/tree/rpi-4.14.y-rt
+- Sync RT PREEMPT patch to git commit: a4b8f1f27a61d6c98a4819a011c0a99f2d7ebfa8
+- Drop perf-man-4.x.tar.gz source (Source10)
+
 * Fri May 11 2018 Vaughan <devel at agrez dot net> - 4.14.39-1
 - Update to stable kernel patch v4.14.39
 - Sync RPi patch to git revision: 70608893d8081e2ec4fee1b6112f7d839ae308f3
