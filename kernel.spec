@@ -225,11 +225,11 @@ BuildRequires: net-tools, hostname, bc
 
 %if %{with_perf}
 BuildRequires: elfutils-devel zlib-devel binutils-devel newt-devel python-devel perl(ExtUtils::Embed) bison flex
-BuildRequires: audit-libs-devel
+BuildRequires: audit-libs-devel xmlto asciidoc
 %endif
 
 %if %{with_tools}
-BuildRequires: pciutils-devel gettext ncurses-devel asciidoc
+BuildRequires: pciutils-devel gettext ncurses-devel asciidoc xmlto
 %endif
 BuildConflicts: rhbuildsys(DiskFree) < 500Mb
 
