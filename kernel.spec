@@ -75,18 +75,12 @@
 
 %global zipmodules 1
 
-# Enable rt preempt build support
-# Only enable if there are available patches
-%global enable_preempt 1
-
-%if %{enable_preempt}
 # Real-Time kernel defines
-%global rtrelease 27
-%global rt_stable_update 34
+%global rtgitsnap a4b8f1f27
+%global rtrelease 29
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
-%endif
 %endif
 
 %if %{with_lpae}
@@ -228,9 +222,6 @@ BuildRequires: kmod, patch, bash, tar
 BuildRequires: bzip2, xz, findutils, gzip, m4, perl-interpreter, perl-Carp, perl-devel, perl-generators, make, diffutils, gawk
 BuildRequires: gcc, binutils, redhat-rpm-config, hmaccalc
 BuildRequires: net-tools, hostname, bc
-%if %{with_rt_preempt}
-BuildRequires: quilt
-%endif
 
 %if %{with_perf}
 BuildRequires: elfutils-devel zlib-devel binutils-devel newt-devel python-devel perl(ExtUtils::Embed) bison flex
@@ -273,17 +264,10 @@ Source99: filter-modules.sh
 Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
-%if %{enable_preempt}
+# rt kernel patch
+Source1500: linux-rpi-4.%{base_sublevel}.y-rt%{rtrelease}-%{rtgitsnap}.patch.xz
 # rt kernel config modification
-%if 0%{?rt_stable_update}
-Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-4.%{base_sublevel}.%{rt_stable_update}-rt%{rtrelease}.tar.xz
-%else
-Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-4.%{base_sublevel}-rt%{rtrelease}.tar.xz
-%endif
-%endif
 Source1501: config-fedberry-rt.cfg
-# Fix for FIQ issue, see also: https://wiki.linuxfoundation.org/realtime/documentation/known_limitations
-Source1502: usb-dwc_otg-fix-system-lockup-when-interrupts-are-threaded.patch
 
 # Sources for kernel-tools
 Source2000: cpupower.service
@@ -836,15 +820,9 @@ for i in %{patches}; do
 %endif
 done
 
-%if %{enable_preempt}
 %if %{with_rt_preempt}
 # apply rt kernel patches
-unxz -c %{SOURCE1500} | tar -xf - -C .
-# we don't want to use the localversion.patch
-sed -i 's/\(localversion.patch\)/# \1/g' patches/series
-quilt push -a
-patch -p1 < %{SOURCE1502}
-%endif
+xzcat %{SOURCE1500} | patch -p1 -F1 -s
 %endif
 
 # END OF PATCH APPLICATIONS
@@ -864,6 +842,11 @@ find . \( -name "*.orig" -o -name "*~" \) -exec rm -f {} \; >/dev/null
 
 # remove unnecessary SCM files
 find . -name .gitignore -exec rm -f {} \; >/dev/null
+
+%if %{with_rt_preempt}
+# remove append on rt kernels
+rm -f localversion-rt
+%endif
 
 cd ..
 
@@ -935,11 +918,9 @@ BuildKernel() {
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1000}
     %endif
 
-    %if %{enable_preempt}
     %if %{with_rt_preempt}
     # merge rt-preempt kernel config changes
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1501}
-    %endif
     %endif
 
     %if %{with_lpae}
