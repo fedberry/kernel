@@ -66,7 +66,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort adb282c91
@@ -96,7 +96,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 39
+%define stable_update 41
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1557,6 +1557,10 @@ fi
 
 
 %changelog
+* Sun May 20 2018 Vaughan <devel at agrez dot net> - 4.14.41-1
+- Update to stable kernel patch v4.14.41
+- Sync RPi patch to git revision: adb282c91b45bd0dd76f2b5d3741850007912192
+
 * Tue May 15 2018 Vaughan <devel at agrez dot net> - 4.14.39-2
 - Sync RPi patch to git revision: 2a6adf636ba83c450f0140b2dbcda5fc66e6b0de
 - Refactor RT PREEMPT kernel build support (generate patch against upstream)
