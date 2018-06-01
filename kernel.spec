@@ -596,7 +596,7 @@ Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
 %else
 %define variant_summary The Linux kernel for the Raspberry Pi Model A, B & Zero
 %endif
-%kernel_variant_package 
+%kernel_variant_package
 %description core
 This package includes a patched version of the Linux kernel built for
 Raspberry Pi devices that use the Broadcom BCM27XX SOC. The
@@ -606,7 +606,7 @@ of the operating system: memory allocation, process allocation, device
 input and output, etc.
 %else
 %define variant_summary The Linux kernel
-%kernel_variant_package 
+%kernel_variant_package
 %description core
 The kernel package contains the Linux kernel (vmlinuz), the core of any
 Linux operating system.  The kernel handles the basic functions
@@ -1989,7 +1989,7 @@ fi
 - Requires bcm283x-firmware >= 20150909
 
 * Wed Sep 02 2015 Vaughan <devel at agrez dot net> - 4.1.6-301.6b30ac8
-- Sync to latest git revision: rpi-4.1.y 6b30ac82c3595887416c7870c35c2cc522f801cc 
+- Sync to latest git revision: rpi-4.1.y 6b30ac82c3595887416c7870c35c2cc522f801cc
 - Refactor kernel config
 
 * Wed Aug 19 2015 Vaughan <devel at agrez dot net> - 4.1.6-300.4507c97
@@ -2000,7 +2000,7 @@ fi
 
 * Tue Aug 18 2015 Vaughan <devel at agrez dot net> - 4.1.5-301.5925037
 - Drop the extra generated kernel-*.img
-- Add device tree trailer to vmlinuz image instead 
+- Add device tree trailer to vmlinuz image instead
 
 * Sun Aug 16 2015 Vaughan <devel at agrez dot net> - 4.1.5-300.5925037
 - Sync to latest git revision: rpi-4.1.y 592503752b6951972f161f04280683c5af38d173
