@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 7
+%define stable_update 15
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1600,6 +1600,11 @@ fi
 
 
 %changelog
+* Sun Jun 17 2018 Vaughan <devel at agrez dot net> - 4.16.15-1
+- Update to stable kernel patch v4.16.15
+- Sync RPi patch to git revision: 2362500e0a547b4683c86725aa0aa7b38cbbdbe1
+- Disable preempt build (there is no upstream 4.16.y-rt tree)
+
 * Sun May 13 2018 Vaughan <devel at agrez dot net> - 4.16.7-1
 - Rebase to 4.16 kernel branch
 - Update to stable kernel patch v4.16.7
@@ -2032,7 +2037,7 @@ fi
 - Requires bcm283x-firmware >= 20150909
 
 * Wed Sep 02 2015 Vaughan <devel at agrez dot net> - 4.1.6-301.6b30ac8
-- Sync to latest git revision: rpi-4.1.y 6b30ac82c3595887416c7870c35c2cc522f801cc 
+- Sync to latest git revision: rpi-4.1.y 6b30ac82c3595887416c7870c35c2cc522f801cc
 - Refactor kernel config
 
 * Wed Aug 19 2015 Vaughan <devel at agrez dot net> - 4.1.6-300.4507c97
@@ -2043,7 +2048,7 @@ fi
 
 * Tue Aug 18 2015 Vaughan <devel at agrez dot net> - 4.1.5-301.5925037
 - Drop the extra generated kernel-*.img
-- Add device tree trailer to vmlinuz image instead 
+- Add device tree trailer to vmlinuz image instead
 
 * Sun Aug 16 2015 Vaughan <devel at agrez dot net> - 4.1.5-300.5925037
 - Sync to latest git revision: rpi-4.1.y 592503752b6951972f161f04280683c5af38d173
