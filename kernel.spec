@@ -75,12 +75,18 @@
 
 %global zipmodules 1
 
+# Enable rt preempt build support
+# Only enable with a useable upstream patch
+%global enable_preempt 0
+
+%if %{enable_preempt}
 # Real-Time kernel defines
 %global rtgitsnap a4b8f1f27
 %global rtrelease 29
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
+%endif
 %endif
 
 %if %{with_lpae}
@@ -288,7 +294,9 @@ Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
 
 # rt kernel patch
+%if %{enable_preempt}
 Source1500: linux-rpi-4.%{base_sublevel}.y-rt%{rtrelease}-%{rtgitsnap}.patch.xz
+%endif
 # rt kernel config modification
 Source1501: config-fedberry-rt.cfg
 
