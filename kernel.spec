@@ -76,8 +76,8 @@
 %global zipmodules 1
 
 # Real-Time kernel defines
-%global rtgitsnap a4b8f1f27
-%global rtrelease 29
+%global rtgitsnap 03c678fa5
+%global rtrelease 31
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
