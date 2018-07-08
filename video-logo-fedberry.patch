@@ -1,8 +1,23 @@
-diff -U 3 -dHrN -- linux-4.4-old/drivers/video/logo/Kconfig linux-4.4/drivers/video/logo/Kconfig
---- linux-4.4-old/drivers/video/logo/Kconfig	2016-01-11 07:01:32.000000000 +0800
-+++ linux-4.4/drivers/video/logo/Kconfig	2016-08-22 10:57:51.475535775 +0800
-@@ -82,4 +82,9 @@
- 	depends on M32R
+From f0ffc7648be55ddd54ee95dca70f441bea37c001 Mon Sep 17 00:00:00 2001
+Message-Id: <f0ffc7648be55ddd54ee95dca70f441bea37c001.1530950867.git.devel@agrez.net>
+From: Vaughan Agrez <devel@agrez.net>
+Date: Sat, 7 Jul 2018 16:05:18 +0800
+Subject: [PATCH] Add fedberry logo
+
+---
+ drivers/video/logo/Kconfig                   |   5 +
+ drivers/video/logo/Makefile                  |   1 +
+ drivers/video/logo/logo.c                    |   4 +
+ drivers/video/logo/logo_fedberry_clut224.ppm | 883 +++++++++++++++++++
+ include/linux/linux_logo.h                   |   1 +
+ 5 files changed, 894 insertions(+)
+
+diff --git a/drivers/video/logo/Kconfig b/drivers/video/logo/Kconfig
+index d1f6196c..7a08c21c 100644
+--- a/drivers/video/logo/Kconfig
++++ b/drivers/video/logo/Kconfig
+@@ -67,4 +67,9 @@ config LOGO_SUPERH_CLUT224
+ 	depends on SUPERH
  	default y
  
 +config LOGO_FEDBERRY_CLUT224
@@ -11,10 +26,23 @@ diff -U 3 -dHrN -- linux-4.4-old/drivers/video/logo/Kconfig linux-4.4/drivers/vi
 +        default y
 +
  endif # LOGO
-diff -U 3 -dHrN -- linux-4.4-old/drivers/video/logo/logo.c linux-4.4/drivers/video/logo/logo.c
---- linux-4.4-old/drivers/video/logo/logo.c	2016-01-11 07:01:32.000000000 +0800
-+++ linux-4.4/drivers/video/logo/logo.c	2016-08-22 11:01:42.116044324 +0800
-@@ -74,6 +74,10 @@
+diff --git a/drivers/video/logo/Makefile b/drivers/video/logo/Makefile
+index 228a89b9..b14cb806 100644
+--- a/drivers/video/logo/Makefile
++++ b/drivers/video/logo/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_LOGO_SUN_CLUT224)		+= logo_sun_clut224.o
+ obj-$(CONFIG_LOGO_SUPERH_MONO)		+= logo_superh_mono.o
+ obj-$(CONFIG_LOGO_SUPERH_VGA16)		+= logo_superh_vga16.o
+ obj-$(CONFIG_LOGO_SUPERH_CLUT224)	+= logo_superh_clut224.o
++obj-$(CONFIG_LOGO_FEDBERRY_CLUT224)	+= logo_fedberry_clut224.o
+ 
+ obj-$(CONFIG_SPU_BASE)			+= logo_spe_clut224.o
+ 
+diff --git a/drivers/video/logo/logo.c b/drivers/video/logo/logo.c
+index 36aa050f..7d083d19 100644
+--- a/drivers/video/logo/logo.c
++++ b/drivers/video/logo/logo.c
+@@ -70,6 +70,10 @@ const struct linux_logo * __ref fb_find_logo(int depth)
  	}
  	
  	if (depth >= 8) {
@@ -25,9 +53,11 @@ diff -U 3 -dHrN -- linux-4.4-old/drivers/video/logo/logo.c linux-4.4/drivers/vid
  #ifdef CONFIG_LOGO_LINUX_CLUT224
  		/* Generic Linux logo */
  		logo = &logo_linux_clut224;
-diff -U 3 -dHrN -- linux-4.4-old/drivers/video/logo/logo_fedberry_clut224.ppm linux-4.4/drivers/video/logo/logo_fedberry_clut224.ppm
---- linux-4.4-old/drivers/video/logo/logo_fedberry_clut224.ppm	1970-01-01 08:00:00.000000000 +0800
-+++ linux-4.4/drivers/video/logo/logo_fedberry_clut224.ppm	2016-08-22 12:27:04.000000000 +0800
+diff --git a/drivers/video/logo/logo_fedberry_clut224.ppm b/drivers/video/logo/logo_fedberry_clut224.ppm
+new file mode 100644
+index 00000000..17a101ea
+--- /dev/null
++++ b/drivers/video/logo/logo_fedberry_clut224.ppm
 @@ -0,0 +1,883 @@
 +P3
 +80 80
@@ -912,25 +942,18 @@ diff -U 3 -dHrN -- linux-4.4-old/drivers/video/logo/logo_fedberry_clut224.ppm li
 +0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 +0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 +
-diff -U 3 -dHrN -- linux-4.4-old/drivers/video/logo/Makefile linux-4.4/drivers/video/logo/Makefile
---- linux-4.4-old/drivers/video/logo/Makefile	2016-01-11 07:01:32.000000000 +0800
-+++ linux-4.4/drivers/video/logo/Makefile	2016-08-22 10:58:35.166632109 +0800
-@@ -15,6 +15,7 @@
- obj-$(CONFIG_LOGO_SUPERH_VGA16)		+= logo_superh_vga16.o
- obj-$(CONFIG_LOGO_SUPERH_CLUT224)	+= logo_superh_clut224.o
- obj-$(CONFIG_LOGO_M32R_CLUT224)		+= logo_m32r_clut224.o
-+obj-$(CONFIG_LOGO_FEDBERRY_CLUT224)	+= logo_fedberry_clut224.o
- 
- obj-$(CONFIG_SPU_BASE)			+= logo_spe_clut224.o
- 
-diff -U 3 -dHrN -- linux-4.4-old/include/linux/linux_logo.h linux-4.4/include/linux/linux_logo.h
---- linux-4.4-old/include/linux/linux_logo.h	2016-01-11 07:01:32.000000000 +0800
-+++ linux-4.4/include/linux/linux_logo.h	2016-08-22 11:28:57.970594572 +0800
-@@ -47,6 +47,7 @@
+diff --git a/include/linux/linux_logo.h b/include/linux/linux_logo.h
+index d4d5b93e..70f82b74 100644
+--- a/include/linux/linux_logo.h
++++ b/include/linux/linux_logo.h
+@@ -45,6 +45,7 @@ extern const struct linux_logo logo_superh_mono;
+ extern const struct linux_logo logo_superh_vga16;
  extern const struct linux_logo logo_superh_clut224;
- extern const struct linux_logo logo_m32r_clut224;
  extern const struct linux_logo logo_spe_clut224;
 +extern const struct linux_logo logo_fedberry_clut224;
  
  extern const struct linux_logo *fb_find_logo(int depth);
  #ifdef CONFIG_FB_LOGO_EXTRA
+-- 
+2.17.1
+
