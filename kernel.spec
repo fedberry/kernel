@@ -1600,6 +1600,12 @@ fi
 
 
 %changelog
+* Sat Jul 07 2018 Vaughan <devel at agrez dot net> - 4.17.3-1
+- Rebase to 4.17 kernel branch
+- Update to stable kernel patch v4.17.3
+- Sync RPi patch to git revision: 9f54ddcdcdb5eeb990b62183b4a505f85909155b
+- Refactoring video-logo-fedberry patch
+
 * Sun Jun 17 2018 Vaughan <devel at agrez dot net> - 4.16.15-1
 - Update to stable kernel patch v4.16.15
 - Sync RPi patch to git revision: 2362500e0a547b4683c86725aa0aa7b38cbbdbe1
