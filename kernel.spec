@@ -831,6 +831,7 @@ xzcat %{SOURCE1500} | patch -p1 -F1 -s
 # Any further pre-build tree manipulations happen here.
 
 chmod +x scripts/checkpatch.pl
+mv COPYING COPYING-%{version}
 
 # This Prevents scripts/setlocalversion from mucking with our version numbers.
 touch .scmversion
@@ -1513,7 +1514,7 @@ fi
 %{expand:%%files -f kernel-%{?2:%{2}-}core.list %{?2:%{2}-}core}\
 %defattr(-,root,root)\
 %{!?_licensedir:%global license %%doc}\
-%license linux-%{KVERREL}/COPYING\
+%license linux-%{KVERREL}/COPYING-%{version}\
 %ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/.vmlinuz.hmac\
 %ghost /%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac\
