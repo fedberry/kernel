@@ -189,7 +189,7 @@
 # Packages that need to be installed before the kernel is, because the %%post
 # scripts use them.
 #
-%define kernel_prereq  fileutils, systemd, grubby
+%define kernel_prereq  coreutils, systemd, grubby
 %define initrd_prereq  dracut
 
 
