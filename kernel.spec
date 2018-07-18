@@ -1372,7 +1372,7 @@ fi\
 #
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
-/sbin/new-kernel-pkg --package kernel --rpmposttrans %{KVERREL}%{?1:+%{1}} || exit $?\
+/sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
 %if %{_target_cpu} == armv7hl\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7.img\
 %else\
