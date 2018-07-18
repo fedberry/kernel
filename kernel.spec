@@ -592,7 +592,7 @@ Provides: kernel-modules-%{_target_cpu} = %{version}-%{release}%{?1:+%{1}}\
 Provides: kernel-modules = %{version}-%{release}%{?1:+%{1}}\
 Provides: installonlypkg(kernel-module)\
 Provides: kernel%{?1:-%{1}}-modules-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
-Requires: kernel-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
+Requires(pre): kernel-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
 AutoReq: no\
 AutoProv: yes\
 %description %{?1:%{1}-}modules\
