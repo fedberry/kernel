@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 3
+%define stable_update 9
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1601,6 +1601,13 @@ fi
 
 
 %changelog
+* Mon Jul 23 2018 Vaughan <devel at agrez dot net> - 4.17.9-1
+- Update to stable kernel patch v4.17.9
+- Sync RPi patch to git revision: 9a564ac065169a73c57d7eb23520ae85fc404b18
+- Update kernel-core %%posttrans script macro
+- Update kernel-modules package macro
+- COPYING file should be version specific
+
 * Sat Jul 07 2018 Vaughan <devel at agrez dot net> - 4.17.3-1
 - Rebase to 4.17 kernel branch
 - Update to stable kernel patch v4.17.3
