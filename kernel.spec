@@ -66,7 +66,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort a06f9e522
@@ -76,8 +76,8 @@
 %global zipmodules 1
 
 # Real-Time kernel defines
-%global rtgitsnap 03c678fa5
-%global rtrelease 31
+%global rtgitsnap 65f3df543
+%global rtrelease 37
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
@@ -1558,6 +1558,9 @@ fi
 
 
 %changelog
+* Thu Aug 09 2018 Vaughan <devel at agrez dot net> - 4.14.59-2
+- Sync RT_PREEMPT patch to git commit: 65f3df54394dcf38ef426b1b02f7bb18f9de9ccd
+
 * Mon Jul 30 2018 Vaughan <devel at agrez dot net> - 4.14.59-1
 - Update to stable kernel patch v4.14.59
 - Sync RPi patch to git revision: a06f9e522301dfacc1f382d72e6a9792d8350328
