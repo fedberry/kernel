@@ -96,7 +96,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 70
+%define stable_update 71
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1558,6 +1558,10 @@ fi
 
 
 %changelog
+* Wed Sep 26 2018 Vaughan <devel at agrez dot net> - 4.14.71-1
+- Update to stable kernel patch v4.14.71
+- Sync RPi patch to git revision: df493abeaf1b0a2a83ebe21262758f802e567a38
+
 * Tue Sep 18 2018 Vaughan <devel at agrez dot net> - 4.14.70-1
 - Update to stable kernel patch v4.14.70
 - Sync RPi patch to git revision: 74f7a305a189d88c506fbc0e22a491d71852c7df
