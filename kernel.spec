@@ -1326,8 +1326,8 @@ rm -f %{buildroot}%{_bindir}/trace
 rm -rf %{buildroot}%{_docdir}/perf-tip
 
 # remove the perf examples/include dir
-rm -rf %{buildroot}%{_libdir}/examples
-rm -rf %{buildroot}%{_libdir}/include
+rm -rf %{buildroot}%{_libdir}/perf/examples
+rm -rf %{buildroot}%{_libdir}/perf/include
 %endif
 
 %if %{with_tools}
