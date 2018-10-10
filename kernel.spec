@@ -66,7 +66,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 8324b0cad
@@ -249,7 +249,7 @@ BuildRequires: elfutils-devel
 BuildRequires: zlib-devel
 BuildRequires: binutils-devel
 BuildRequires: newt-devel
-BuildRequires: python-devel
+BuildRequires: python2-devel
 BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: bison
 BuildRequires: flex
@@ -1502,7 +1502,7 @@ fi
 
 %files -n python2-perf
 %defattr(-,root,root)
-%{python_sitearch}
+%{python2_sitearch}
 
 %if %{with_debuginfo}
 %files -f perf-debuginfo.list -n perf-debuginfo
@@ -1605,6 +1605,9 @@ fi
 
 
 %changelog
+* Wed Oct 10 2018 Vaughan <devel at agrez dot net> - 4.18.12-2
+- Python fix for f29 builds
+
 * Tue Oct 09 2018 Vaughan <devel at agrez dot net> - 4.18.12-1
 - Update to stable kernel patch v4.18.12
 - Sync RPi patch to git revision: 8324b0cad6b073e2b4bca1e1cb17dd1d18d22622
