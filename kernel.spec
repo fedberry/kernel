@@ -1605,6 +1605,11 @@ fi
 
 
 %changelog
+* Thu Nov 08 2018 Vaughan <devel at agrez dot net> - 4.19.1-1
+- Rebase to 4.19 kernel branch
+- Update to stable kernel patch v4.19.1
+- Sync RPi patch to git revision: db63de0fbb84c96fa3f4497907dd3953bcf7b9b7
+
 * Fri Oct 26 2018 Vaughan <devel at agrez dot net> - 4.18.16-1
 - Update to stable kernel patch v4.18.16
 - Sync RPi patch to git revision: 866a96948b99651cdb168459922a43d8f07134cf
