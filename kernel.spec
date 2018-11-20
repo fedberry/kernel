@@ -69,7 +69,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 9ca74c53c
+%global rpi_gitshort f6878de4d
 
 %global fedora_build %{baserelease}
 
