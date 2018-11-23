@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 1
+%define stable_update 3
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1605,6 +1605,11 @@ fi
 
 
 %changelog
+* Thu Nov 22 2018 Vaughan <devel at agrez dot net> - 4.19.3-1
+- Update to stable kernel patch v4.19.3
+- Sync RPi patch to git revision: ad8e5625d3c4ae2e64fcb7b2500c0383a204789c
+- Fix usbip-vudc depmod failure
+
 * Thu Nov 08 2018 Vaughan <devel at agrez dot net> - 4.19.1-1
 - Rebase to 4.19 kernel branch
 - Update to stable kernel patch v4.19.1
