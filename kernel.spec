@@ -971,7 +971,7 @@ BuildKernel() {
     sed -i 's/# CONFIG_ARM_LPAE is not set/CONFIG_ARM_LPAE=y/' .config
     sed -i 's/# CONFIG_ARCH_PHYS_ADDR_T_64BIT is not set/CONFIG_ARCH_PHYS_ADDR_T_64BIT=y/' .config
     sed -i 's/CONFIG_VMSPLIT_2G=y/# CONFIG_VMSPLIT_2G is not set/' .config
-    sed -i 's/# CONFIG_VMSPLIT_3G is not set/CONFIG_VMSPLIT_3G=y/' .config
+    sed -i 's/# CONFIG_VMSPLIT_3G_OPT is not set/CONFIG_VMSPLIT_3G_OPT=y/' .config
     %endif
 
     echo USING ARCH=$Arch
