@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 7
+%define stable_update 9
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1605,6 +1605,11 @@ fi
 
 
 %changelog
+* Sat Dec 15 2018 Vaughan <devel at agrez dot net> - 4.19.9-1
+- Update to stable kernel patch v4.19.9
+- Sync RPi patch to git revision: 0a186de04e03315b1107a5df803bdb7d78828227
+- Enable CONFIG_F2FS_FS_SECURITY
+
 * Fri Dec 07 2018 Vaughan <devel at agrez dot net> - 4.19.7-1
 - Update to stable kernel patch v4.19.7
 - Sync RPi patch to git revision: 172a80a6804086350ee594765d43047a69f4755f
