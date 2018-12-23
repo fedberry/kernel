@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 9
+%define stable_update 12
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1605,6 +1605,11 @@ fi
 
 
 %changelog
+* Sat Dec 22 2018 Vaughan <devel at agrez dot net> - 4.19.12-1
+- Update to stable kernel patch v4.19.12
+- Sync RPi patch to git revision: e75aca6e66f6091dd3b9c316750025c8e9684f16
+- Revert back to CONFIG_VMSPLIT_3G for lpae kernel builds
+
 * Sat Dec 15 2018 Vaughan <devel at agrez dot net> - 4.19.9-1
 - Update to stable kernel patch v4.19.9
 - Sync RPi patch to git revision: 0a186de04e03315b1107a5df803bdb7d78828227
