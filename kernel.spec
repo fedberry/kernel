@@ -1066,6 +1066,9 @@ BuildKernel() {
       cp -a --parents arch/%{asmarch}/include %{buildroot}/lib/modules/$KernelVer/build/
     fi
 
+    # We need module.lds to compile out-of-tree modules
+    cp -a --parents arch/%{asmarch}/kernel/module.lds %{buildroot}/lib/modules/$KernelVer/build/
+
     # include the machine specific headers
     if [ -d arch/%{asmarch}/mach-${Flavour}/include ]; then
       cp -a --parents arch/%{asmarch}/mach-${Flavour}/include %{buildroot}/lib/modules/$KernelVer/build/
