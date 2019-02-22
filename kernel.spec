@@ -66,7 +66,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort e2d294132
@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 19
+%define stable_update 23
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1608,6 +1608,10 @@ fi
 
 
 %changelog
+* Thu Feb 21 2019 Vaughan <devel at agrez dot net> - 4.19.23-1
+- Update to stable kernel patch v4.19.23
+- Sync RPi patch to git revision: e2d2941326922b63d722ebc46520c3a2287b675f
+
 * Wed Feb 06 2019 Vaughan <devel at agrez dot net> - 4.19.19-2
 - Sync RPi patch to git revision: 8718503ea3b1bb131355ab237b62ea59440e8dc9
 - Include module linker script in kernel-devel
