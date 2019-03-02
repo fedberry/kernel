@@ -1608,6 +1608,11 @@ fi
 
 
 %changelog
+* Sat Mar 02 2019 Vaughan <devel at agrez dot net> - 4.20.13-1
+- Rebase to 4.20 kernel branch
+- Update to stable kernel patch v4.20.3
+- Sync RPi patch to git revision: 7d30deaf2091d4ff63097860b568b4adb336ef6c
+
 * Thu Feb 21 2019 Vaughan <devel at agrez dot net> - 4.19.23-1
 - Update to stable kernel patch v4.19.23
 - Sync RPi patch to git revision: e2d2941326922b63d722ebc46520c3a2287b675f
