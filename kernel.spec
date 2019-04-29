@@ -884,12 +884,18 @@ find . \( -name "*.orig" -o -name "*~" \) -exec rm -f {} \; >/dev/null
 # remove unnecessary SCM files
 find . -name .gitignore -exec rm -f {} \; >/dev/null
 
+# Ensure all python shebangs in 'tools' & 'scripts' directory are using python3
+%if 0%{?fedora} > 29
+find scripts tools -type f -exec sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' '{}' ';'
+%endif
+
 %if %{with_rt_preempt}
 # remove append on rt kernels
 rm -f localversion-rt
 %endif
 
 cd ..
+
 
 
 
