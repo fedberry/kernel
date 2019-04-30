@@ -102,7 +102,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 35
+%define stable_update 36
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1614,6 +1614,11 @@ fi
 
 
 %changelog
+* Mon Apr 29 2019 Vaughan <devel at agrez dot net> - 4.19.36-1
+- Update to stable kernel patch v4.19.36
+- Sync RPi patch to git revision: f70d3cee7ea9e6411559cc75e3882d4703752dfe
+- Change all python shebangs to be explicitly python3
+
 * Fri Apr 19 2019 Vaughan <devel at agrez dot net> - 4.19.35-1
 - Update to stable kernel patch v4.19.35
 - Sync RPi patch to git revision: 6dabe04c82943c34fb5bcadc9cc2ee7b6b4a145b
