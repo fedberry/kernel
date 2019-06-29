@@ -90,6 +90,7 @@
 %endif
 
 %if %{with_lpae}
+%global variant -lpae
 %global fedora_build %{baserelease}.lpae
 %endif
 
@@ -217,8 +218,8 @@ Version: %{rpmversion}
 Release: %{pkg_release}
 ExclusiveArch: %{arm}
 
-Requires: kernel-core-uname-r = %{KVERREL}%{?variant}
-Requires: kernel-modules-uname-r = %{KVERREL}%{?variant}
+Requires: kernel-core-uname-r = %{KVERREL}
+Requires: kernel-modules-uname-r = %{KVERREL}
 
 BuildRequires: kmod
 BuildRequires: patch
@@ -360,7 +361,7 @@ The kernel meta package
 Provides: kernel = %{rpmversion}-%{pkg_release}\
 Provides: kernel-%{_target_cpu} = %{rpmversion}-%{pkg_release}%{?1:+%{1}}\
 Provides: kernel-drm-nouveau = 16\
-Provides: kernel-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
+Provides: kernel-uname-r = %{KVERREL}%{?1:+%{1}}\
 Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
 Suggests: linux-firmware\
@@ -548,7 +549,7 @@ Group: System Environment/Kernel\
 Provides: kernel%{?1:-%{1}}-devel-%{_target_cpu} = %{version}-%{release}\
 Provides: kernel-devel-%{_target_cpu} = %{version}-%{release}%{?1:+%{1}}\
 Provides: kernel-devel = %{version}-%{release}%{?1:+%{1}}\
-Provides: kernel-devel-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
+Provides: kernel-devel-uname-r = %{KVERREL}%{?1:+%{1}}\
 Provides: installonlypkg(kernel)\
 AutoReqProv: no\
 Requires(pre): /usr/bin/find\
@@ -570,9 +571,9 @@ Provides: kernel%{?1:-%{1}}-modules-extra-%{_target_cpu} = %{version}-%{release}
 Provides: kernel%{?1:-%{1}}-modules-extra-%{_target_cpu} = %{version}-%{release}%{?1:+%{1}}\
 Provides: kernel%{?1:-%{1}}-modules-extra = %{version}-%{release}%{?1:+%{1}}\
 Provides: installonlypkg(kernel-module)\
-Provides: kernel%{?1:-%{1}}-modules-extra-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
-Requires: kernel-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
-Requires: kernel%{?1:-%{1}}-modules-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
+Provides: kernel%{?1:-%{1}}-modules-extra-uname-r = %{KVERREL}%{?1:+%{1}}\
+Requires: kernel-uname-r = %{KVERREL}%{?1:+%{1}}\
+Requires: kernel%{?1:-%{1}}-modules-uname-r = %{KVERREL}%{?1:+%{1}}\
 AutoReq: no\
 AutoProv: yes\
 %description %{?1:%{1}-}modules-extra\
@@ -591,8 +592,8 @@ Provides: kernel%{?1:-%{1}}-modules-%{_target_cpu} = %{version}-%{release}\
 Provides: kernel-modules-%{_target_cpu} = %{version}-%{release}%{?1:+%{1}}\
 Provides: kernel-modules = %{version}-%{release}%{?1:+%{1}}\
 Provides: installonlypkg(kernel-module)\
-Provides: kernel%{?1:-%{1}}-modules-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
-Requires(pre): kernel-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
+Provides: kernel%{?1:-%{1}}-modules-uname-r = %{KVERREL}%{?1:+%{1}}\
+Requires(pre): kernel-uname-r = %{KVERREL}%{?1:+%{1}}\
 AutoReq: no\
 AutoProv: yes\
 %description %{?1:%{1}-}modules\
@@ -607,8 +608,8 @@ This package provides commonly used kernel modules for the %{?2:%{2}-}core kerne
 %package %{1}\
 summary: kernel meta-package for the %{1} kernel\
 group: system environment/kernel\
-Requires: kernel-%{1}-core-uname-r = %{KVERREL}%{?variant}+%{1}\
-Requires: kernel-%{1}-modules-uname-r = %{KVERREL}%{?variant}+%{1}\
+Requires: kernel-%{1}-core-uname-r = %{KVERREL}+%{1}\
+Requires: kernel-%{1}-modules-uname-r = %{KVERREL}+%{1}\
 %description %{1}\
 The meta-package for the %{1} kernel\
 %{nil}
@@ -622,7 +623,7 @@ The meta-package for the %{1} kernel\
 %package %{?1:%{1}-}core\
 Summary: %{variant_summary}\
 Group: System Environment/Kernel\
-Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?variant}%{?1:+%{1}}\
+Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?1:+%{1}}\
 %{expand:%%kernel_reqprovconf}\
 %if %{?1:1} %{!?1:0} \
 %{expand:%%kernel_meta_package %{?1:%{1}}}\
