@@ -594,6 +594,7 @@ This package provides commonly used kernel modules for the %{?2:%{2}-}core kerne
 summary: kernel meta-package for the %{1} kernel\
 Requires: kernel-%{1}-core-uname-r = %{KVERREL}+%{1}\
 Requires: kernel-%{1}-modules-uname-r = %{KVERREL}+%{1}\
+Provides: installonlypkg(kernel)\
 %description %{1}\
 The meta-package for the %{1} kernel\
 %{nil}
@@ -607,6 +608,7 @@ The meta-package for the %{1} kernel\
 %package %{?1:%{1}-}core\
 Summary: %{variant_summary}\
 Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?1:+%{1}}\
+Provides: installonlypkg(kernel)\
 %{expand:%%kernel_reqprovconf}\
 %if %{?1:1} %{!?1:0} \
 %{expand:%%kernel_meta_package %{?1:%{1}}}\
