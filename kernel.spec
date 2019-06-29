@@ -201,7 +201,6 @@
 
 
 Name: kernel%{?variant}
-Group: System Environment/Kernel
 License: GPLv2 and Redistributable, no modification permitted
 %if !%{bcm270x}
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
@@ -382,7 +381,6 @@ AutoProv: yes\
 
 %package headers
 Summary: Header files for the Linux kernel for use by glibc
-Group: Development/System
 Obsoletes: glibc-kernheaders < 3.0-46
 Provides: glibc-kernheaders = 3.0-46
 %if "0%{?variant}"
@@ -400,7 +398,6 @@ glibc package.
 
 %package debuginfo-common-%{_target_cpu}
 Summary: Kernel source files used by %{name}-debuginfo packages
-Group: Development/Debug
 
 %description debuginfo-common-%{_target_cpu}
 This package is required by %{name}-debuginfo subpackages.
@@ -410,7 +407,6 @@ It provides the kernel source files common to all builds.
 %if %{with_perf}
 %package -n perf
 Summary: Performance monitoring for the Linux kernel
-Group: Development/System
 License: GPLv2
 
 %description -n perf
@@ -420,7 +416,6 @@ of the Linux kernel.
 
 %package -n perf-debuginfo
 Summary: Debug information for package perf
-Group: Development/Debug
 Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}
 AutoReqProv: no
 
@@ -436,7 +431,6 @@ This package provides debug information for the perf package.
 
 %package -n python2-perf
 Summary: Python bindings for apps which will manipulate perf events
-Group: Development/Libraries
 
 %description -n python2-perf
 The python2-perf package contains a module that permits applications
@@ -448,7 +442,6 @@ to manipulate perf events.
 
 %package -n python2-perf-debuginfo
 Summary: Debug information for package perf python bindings
-Group: Development/Debug
 Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}
 AutoReqProv: no
 
@@ -463,7 +456,6 @@ This package provides debug information for the perf python bindings.
 %if %{with_tools}
 %package -n kernel-tools
 Summary: Assortment of tools for the Linux kernel
-Group: Development/System
 License: GPLv2
 Provides:  cpupowerutils = 1:009-0.6.p1
 Obsoletes: cpupowerutils < 1:009-0.6.p1
@@ -481,7 +473,6 @@ and the supporting documentation.
 
 %package -n kernel-tools-libs
 Summary: Libraries for the kernels-tools
-Group: Development/System
 License: GPLv2
 
 %description -n kernel-tools-libs
@@ -491,7 +482,6 @@ from the kernel source.
 
 %package -n kernel-tools-libs-devel
 Summary: Assortment of tools for the Linux kernel
-Group: Development/System
 License: GPLv2
 Requires: kernel-tools = %{version}-%{release}
 Provides:  cpupowerutils-devel = 1:009-0.6.p1
@@ -506,7 +496,6 @@ the kernel source.
 
 %package -n kernel-tools-debuginfo
 Summary: Debug information for package kernel-tools
-Group: Development/Debug
 Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}
 AutoReqProv: no
 
@@ -528,7 +517,6 @@ This package provides debug information for package kernel-tools.
 %define kernel_debuginfo_package() \
 %package %{?1:%{1}-}debuginfo\
 Summary: Debug information for package %{name}%{?1:-%{1}}\
-Group: Development/Debug\
 Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}\
 Provides: %{name}%{?1:-%{1}}-debuginfo-%{_target_cpu} = %{version}-%{release}\
 AutoReqProv: no\
@@ -545,7 +533,6 @@ This is required to use SystemTap with %{name}%{?1:-%{1}}-%{KVERREL}.\
 %define kernel_devel_package() \
 %package %{?1:%{1}-}devel\
 Summary: Development package for building kernel modules to match the %{?2:%{2} }kernel\
-Group: System Environment/Kernel\
 Provides: kernel%{?1:-%{1}}-devel-%{_target_cpu} = %{version}-%{release}\
 Provides: kernel-devel-%{_target_cpu} = %{version}-%{release}%{?1:+%{1}}\
 Provides: kernel-devel = %{version}-%{release}%{?1:+%{1}}\
@@ -566,7 +553,6 @@ against the %{?2:%{2} }kernel package.\
 %define kernel_modules_extra_package() \
 %package %{?1:%{1}-}modules-extra\
 Summary: Extra kernel modules to match the %{?2:%{2} }kernel\
-Group: System Environment/Kernel\
 Provides: kernel%{?1:-%{1}}-modules-extra-%{_target_cpu} = %{version}-%{release}\
 Provides: kernel%{?1:-%{1}}-modules-extra-%{_target_cpu} = %{version}-%{release}%{?1:+%{1}}\
 Provides: kernel%{?1:-%{1}}-modules-extra = %{version}-%{release}%{?1:+%{1}}\
@@ -587,7 +573,6 @@ This package provides less commonly used kernel modules for the %{?2:%{2} }kerne
 %define kernel_modules_package() \
 %package %{?1:%{1}-}modules\
 Summary: kernel modules to match the %{?2:%{2}-}core kernel\
-Group: System Environment/Kernel\
 Provides: kernel%{?1:-%{1}}-modules-%{_target_cpu} = %{version}-%{release}\
 Provides: kernel-modules-%{_target_cpu} = %{version}-%{release}%{?1:+%{1}}\
 Provides: kernel-modules = %{version}-%{release}%{?1:+%{1}}\
@@ -607,7 +592,6 @@ This package provides commonly used kernel modules for the %{?2:%{2}-}core kerne
 %define kernel_meta_package() \
 %package %{1}\
 summary: kernel meta-package for the %{1} kernel\
-group: system environment/kernel\
 Requires: kernel-%{1}-core-uname-r = %{KVERREL}+%{1}\
 Requires: kernel-%{1}-modules-uname-r = %{KVERREL}+%{1}\
 %description %{1}\
@@ -622,7 +606,6 @@ The meta-package for the %{1} kernel\
 %define kernel_variant_package(n:) \
 %package %{?1:%{1}-}core\
 Summary: %{variant_summary}\
-Group: System Environment/Kernel\
 Provides: kernel-%{?1:%{1}-}core-uname-r = %{KVERREL}%{?1:+%{1}}\
 %{expand:%%kernel_reqprovconf}\
 %if %{?1:1} %{!?1:0} \
