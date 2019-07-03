@@ -92,6 +92,8 @@
 %if %{with_lpae}
 %global variant -lpae
 %global fedora_build %{baserelease}.lpae
+%global with_tools 0
+%global with_perf 0
 %endif
 
 # base_sublevel is the kernel version we're starting with and patching
