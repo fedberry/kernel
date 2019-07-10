@@ -222,30 +222,33 @@ ExclusiveArch: %{arm}
 Requires: kernel-core-uname-r = %{KVERREL}
 Requires: kernel-modules-uname-r = %{KVERREL}
 
-BuildRequires: kmod
-BuildRequires: patch
 BuildRequires: bash
-BuildRequires: tar
+BuildRequires: bc
+BuildRequires: binutils
+BuildRequires: bison
 BuildRequires: bzip2
-BuildRequires: xz
+BuildRequires: diffutils
 BuildRequires: findutils
+BuildRequires: flex
+BuildRequires: gawk
+BuildRequires: gcc
 BuildRequires: gzip
+BuildRequires: hmaccalc
+BuildRequires: hostname
+BuildRequires: kmod
 BuildRequires: m4
+BuildRequires: make
+BuildRequires: net-tools
+BuildRequires: openssl-devel
+BuildRequires: patch
 BuildRequires: perl-interpreter
 BuildRequires: perl-Carp
 BuildRequires: perl-devel
 BuildRequires: perl-generators
-BuildRequires: make
-BuildRequires: diffutils
-BuildRequires: gawk
-BuildRequires: gcc
-BuildRequires: binutils
 BuildRequires: redhat-rpm-config
-BuildRequires: hmaccalc
-BuildRequires: net-tools
-BuildRequires: hostname
-BuildRequires: bc
-BuildRequires: openssl-devel
+BuildRequires: tar
+BuildRequires: xz
+
 %if %{with_perf}
 BuildRequires: elfutils-devel
 BuildRequires: zlib-devel
@@ -253,8 +256,6 @@ BuildRequires: binutils-devel
 BuildRequires: newt-devel
 BuildRequires: python2-devel
 BuildRequires: perl(ExtUtils::Embed)
-BuildRequires: bison
-BuildRequires: flex
 BuildRequires: audit-libs-devel
 BuildRequires: xmlto
 %endif
