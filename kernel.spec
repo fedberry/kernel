@@ -295,6 +295,7 @@ Source99: filter-modules.sh
 # kernel config modifications
 Source1000: bcm270x.cfg
 Source1100: bcm283x.cfg
+Source1200: lpae.cfg
 
 # rt kernel patch
 %if %{enable_preempt}
@@ -963,10 +964,8 @@ BuildKernel() {
     %endif
 
     %if %{with_lpae}
-    sed -i 's/# CONFIG_ARM_LPAE is not set/CONFIG_ARM_LPAE=y/' .config
-    sed -i 's/# CONFIG_ARCH_PHYS_ADDR_T_64BIT is not set/CONFIG_ARCH_PHYS_ADDR_T_64BIT=y/' .config
-    sed -i 's/CONFIG_VMSPLIT_2G=y/# CONFIG_VMSPLIT_2G is not set/' .config
-    sed -i 's/# CONFIG_VMSPLIT_3G is not set/CONFIG_VMSPLIT_3G=y/' .config
+    # merge lpae kernel config changes
+    scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1200}
     %endif
 
     echo USING ARCH=$Arch
