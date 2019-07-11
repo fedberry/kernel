@@ -293,16 +293,16 @@ Source17: mod-extra.sh
 Source99: filter-modules.sh
 
 # kernel config modifications
-Source1000: bcm270x.cfg
-Source1100: bcm283x.cfg
-Source1200: lpae.cfg
+Source1000: config-bcm27xx.cfg
+Source1100: config-bcm283x.cfg
+Source1200: config-lpae.cfg
 
 # rt kernel patch
 %if %{enable_preempt}
 Source1500: linux-rpi-4.%{base_sublevel}.y-rt%{rtrelease}-%{rtgitsnap}.patch.xz
 %endif
 # rt kernel config modification
-Source1501: config-fedberry-rt.cfg
+Source1501: config-rt.cfg
 
 # Sources for kernel-tools
 Source2000: cpupower.service
