@@ -45,6 +45,9 @@
 # Enable Large Physical Address Extension support
 %define with_lpae       %{?_with_lpae:       1} %{?!_with_lpae: 0}
 
+# Build a bcm2711 (RPi4) kernel
+%define with_rpi4       %{?_with_rpi4:       1} %{?!_with_rpi4: 0}
+
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
@@ -94,6 +97,13 @@
 %global fedora_build %{baserelease}.lpae
 %global with_tools 0
 %global with_perf 0
+%endif
+
+%if %{with_rpi4}
+%global variant -rpi4
+%global with_tools 0
+%global with_perf 0
+%global with_lpae 0
 %endif
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -149,7 +159,11 @@
 
 %if %{with_bcm270x}
  %define bcm270x 1
- %define Flavour rpi
+ %if %{with_rpi4}
+  %define Flavour rpi4
+ %else
+  %define Flavour rpi
+ %endif
  %define buildid .%{Flavour}
 %else
  %define bcm270x 0
@@ -209,7 +223,11 @@ Summary: The Linux kernel for the Raspberry Pi (BCM283x)
 URL: http://www.kernel.org
 %else
 %if %{_target_cpu} == armv7hl
+%if %{with_rpi4}
+Summary: The BCM2711 Linux kernel port for the Raspberry Pi 4 Model B
+%else
 Summary: The BCM2709 Linux kernel port for the Raspberry Pi 2 and 3 Model B
+%endif
 %else
 Summary: The BCM2708 Linux kernel port for the Raspberry Pi Model A, B and Zero
 %endif
@@ -626,7 +644,11 @@ Provides: installonlypkg(kernel)\
 # The main -core package
 %if %{bcm270x}
 %if %{_target_cpu} == armv7hl
+%if %{with_rpi4}
+%define variant_summary The Linux kernel for the Raspberry Pi 4 Model B
+%else
 %define variant_summary The Linux kernel for the Raspberry Pi 2/3 Model B
+%endif
 %else
 %define variant_summary The Linux kernel for the Raspberry Pi Model A, B & Zero
 %endif
@@ -950,7 +972,11 @@ BuildKernel() {
     %endif
     %if %{bcm270x}
     %if %{_target_cpu} == armv7hl
+    %if %{with_rpi4}
+    make bcm2711_defconfig
+    %else
     make bcm2709_defconfig
+    %endif
     %else
     make bcmrpi_defconfig
     %endif
@@ -1417,7 +1443,11 @@ fi\
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
 %if %{_target_cpu} == armv7hl\
+%if %{with_rpi4}\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7l.img\
+%else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7.img\
+%endif\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel.img\
 %endif\
