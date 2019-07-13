@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 57
+%define stable_update 58
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1632,6 +1632,18 @@ fi
 
 
 %changelog
+* Sat Jul 13 2019 Vaughan <devel at agrez dot net> - 4.19.58-1
+- Update to stable kernel patch v4.19.58
+- Sync RPi patch to git revision: 246113692edbef9a438b31ab2dd0172a30ed5eb2
+- Modify lpae kernel builds
+- Drop Groups
+- Add Provides: installonlypkg(kernel) to macros
+- Disable tools & perf packages for lpae builds
+- Update/fix BuildRequires for lpae builds
+- Add & use a kernel config fragments file for lpae builds
+- Rename kernel config fragment files
+- Add RPi4 (bcm2711) build option
+
 * Mon Jul 08 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.57-1
 - Update to stable kernel patch v4.19.57
 - Sync RPi patch to git revision: 8ea4810a9f2d0c510f6a8fd56805e82ac76904a3
