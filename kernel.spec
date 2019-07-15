@@ -1445,6 +1445,7 @@ fi\
 %if %{_target_cpu} == armv7hl\
 %if %{with_rpi4}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7l.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2711* /boot/\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7.img\
 %endif\
