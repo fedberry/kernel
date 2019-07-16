@@ -1635,6 +1635,7 @@ fi
 %changelog
 * Sat Jul 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.58-2
 - Enable BPF/cgroup based firewalling
+- Add installation of bcm2711-rpi-4-b.dtb for rpi4
 
 * Sat Jul 13 2019 Vaughan <devel at agrez dot net> - 4.19.58-1
 - Update to stable kernel patch v4.19.58
