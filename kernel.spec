@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 246113692
@@ -1633,6 +1633,9 @@ fi
 
 
 %changelog
+* Sat Jul 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.58-2
+- Enable BPF/cgroup based firewalling
+
 * Sat Jul 13 2019 Vaughan <devel at agrez dot net> - 4.19.58-1
 - Update to stable kernel patch v4.19.58
 - Sync RPi patch to git revision: 246113692edbef9a438b31ab2dd0172a30ed5eb2
