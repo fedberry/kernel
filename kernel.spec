@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 20565c94c
@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 58
+%define stable_update 61
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1633,6 +1633,10 @@ fi
 
 
 %changelog
+* Sat Jul 27 2019 Vaughan <devel at agrez dot net> - 4.19.61-1
+- Update to stable kernel patch v4.19.61
+- Sync RPi patch to git revision: 20565c94ca877a099a3c9c5fa39a0380f3d16491
+
 * Sat Jul 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.58-2
 - Enable BPF/cgroup based firewalling
 - Add installation of bcm2711-rpi-4-b.dtb for rpi4
