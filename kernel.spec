@@ -109,20 +109,20 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 20
+%define base_sublevel 3
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 13
+%define stable_update 8
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
 %define stablerev %{stable_update}
 %define stable_base %{stable_update}
 %endif
-%define rpmversion 4.%{base_sublevel}.%{stable_update}
+%define rpmversion 5.%{base_sublevel}.%{stable_update}
 
 ## The not-released-kernel case ##
 %else
@@ -133,7 +133,7 @@
 # The git snapshot level
 %define gitrev 0
 # Set rpm version accordingly
-%define rpmversion 4.%{upstream_sublevel}.0
+%define rpmversion 5.%{upstream_sublevel}.0
 %endif
 # Nb: The above rcrev and gitrev values automagically define Source1 and Source2 below.
 
@@ -178,7 +178,7 @@
 %endif
 
 # The kernel tarball/base version
-%define kversion 4.%{base_sublevel}
+%define kversion 5.%{base_sublevel}
 
 %define make_target bzImage
 %define kernel_image arch/arm/boot/zImage
@@ -236,7 +236,6 @@ URL: https://github.com/raspberrypi/linux
 Version: %{rpmversion}
 Release: %{pkg_release}
 ExclusiveArch: %{arm}
-
 Requires: kernel-core-uname-r = %{KVERREL}
 Requires: kernel-modules-uname-r = %{KVERREL}
 
@@ -266,7 +265,9 @@ BuildRequires: perl-generators
 BuildRequires: redhat-rpm-config
 BuildRequires: tar
 BuildRequires: xz
-
+%if %{with_headers}
+BuildRequires: rsync
+%endif
 %if %{with_perf}
 BuildRequires: elfutils-devel
 BuildRequires: zlib-devel
@@ -305,7 +306,7 @@ BuildRequires: gcc-%{_build_arch}-linux-gnu
 %define cross_opts CROSS_COMPILE=%{_build_arch}-linux-gnu-
 %endif
 
-Source0: https://www.kernel.org/pub/linux/kernel/v4.x/linux-%{kversion}.tar.xz
+Source0: https://www.kernel.org/pub/linux/kernel/v5.x/linux-%{kversion}.tar.xz
 Source16: mod-extra.list
 Source17: mod-extra.sh
 Source99: filter-modules.sh
@@ -317,7 +318,7 @@ Source1200: config-lpae.cfg
 
 # rt kernel patch
 %if %{enable_preempt}
-Source1500: linux-rpi-4.%{base_sublevel}.y-rt%{rtrelease}-%{rtgitsnap}.patch.xz
+Source1500: linux-rpi-5.%{base_sublevel}.y-rt%{rtrelease}-%{rtgitsnap}.patch.xz
 %endif
 # rt kernel config modification
 Source1501: config-rt.cfg
@@ -330,7 +331,7 @@ Source2001: cpupower.config
 # For a stable release kernel
 %if 0%{?stable_update}
 %if 0%{?stable_base}
-Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}.%{stable_base}.xz
+Source1: https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.%{base_sublevel}.%{stable_base}.xz
 %endif
 
 # non-released_kernel case
@@ -338,14 +339,14 @@ Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}.%
 # near the top of this spec file.
 %else
 %if 0%{?rcrev}
-Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{upstream_sublevel}-rc%{rcrev}.xz
+Source1: https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.%{upstream_sublevel}-rc%{rcrev}.xz
 %if 0%{?gitrev}
-Source2: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{upstream_sublevel}-rc%{rcrev}-git%{gitrev}.xz
+Source2: https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.%{upstream_sublevel}-rc%{rcrev}-git%{gitrev}.xz
 %endif
 %else
 # pre-{base_sublevel+1}-rc1 case
 %if 0%{?gitrev}
-Source1: https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.%{base_sublevel}-git%{gitrev}.xz
+Source1: https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.%{base_sublevel}-git%{gitrev}.xz
 %endif
 %endif
 %endif
@@ -357,7 +358,7 @@ Patch10: bcm283x-add-mkknlimg-knlinfo.patch
 
 ## Patches for bcm270x builds (append patches with bcm270x)
 #RasperryPi patch
-Patch100: bcm270x-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
+Patch100: bcm270x-linux-rpi-5.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 
 ## Patches for both builds (bcm270x & bcm283x)
 #FedBerry logo
@@ -472,7 +473,7 @@ This package provides debug information for the perf python bindings.
 
 # the python_sitearch macro should already be defined from above
 %{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{python_sitearch}/perf.so(\.debug)?|XXX' -o python2-perf-debuginfo.list}
-%endif # with_perf
+%endif
 
 
 %if %{with_tools}
@@ -529,8 +530,7 @@ This package provides debug information for package kernel-tools.
 # the leading .*, because of find-debuginfo.sh's buggy handling
 # of matching the pattern against the symlinks file.
 %{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{_bindir}/cpupower(\.debug)?|.*%%{_libdir}/libcpupower.*|.*%%{_bindir}/turbostat(\.debug)?|.*%%{_bindir}/tmon(\.debug)?|.*%%{_bindir}/lsgpio(\.debug)?|.*%%{_bindir}/gpio-hammer(\.debug)?|.*%%{_bindir}/gpio-event-mon(\.debug)?|.*%%{_bindir}/iio_event_monitor(\.debug)?|.*%%{_bindir}/iio_generic_buffer(\.debug)?|.*%%{_bindir}/lsiio(\.debug)?|XXX' -o kernel-tools-debuginfo.list}
-%endif # with_tools
-
+%endif
 
 #
 # This macro creates a kernel-<subpackage>-debuginfo package.
@@ -727,20 +727,20 @@ ApplyOptionalPatch()
 
 # Update to latest upstream.
 %if 0%{?released_kernel}
-%define vanillaversion 4.%{base_sublevel}
+%define vanillaversion 5.%{base_sublevel}
 # non-released_kernel case
 %else
 %if 0%{?rcrev}
-%define vanillaversion 4.%{upstream_sublevel}-rc%{rcrev}
+%define vanillaversion 5.%{upstream_sublevel}-rc%{rcrev}
 %if 0%{?gitrev}
-%define vanillaversion 4.%{upstream_sublevel}-rc%{rcrev}-git%{gitrev}
+%define vanillaversion 5.%{upstream_sublevel}-rc%{rcrev}-git%{gitrev}
 %endif
 %else
 # pre-{base_sublevel+1}-rc1 case
 %if 0%{?gitrev}
-%define vanillaversion 4.%{base_sublevel}-git%{gitrev}
+%define vanillaversion 5.%{base_sublevel}-git%{gitrev}
 %else
-%define vanillaversion 4.%{base_sublevel}
+%define vanillaversion 5.%{base_sublevel}
 %endif
 %endif
 %endif
@@ -753,7 +753,7 @@ ApplyOptionalPatch()
 
 # Build a list of the other top-level kernel tree directories.
 # This will be used to hardlink identical vanilla subdirs.
-sharedirs=$(find "$PWD" -maxdepth 1 -type d -name 'kernel-4.*' \
+sharedirs=$(find "$PWD" -maxdepth 1 -type d -name 'kernel-5.*' \
             | grep -x -v "$PWD"/kernel-%{kversion}%{?dist}) ||:
 
 # Delete all old stale trees.
@@ -1245,7 +1245,7 @@ cd linux-%{KVERREL}
 BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
-  make EXTRA_CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf V=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+  make EXTRA_CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
 
 %if %{with_perf}
 # perf
@@ -1539,7 +1539,8 @@ fi
 %files -f python2-perf-debuginfo.list -n python2-perf-debuginfo
 %defattr(-,root,root)
 %endif
-%endif # with_perf
+%endif
+
 
 %if %{with_tools}
 %files -n kernel-tools -f cpupower.lang
@@ -1557,6 +1558,7 @@ fi
 %{_bindir}/gpio-event-mon
 %{_mandir}/man1/kvm_stat*
 %{_bindir}/kvm_stat
+%{_datadir}/bash-completion/completions/cpupower
 
 %if %{with_debuginfo}
 %files -f kernel-tools-debuginfo.list -n kernel-tools-debuginfo
@@ -1570,7 +1572,7 @@ fi
 %files -n kernel-tools-libs-devel
 %{_libdir}/libcpupower.so
 %{_includedir}/cpufreq.h
-%endif # with_perf
+%endif
 
 # empty meta-package
 %files
