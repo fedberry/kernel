@@ -352,10 +352,6 @@ Source1: https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.%{base_sublevel}-g
 %endif
 
 %if !%{nopatches}
-## Patches for bcm283x builds (append patches with bcm283x)
-#script for adding device tree trailer to the kernel img
-Patch10: bcm283x-add-mkknlimg-knlinfo.patch
-
 ## Patches for bcm270x builds (append patches with bcm270x)
 #RasperryPi patch
 Patch100: bcm270x-linux-rpi-5.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
@@ -1026,14 +1022,7 @@ BuildKernel() {
     # into consideration when performing disk space calculations. (See bz #530778)
     dd if=/dev/zero of=%{buildroot}/boot/initramfs-$KernelVer.img bs=1M count=20
 
-    # add the device tree trailer to the kernel img
-    chmod +x scripts/mkknlimg
-    %if !%{bcm270x}
-    scripts/mkknlimg --dtok --283x $KernelImage %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
-    %else
-    scripts/mkknlimg --dtok --270x $KernelImage %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
-    %endif
-    chmod 755 %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
+    install -m 755 $KernelImage %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
     cp %{buildroot}/%{image_install_path}/$InstallName-$KernelVer %{buildroot}/lib/modules/$KernelVer/$InstallName
 
     # hmac sign the kernel for FIPS
@@ -1573,6 +1562,7 @@ fi
 %{_libdir}/libcpupower.so
 %{_includedir}/cpufreq.h
 %endif
+
 
 # empty meta-package
 %files
