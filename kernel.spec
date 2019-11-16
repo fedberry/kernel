@@ -1625,6 +1625,21 @@ fi
 
 
 %changelog
+* Sat Nov 09 2019 Vaughan <devel at agrez dot net> - 5.3.8-1
+- Rebase to 5.3 kernel branch
+- Update to stable kernel patch v5.3.8
+- Sync RPi patch to git revision: e7a4bc6d056b339950fa5a26afcb3f4a03ac740c
+- Drop mkknlimg support (its depreciated)
+- Sync with changes in 4.19.x branch
+  * Enable BPF/cgroup based firewalling
+  * Add RPi4 (bcm2711) build option
+  * Rename kernel config fragment files
+  * Disable tools & perf packages for lpae build
+  * Add Provides: installonlypkg(kernel) to macros
+  * Drop Groups
+  * Modify lpae build
+  * Change python shebangs to be explicitly python3
+
 * Sat Mar 02 2019 Vaughan <devel at agrez dot net> - 4.20.13-1
 - Rebase to 4.20 kernel branch
 - Update to stable kernel patch v4.20.3
