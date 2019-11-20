@@ -72,7 +72,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 389314825
+%global rpi_gitshort 3c235dcfe
 
 %global fedora_build %{baserelease}
 
@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 80
+%define stable_update 83
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
