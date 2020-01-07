@@ -69,10 +69,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 3c235dcfe
+%global rpi_gitshort 9ee95326a
 
 %global fedora_build %{baserelease}
 
@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 83
+%define stable_update 93
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1641,6 +1641,10 @@ fi
 
 
 %changelog
+* Tue Jan 07 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.93-1.rpi
+- Update to stable kernel patch v4.19.93
+- Sync RPi patch to git revision: 9ee95326a1811c97f505f00aa7328e81dfdbd01b
+
 * Thu Jan 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.83-2.rpi
 - Fix extra tokens (for f31) at the end of %%endif directives
 
