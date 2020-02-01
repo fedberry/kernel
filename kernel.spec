@@ -1641,6 +1641,10 @@ fi
 
 
 %changelog
+* Sat Feb 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.97-1.rpi
+- Update to stable kernel patch v4.19.97
+- Sync RPi patch to git revision: 4dc8a4f35e45ba669e39d56ac9e0114eb56057f1
+
 * Mon Jan 20 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.95-1.rpi
 - Update to stable kernel patch v4.19.95
 - Sync RPi patch to git revision: 0d72d83ec92acda1e8cbad0d4213a5ec2b3f2e1b
