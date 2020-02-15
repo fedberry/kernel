@@ -72,7 +72,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort e7a4bc6d0
+%global rpi_gitshort 0f100bcec
 
 %global fedora_build %{baserelease}
 
@@ -109,13 +109,13 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 3
+%define base_sublevel 4
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 8
+%define stable_update 3
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1625,6 +1625,11 @@ fi
 
 
 %changelog
+* Thu Jan 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.3-1.rpi
+- Rebase to 5.4 kernel branch
+- Update to stable kernel patch v5.4.3
+- Sync RPi patch to git revision: 0f100bcec9fde14a71248b24eb1257b77a99970c
+
 * Sat Nov 09 2019 Vaughan <devel at agrez dot net> - 5.3.8-1
 - Rebase to 5.3 kernel branch
 - Update to stable kernel patch v5.3.8
