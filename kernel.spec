@@ -180,11 +180,21 @@
 # The kernel tarball/base version
 %define kversion 5.%{base_sublevel}
 
+%ifarch aarch64
+%define make_target Image
+%define kernel_image arch/arm64/boot/Image
+%define asmarch arm64
+%define hdrarch arm64
+%endif
+
+%ifarch armv7hl
 %define make_target bzImage
 %define kernel_image arch/arm/boot/zImage
-%define KVERREL %{version}-%{release}.%{_target_cpu}
 %define asmarch arm
 %define hdrarch arm
+%endif
+
+%define KVERREL %{version}-%{release}.%{_target_cpu}
 %define image_install_path boot
 # http://lists.infradead.org/pipermail/linux-arm-kernel/2012-March/091404.html
 %define kernel_mflags KALLSYMS_EXTRA_PASS=1
@@ -222,7 +232,7 @@ License: GPLv2 and Redistributable, no modification permitted
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
 URL: http://www.kernel.org
 %else
-%if %{_target_cpu} == armv7hl
+%if %{_target_cpu} != armv6hl
 %if %{with_rpi4}
 Summary: The BCM2711 Linux kernel port for the Raspberry Pi 4 Model B
 %else
@@ -233,9 +243,10 @@ Summary: The BCM2708 Linux kernel port for the Raspberry Pi Model A, B and Zero
 %endif
 URL: https://github.com/raspberrypi/linux
 %endif
+
 Version: %{rpmversion}
 Release: %{pkg_release}
-ExclusiveArch: %{arm}
+ExclusiveArch: %{arm} aarch64
 Requires: kernel-core-uname-r = %{KVERREL}
 Requires: kernel-modules-uname-r = %{KVERREL}
 
@@ -913,7 +924,7 @@ cd ..
 
 %build
 
-%ifnarch %{arm}
+%ifnarch %{arm} aarch64
 echo "This build is for arm archiecture only"
 exit 1
 %endif
@@ -967,11 +978,15 @@ BuildKernel() {
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1100}
     %endif
     %if %{bcm270x}
-    %if %{_target_cpu} == armv7hl
+    %if %{_target_cpu} != armv6hl
     %if %{with_rpi4}
     make bcm2711_defconfig
     %else
+    %ifarch aarch64
+    make bcmrpi3_defconfig
+    %else
     make bcm2709_defconfig
+    %endif
     %endif
     %else
     make bcmrpi_defconfig
@@ -1013,14 +1028,14 @@ BuildKernel() {
     %endif
 
     # Start installing the results
-    install -m 644 .config %{buildroot}/boot/config-$KernelVer
+    install -m 644 .config %{buildroot}/%{image_install_path}/config-$KernelVer
     install -m 644 .config %{buildroot}/lib/modules/$KernelVer/config
-    install -m 644 System.map %{buildroot}/boot/System.map-$KernelVer
+    install -m 644 System.map %{buildroot}/%{image_install_path}/System.map-$KernelVer
     install -m 644 System.map %{buildroot}/lib/modules/$KernelVer/System.map
 
     # We estimate the size of the initramfs because rpm needs to take this size
     # into consideration when performing disk space calculations. (See bz #530778)
-    dd if=/dev/zero of=%{buildroot}/boot/initramfs-$KernelVer.img bs=1M count=20
+    #dd if=/dev/zero of=%{buildroot}/boot/initramfs-$KernelVer.img bs=1M count=20
 
     install -m 755 $KernelImage %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
     cp %{buildroot}/%{image_install_path}/$InstallName-$KernelVer %{buildroot}/lib/modules/$KernelVer/$InstallName
@@ -1077,6 +1092,13 @@ BuildKernel() {
 
     # We need module.lds to compile out-of-tree modules
     cp -a --parents arch/%{asmarch}/kernel/module.lds %{buildroot}/lib/modules/$KernelVer/build/
+
+    %ifarch aarch64
+    # arch/arm64/include/asm/xen references arch/arm
+    cp -a --parents arch/arm/include/asm/xen $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
+    # arch/arm64/include/asm/opcodes.h references arch/arm
+    cp -a --parents arch/arm/include/asm/opcodes.h $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/
+    %endif
 
     # include the machine specific headers
     if [ -d arch/%{asmarch}/mach-${Flavour}/include ]; then
@@ -1226,7 +1248,7 @@ BuildKernel() {
 
 # prepare directories
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/boot
+mkdir -p %{buildroot}/%{image_install_path}
 mkdir -p %{buildroot}%{_libexecdir}
 
 cd linux-%{KVERREL}
@@ -1338,8 +1360,8 @@ rm -f %{buildroot}%{_bindir}/trace
 rm -rf %{buildroot}%{_docdir}/perf-tip
 
 # remove the perf examples/include dir
-rm -rf %{buildroot}%{_libdir}/perf/examples
-rm -rf %{buildroot}%{_libdir}/perf/include
+rm -rf %{buildroot}/usr/lib/perf/examples
+rm -rf %{buildroot}/usr/lib/perf/include
 %endif
 
 %if %{with_tools}
@@ -1431,10 +1453,13 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
-%if %{_target_cpu} == armv7hl\
+%if %{_target_cpu} != armv6hl\
 %if %{with_rpi4}\
+%ifarch aarch64\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel8.img\
+%else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7l.img\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2711* /boot/\
+%endif\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7.img\
 %endif\
@@ -1443,17 +1468,21 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel.i
 %endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}}\
 %if %{bcm270x}\
-rm -f /boot/overlays/*\
-mkdir -p /boot/overlays\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
-%if %{_target_cpu} == armv7hl\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /boot/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2710* /boot/\
+rm -f /%{image_install_path}/overlays/*\
+mkdir -p /%{image_install_path}/overlays\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /%{image_install_path}/overlays/\
+%if %{_target_cpu} != armv6hl\
+%ifarch aarch64\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2708* /boot/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2709* /%{image_install_path}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /boot/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2708* /%{image_install_path}/\
+%endif\
+%else\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /%{image_install_path}/\
 %endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/config /%{image_install_path}/config-%{KVERREL}%{?1:+%{1}}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/System.map /%{image_install_path}/System.map-%{KVERREL}%{?1:+%{1}}\
@@ -1589,10 +1618,9 @@ fi
 %ghost /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/%{?-k:%{-k*}}%{!?-k:vmlinuz}\
 %attr(600,root,root) /lib/modules/%{KVERREL}%{?2:+%{2}}/System.map\
-%ghost /boot/System.map-%{KVERREL}%{?2:+%{2}}\
+%ghost /%{image_install_path}/System.map-%{KVERREL}%{?2:+%{2}}\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/config\
-%ghost /boot/config-%{KVERREL}%{?2:+%{2}}\
-%ghost /boot/initramfs-%{KVERREL}%{?2:+%{2}}.img\
+%ghost /%{image_install_path}/config-%{KVERREL}%{?2:+%{2}}\
 %{?_bcm270x:%ghost /%{image_install_path}/overlays}\
 %dir /lib/modules\
 %dir /lib/modules/%{KVERREL}%{?2:+%{2}}\
