@@ -395,7 +395,6 @@ Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
 Suggests: linux-firmware\
 Requires(pre): bcm283x-firmware\
-Requires(pre): raspberrypi-vc-utils\
 Requires(preun): systemd\
 Conflicts: xorg-x11-drv-vmmouse\
 %{expand:%%{?kernel%{?1:_%{1}}_conflicts:Conflicts: %%{kernel%{?1:_%{1}}_conflicts}}}\
