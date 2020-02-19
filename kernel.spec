@@ -280,7 +280,7 @@ BuildRequires: elfutils-devel
 BuildRequires: zlib-devel
 BuildRequires: binutils-devel
 BuildRequires: newt-devel
-BuildRequires: python2-devel
+BuildRequires: python3-devel
 BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: audit-libs-devel
 BuildRequires: xmlto
@@ -454,27 +454,16 @@ This package provides debug information for the perf package.
 %{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{_bindir}/perf(\.debug)?|.*%%{_libexecdir}/perf-core/.*|.*%%{_libdir}/traceevent/plugins/.*|XXX' -o perf-debuginfo.list}
 
 
-%package -n python2-perf
+%package -n python3-perf
 Summary: Python bindings for apps which will manipulate perf events
 
-%description -n python2-perf
-The python2-perf package contains a module that permits applications
+%description -n python3-perf
+The python3-perf package contains a module that permits applications
 written in the Python programming language to use the interface
 to manipulate perf events.
 
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-
-
-%package -n python2-perf-debuginfo
-Summary: Debug information for package perf python bindings
-Requires: %{name}-debuginfo-common-%{_target_cpu} = %{version}-%{release}
-AutoReqProv: no
-
-%description -n python2-perf-debuginfo
-This package provides debug information for the perf python bindings.
-
 # the python_sitearch macro should already be defined from above
-%{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{python_sitearch}/perf.so(\.debug)?|XXX' -o python2-perf-debuginfo.list}
+%{expand:%%global _find_debuginfo_opts %{?_find_debuginfo_opts} -p '.*%%{python3_sitearch}/perf.so(\.debug)?|XXX' -o python3-perf-debuginfo.list}
 %endif
 
 
@@ -1249,7 +1238,7 @@ cd linux-%{KVERREL}
 BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
-  make EXTRA_CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+  make EXTRA_CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix} PYTHON=%{__python3}
 
 %if %{with_perf}
 # perf
@@ -1539,15 +1528,15 @@ fi
 %doc linux-%{KVERREL}/tools/perf/Documentation/examples.txt
 %doc linux-%{KVERREL}/tools/perf/Documentation/tips.txt
 
-%files -n python2-perf
+%files -n python3-perf
 %defattr(-,root,root)
-%{python2_sitearch}
+%{python3_sitearch}
 
 %if %{with_debuginfo}
 %files -f perf-debuginfo.list -n perf-debuginfo
 %defattr(-,root,root)
 
-%files -f python2-perf-debuginfo.list -n python2-perf-debuginfo
+%files -f python3-perf-debuginfo.list -n python3-perf-debuginfo
 %defattr(-,root,root)
 %endif
 %endif
