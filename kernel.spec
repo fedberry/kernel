@@ -54,11 +54,7 @@
 %global released_kernel 1
 
 # baserelease defines which build revision of this kernel version we're
-# building.  We used to call this fedora_build, but the magical name
-# baserelease is matched by the rpmdev-bumpspec tool, which you should use.
-#
-# We used to have some extra magic weirdness to bump this automatically,
-# but now we don't.  Just use: rpmdev-bumpspec -c 'comment for changelog'
+# building.  Use: rpmdev-bumpspec -c 'comment for changelog'
 # When changing base_sublevel below or going from rc to a final kernel,
 # reset this by hand to 1 (or to 0 and then use rpmdev-bumpspec).
 # scripts/rebase.sh should be made to do that for you, actually.
@@ -74,7 +70,7 @@
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 0f100bcec
 
-%global fedora_build %{baserelease}
+%global build_release %{baserelease}
 
 %global zipmodules 1
 
@@ -88,13 +84,13 @@
 %global rtrelease 29
 
 %if %{with_rt_preempt}
-%global fedora_build %{baserelease}.rt%{rtrelease}
+%global build_release %{baserelease}.rt%{rtrelease}
 %endif
 %endif
 
 %if %{with_lpae}
 %global variant -lpae
-%global fedora_build %{baserelease}.lpae
+%global build_release %{baserelease}.lpae
 %global with_tools 0
 %global with_perf 0
 %endif
@@ -171,7 +167,7 @@
 
 
 # pkg_release is what we'll fill in for the rpm Release: field
-%define pkg_release %{fedora_build}%{?buildid}%{?dist}
+%define pkg_release %{build_release}%{?buildid}%{?dist}
 
 %if %{zipmodules}
 %global zipsed -e 's/\.ko$/\.ko.xz/'
@@ -848,7 +844,7 @@ else
   cd kernel-%{kversion}%{?dist}
 fi
 
-# Now build the fedora kernel tree.
+# Now build the kernel tree.
 cp -al vanilla-%{vanillaversion} linux-%{KVERREL}
 cd linux-%{KVERREL}
 
@@ -903,9 +899,7 @@ find . \( -name "*.orig" -o -name "*~" \) -exec rm -f {} \; >/dev/null
 find . -name .gitignore -exec rm -f {} \; >/dev/null
 
 # Ensure all python shebangs in 'tools' & 'scripts' directory are using python3
-%if 0%{?fedora} > 29
 find scripts tools -type f -exec sed -i '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python3}=' '{}' ';'
-%endif
 
 %if %{with_rt_preempt}
 # remove append on rt kernels
