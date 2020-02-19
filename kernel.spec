@@ -191,7 +191,7 @@
 %endif
 
 %define KVERREL %{version}-%{release}.%{_target_cpu}
-%define image_install_path boot
+%define image_install_path boot/efi
 # http://lists.infradead.org/pipermail/linux-arm-kernel/2012-March/091404.html
 %define kernel_mflags KALLSYMS_EXTRA_PASS=1
 
