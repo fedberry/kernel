@@ -72,7 +72,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 65cd47913
+%global rpi_gitshort 9634b843e
 
 %global fedora_build %{baserelease}
 
@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 102
+%define stable_update 105
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1641,6 +1641,10 @@ fi
 
 
 %changelog
+* Fri Feb 21 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.105-1.rpi
+- Update to stable kernel patch v4.19.105
+- Sync RPi patch to git revision: 9634b843e28cae9df42b08ea37e136822c339a3f
+
 * Thu Feb 13 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.102-1.rpi
 - Update to stable kernel patch v4.19.102
 - Sync RPi patch to git revision: 65cd479134433363e1235a3aee4e41e281384cf6
