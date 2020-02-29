@@ -1468,7 +1468,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /%{image_install_path}/\
 %endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/config /%{image_install_path}/config-%{KVERREL}%{?1:+%{1}}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/System.map /%{image_install_path}/System.map-%{KVERREL}%{?1:+%{1}}\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.vmlinuz.hmac-%{KVERREL}%{?1:+%{1}}\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.vmlinuz-%{KVERREL}%{?1:+%{1}}.hmac\
 %{nil}
 
 #
@@ -1491,7 +1491,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.v
 %define kernel_variant_preun() \
 %{expand:%%preun %{?1:%{1}-}core}\
 /bin/kernel-install remove %{KVERREL}%{?1:+%{1}} /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}} || exit $?\
-rm -f /%{image_install_path}/.vmlinuz.hmac-%{KVERREL}%{?1:+%{1}}\
+rm -f /%{image_install_path}/.vmlinuz-%{KVERREL}%{?1:+%{1}}.hmac\
 %{nil}
 
 %kernel_variant_preun
