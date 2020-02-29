@@ -191,7 +191,7 @@
 %endif
 
 %define KVERREL %{version}-%{release}.%{_target_cpu}
-%define image_install_path boot/efi
+%define image_install_path boot
 # http://lists.infradead.org/pipermail/linux-arm-kernel/2012-March/091404.html
 %define kernel_mflags KALLSYMS_EXTRA_PASS=1
 
@@ -1438,33 +1438,33 @@ fi\
 %if %{_target_cpu} != armv6hl\
 %if %{with_rpi4}\
 %ifarch aarch64\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel8.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel8.img\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7l.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel7l.img\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel7.img\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel.img\
 %endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}}\
 %if %{bcm270x}\
-rm -f /%{image_install_path}/overlays/*\
-mkdir -p /%{image_install_path}/overlays\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /%{image_install_path}/overlays/\
+rm -f /%{image_install_path}/efi/overlays/*\
+mkdir -p /%{image_install_path}/efi/overlays\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /%{image_install_path}/efi/overlays/\
 %if %{_target_cpu} != armv6hl\
 %ifarch aarch64\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/efi/\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2709* /%{image_install_path}/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2709* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/efi/\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2708* /%{image_install_path}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2708* /%{image_install_path}/efi/\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /%{image_install_path}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /%{image_install_path}/efi/\
 %endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/config /%{image_install_path}/config-%{KVERREL}%{?1:+%{1}}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/System.map /%{image_install_path}/System.map-%{KVERREL}%{?1:+%{1}}\
@@ -1603,7 +1603,7 @@ fi
 %ghost /%{image_install_path}/System.map-%{KVERREL}%{?2:+%{2}}\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/config\
 %ghost /%{image_install_path}/config-%{KVERREL}%{?2:+%{2}}\
-%{?_bcm270x:%ghost /%{image_install_path}/overlays}\
+%{?_bcm270x:%ghost /%{image_install_path}/efi/overlays}\
 %dir /lib/modules\
 %dir /lib/modules/%{KVERREL}%{?2:+%{2}}\
 %dir /lib/modules/%{KVERREL}%{?2:+%{2}}/kernel\
