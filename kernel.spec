@@ -368,9 +368,10 @@ Source1: https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.%{base_sublevel}-g
 Patch100: bcm270x-linux-rpi-5.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 
 ## Patches for both builds (bcm270x & bcm283x)
-#FedBerry logo
-Patch200: video-logo-fedberry.patch
+Patch150: 0001-perf-build-fix-epel8.patch
 
+#Centberry logo
+Patch200: video-logo-centberry.patch
 # END OF PATCH DEFINITIONS
 %endif
 
