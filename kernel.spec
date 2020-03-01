@@ -176,18 +176,22 @@
 # The kernel tarball/base version
 %define kversion 5.%{base_sublevel}
 
-%ifarch aarch64
-%define make_target Image
-%define kernel_image arch/arm64/boot/Image
-%define asmarch arm64
-%define hdrarch arm64
-%endif
+# Default kernel image name (compressed)
+%define install_name vmlinuz
 
 %ifarch armv7hl
 %define make_target bzImage
 %define kernel_image arch/arm/boot/zImage
 %define asmarch arm
 %define hdrarch arm
+%endif
+
+%ifarch aarch64
+%define make_target Image
+%define kernel_image arch/arm64/boot/Image
+%define install_name vmlinux
+%define asmarch arm64
+%define hdrarch arm64
 %endif
 
 %define KVERREL %{version}-%{release}.%{_target_cpu}
@@ -647,7 +651,7 @@ Provides: installonlypkg(kernel)\
 %description core
 This package includes a patched version of the Linux kernel built for
 Raspberry Pi devices that use the Broadcom BCM27XX SOC. The
-kernel package contains the Linux kernel (vmlinuz), the core of any
+kernel package contains the Linux kernel, the core of any
 Linux operating system.  The kernel handles the basic functions
 of the operating system: memory allocation, process allocation, device
 input and output, etc.
@@ -655,7 +659,7 @@ input and output, etc.
 %define variant_summary The Linux kernel
 %kernel_variant_package
 %description core
-The kernel package contains the Linux kernel (vmlinuz), the core of any
+The kernel package contains the Linux kernel, the core of any
 Linux operating system.  The kernel handles the basic functions
 of the operating system: memory allocation, process allocation, device
 input and output, etc.
@@ -922,7 +926,7 @@ BuildKernel() {
     Flavour=$3
     Arch=%{asmarch}
     Flav=${Flavour:++${Flavour}}
-    InstallName=${4:-vmlinuz}
+    InstallName=${4:-%{install_name}}
     DevelDir=/usr/src/kernels/%{KVERREL}
 
     # When the bootable image is just the ELF kernel, strip it.
@@ -1023,10 +1027,10 @@ BuildKernel() {
     cp %{buildroot}/%{image_install_path}/$InstallName-$KernelVer %{buildroot}/lib/modules/$KernelVer/$InstallName
 
     # hmac sign the kernel for FIPS
-    echo "Creating hmac file: %{buildroot}/%{image_install_path}/.vmlinuz-$KernelVer.hmac"
+    echo "Creating hmac file: %{buildroot}/%{image_install_path}/.%{install_name}-$KernelVer.hmac"
     ls -l %{buildroot}/%{image_install_path}/$InstallName-$KernelVer
-    sha512hmac %{buildroot}/%{image_install_path}/$InstallName-$KernelVer | sed -e "s,%{buildroot},," > %{buildroot}/%{image_install_path}/.vmlinuz-$KernelVer.hmac;
-    cp %{buildroot}/%{image_install_path}/.vmlinuz-$KernelVer.hmac %{buildroot}/lib/modules/$KernelVer/.vmlinuz.hmac
+    sha512hmac %{buildroot}/%{image_install_path}/$InstallName-$KernelVer | sed -e "s,%{buildroot},," > %{buildroot}/%{image_install_path}/.%{install_name}-$KernelVer.hmac;
+    cp %{buildroot}/%{image_install_path}/.%{install_name}-$KernelVer.hmac %{buildroot}/lib/modules/$KernelVer/.%{install_name}.hmac
 
     mkdir -p %{buildroot}/lib/modules/$KernelVer
     # Override $(mod-fw) because we don't want it to install any firmware
@@ -1438,17 +1442,17 @@ fi\
 %if %{_target_cpu} != armv6hl\
 %if %{with_rpi4}\
 %ifarch aarch64\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel8.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/efi/kernel8.img\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel7l.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/efi/kernel7l.img\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel7.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/efi/kernel7.img\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/efi/kernel.img\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/efi/kernel.img\
 %endif\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}}\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/%{install_name}-%{KVERREL}%{?1:+%{1}}\
 %if %{bcm270x}\
 rm -f /%{image_install_path}/efi/overlays/*\
 mkdir -p /%{image_install_path}/efi/overlays\
@@ -1474,7 +1478,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /%{image_install_path}/dtb-%
 %endif\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/config /%{image_install_path}/config-%{KVERREL}%{?1:+%{1}}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/System.map /%{image_install_path}/System.map-%{KVERREL}%{?1:+%{1}}\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.vmlinuz-%{KVERREL}%{?1:+%{1}}.hmac\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.%{install_name}.hmac /%{image_install_path}/.%{install_name}-%{KVERREL}%{?1:+%{1}}.hmac\
 %{nil}
 
 #
@@ -1496,8 +1500,8 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/.vmlinuz.hmac /%{image_install_path}/.v
 #
 %define kernel_variant_preun() \
 %{expand:%%preun %{?1:%{1}-}core}\
-/bin/kernel-install remove %{KVERREL}%{?1:+%{1}} /%{image_install_path}/vmlinuz-%{KVERREL}%{?1:+%{1}} || exit $?\
-rm -f /%{image_install_path}/.vmlinuz-%{KVERREL}%{?1:+%{1}}.hmac\
+/bin/kernel-install remove %{KVERREL}%{?1:+%{1}} /%{image_install_path}/%{install_name}-%{KVERREL}%{?1:+%{1}} || exit $?\
+rm -f /%{image_install_path}/.%{install_name}-%{KVERREL}%{?1:+%{1}}.hmac\
 %{nil}
 
 %kernel_variant_preun
@@ -1599,12 +1603,12 @@ fi
 %defattr(-,root,root)\
 %{!?_licensedir:%global license %%doc}\
 %license linux-%{KVERREL}/COPYING-%{version}\
-%ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?2:+%{2}}\
-/lib/modules/%{KVERREL}%{?2:+%{2}}/.vmlinuz.hmac\
-%ghost /%{image_install_path}/.vmlinuz-%{KVERREL}%{?2:+%{2}}.hmac\
+%ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:%{install_name}}-%{KVERREL}%{?2:+%{2}}\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/.%{install_name}.hmac\
+%ghost /%{image_install_path}/.%{install_name}-%{KVERREL}%{?2:+%{2}}.hmac\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/dtb\
 %ghost /%{image_install_path}/dtb-%{KVERREL}%{?2:+%{2}}\
-/lib/modules/%{KVERREL}%{?2:+%{2}}/%{?-k:%{-k*}}%{!?-k:vmlinuz}\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/%{?-k:%{-k*}}%{!?-k:%{install_name}}\
 %attr(600,root,root) /lib/modules/%{KVERREL}%{?2:+%{2}}/System.map\
 %ghost /%{image_install_path}/System.map-%{KVERREL}%{?2:+%{2}}\
 /lib/modules/%{KVERREL}%{?2:+%{2}}/config\
