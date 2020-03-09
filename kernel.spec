@@ -69,10 +69,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort ecb440abe
+%global rpi_gitshort 2fab54c74
 
 %global fedora_build %{baserelease}
 
@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 106
+%define stable_update 108
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1640,6 +1640,10 @@ fi
 
 
 %changelog
+* Mon Mar 09 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-1.rpi
+- Update to stable kernel patch v4.19.108
+- Sync RPi patch to git revision: 2fab54c74bf956951e61c6d4fe473995e8d07010
+
 * Mon Mar 09 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.106-2.rpi
 - Remove Requires(pre): raspberrypi-vc-utils
 
