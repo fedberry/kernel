@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort ecb440abe
@@ -387,7 +387,6 @@ Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
 Suggests: linux-firmware\
 Requires(pre): bcm283x-firmware\
-Requires(pre): raspberrypi-vc-utils\
 Requires(preun): systemd\
 Conflicts: xorg-x11-drv-vmmouse\
 %{expand:%%{?kernel%{?1:_%{1}}_conflicts:Conflicts: %%{kernel%{?1:_%{1}}_conflicts}}}\
@@ -1641,6 +1640,9 @@ fi
 
 
 %changelog
+* Mon Mar 09 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.106-2.rpi
+- Remove Requires(pre): raspberrypi-vc-utils
+
 * Thu Mar 05 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.106-1.rpi
 - Update to stable kernel patch v4.19.106
 - Sync RPi patch to git revision: ecb440abef61d198478b6e598b3510ff6680090a
