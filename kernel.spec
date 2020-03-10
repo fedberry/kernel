@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 2fab54c74
@@ -362,6 +362,7 @@ Patch100: bcm270x-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 ## Patches for both builds (bcm270x & bcm283x)
 #FedBerry logo
 Patch200: video-logo-fedberry.patch
+Patch300: Fix-linking-error-for-gcc-10.patch
 
 # END OF PATCH DEFINITIONS
 %endif
@@ -1640,6 +1641,9 @@ fi
 
 
 %changelog
+* Tue Mar 10 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-2.rpi4
+- Fix multiple definition of `yylloc' linking error for >=f32
+
 * Mon Mar 09 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-1.rpi
 - Update to stable kernel patch v4.19.108
 - Sync RPi patch to git revision: 2fab54c74bf956951e61c6d4fe473995e8d07010
