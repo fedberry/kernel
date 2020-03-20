@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 3
+%global baserelease 4
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 2fab54c74
@@ -891,7 +891,7 @@ mv COPYING COPYING-%{version}
 # This Prevents scripts/setlocalversion from mucking with our version numbers.
 touch .scmversion
 
-%define make make %{?cross_opts} HOSTCFLAGS="-fcommon" V=1
+%define make make %{?cross_opts} HOSTCFLAGS="-fcommon" HOSTLDFLAGS="-z common" V=1
 
 # get rid of unwanted files resulting from patch fuzz
 find . \( -name "*.orig" -o -name "*~" \) -exec rm -f {} \; >/dev/null
@@ -1248,7 +1248,7 @@ cd linux-%{KVERREL}
 BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
-  %{make} EXTRA_CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+  %{make} EXTRA_CFLAGS="%{optflags}" EXTRA_LDFLAGS="-z common" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
 
 %if %{with_perf}
 # perf
@@ -1640,6 +1640,9 @@ fi
 
 
 %changelog
+* Fri Mar 20 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-4.rpi4
+- Add "-z common" to {EXTRA_,HOST}LDFLAGS= to let it compile with gcc-10 for >=f32
+
 * Fri Mar 13 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-3.rpi4
 - Add -fcommon to HOSTCFLAGS= to let it compile with gcc-10 for >=f32
 
