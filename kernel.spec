@@ -362,6 +362,11 @@ Patch100: bcm270x-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 ## Patches for both builds (bcm270x & bcm283x)
 #FedBerry logo
 Patch200: video-logo-fedberry.patch
+Patch300: perf-cs-etm-gcc-10-fix.patch
+Patch400: Fix-multiple-definitions-of-cpu_count.patch
+
+# Needs to be applied only for binutils >=2.34 (>F31)
+Source3100: Fix-linking-with-binutils-2.34.patch
 
 # END OF PATCH DEFINITIONS
 %endif
@@ -881,6 +886,10 @@ done
 xzcat %{SOURCE1500} | patch -p1 -F1 -s
 %endif
 
+%if 0%{?fedora} > 31
+  ApplyPatch %{SOURCE3100}
+%endif
+
 # END OF PATCH APPLICATIONS
 %endif
 
@@ -1248,7 +1257,7 @@ cd linux-%{KVERREL}
 BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
-  %{make} EXTRA_CFLAGS="%{optflags}" EXTRA_LDFLAGS="-z common" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+  %{make} EXTRA_CFLAGS="%{optflags} -fcommon" EXTRA_LDFLAGS="-z common" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
 
 %if %{with_perf}
 # perf
@@ -1641,6 +1650,9 @@ fi
 
 %changelog
 * Fri Mar 20 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-4.rpi4
+- Fix linking with binutils >=2.34 for >=f32
+- Fix multiple definition of `traceid_list' for >=f32
+- Fix multiple definition of `cpu_count' for >=f32
 - Add "-z common" to {EXTRA_,HOST}LDFLAGS= to let it compile with gcc-10 for >=f32
 
 * Fri Mar 13 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-3.rpi4

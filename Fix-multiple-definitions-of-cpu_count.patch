@@ -1,0 +1,40 @@
+From 9f0c52111616aef0d50102dc2ec7dae32dc52686 Mon Sep 17 00:00:00 2001
+From: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
+Date: Sun, 22 Mar 2020 12:31:12 +0100
+Subject: [PATCH] Fix multiple definitions of `cpu_count'
+
+Signed-off-by: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
+---
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+index 051da0a7c454..a3cb39f85f28 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+@@ -22,6 +22,8 @@
+ #include "idle_monitor/idle_monitors.h"
+ #include "helpers/helpers.h"
+ 
++int cpu_count;
++
+ /* Define pointers to all monitors.  */
+ #define DEF(x) & x ## _monitor ,
+ struct cpuidle_monitor *all_monitors[] = {
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+index 2ae50b499e0a..06b3cd6de018 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+@@ -27,7 +27,7 @@
+ #endif
+ #define CSTATE_DESC_LEN 60
+ 
+-int cpu_count;
++extern int cpu_count;
+ 
+ /* Hard to define the right names ...: */
+ enum power_range_e {
+-- 
+2.24.1
+

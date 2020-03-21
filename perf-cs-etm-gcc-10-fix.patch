@@ -1,0 +1,40 @@
+Fix linking error for gcc 10
+
+Fixes the following error:
+  ld   -r -o libperf-in.o  util/libperf-in.o arch/libperf-in.o \
+  ui/libperf-in.o scripts/libperf-in.o trace/beauty/libperf-in.o
+/usr/bin/ld: arch/libperf-in.o:/builddir/build/BUILD/kernel-4.19.fc32/
+linux-4.19.108-2.rpi.fc32.armv7hl/tools/perf/util/include/../../util/cs-etm.h:57:
+multiple definition of `traceid_list';
+util/libperf-in.o:/builddir/build/BUILD/kernel-4.19.fc32/
+linux-4.19.108-2.rpi.fc32.armv7hl/tools/perf/util/cs-etm.h:57: first defined here
+
+Signed-off-by: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
+---
+
+Index: linux-4.19.108-2.rpi4.fc31.armv7hl/tools/perf/util/cs-etm.c
+===================================================================
+--- linux-4.19.108-2.rpi4.fc31.armv7hl.orig/tools/perf/util/cs-etm.c
++++ linux-4.19.108-2.rpi4.fc31.armv7hl/tools/perf/util/cs-etm.c
+@@ -220,6 +220,8 @@ static void cs_etm__free_events(struct p
+ 	auxtrace_queues__free(queues);
+ }
+ 
++struct intlist *traceid_list;
++
+ static void cs_etm__free(struct perf_session *session)
+ {
+ 	int i;
+Index: linux-4.19.108-2.rpi4.fc31.armv7hl/tools/perf/util/cs-etm.h
+===================================================================
+--- linux-4.19.108-2.rpi4.fc31.armv7hl.orig/tools/perf/util/cs-etm.h
++++ linux-4.19.108-2.rpi4.fc31.armv7hl/tools/perf/util/cs-etm.h
+@@ -54,7 +54,7 @@ enum {
+ };
+ 
+ /* RB tree for quick conversion between traceID and CPUs */
+-struct intlist *traceid_list;
++extern struct intlist *traceid_list;
+ 
+ #define KiB(x) ((x) * 1024)
+ #define MiB(x) ((x) * 1024 * 1024)
