@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort a75a01501
@@ -222,7 +222,7 @@ License: GPLv2 and Redistributable, no modification permitted
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
 URL: http://www.kernel.org
 %else
-%if %{_target_cpu} == armv7hl
+%if "%{_target_cpu}" == "armv7hl"
 %if %{with_rpi4}
 Summary: The BCM2711 Linux kernel port for the Raspberry Pi 4 Model B
 %else
@@ -464,7 +464,7 @@ The python2-perf package contains a module that permits applications
 written in the Python programming language to use the interface
 to manipulate perf events.
 
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 
 %package -n python2-perf-debuginfo
@@ -651,7 +651,7 @@ Provides: installonlypkg(kernel)\
 
 # The main -core package
 %if %{bcm270x}
-%if %{_target_cpu} == armv7hl
+%if "%{_target_cpu}" == "armv7hl"
 %if %{with_rpi4}
 %define variant_summary The Linux kernel for the Raspberry Pi 4 Model B
 %else
@@ -983,7 +983,7 @@ BuildKernel() {
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1100}
     %endif
     %if %{bcm270x}
-    %if %{_target_cpu} == armv7hl
+    %if "%{_target_cpu}" == "armv7hl"
     %if %{with_rpi4}
     make bcm2711_defconfig
     %else
@@ -1454,7 +1454,7 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
-%if %{_target_cpu} == armv7hl\
+%if "%{_target_cpu}" == "armv7hl"\
 %if %{with_rpi4}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7l.img\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2711* /boot/\
@@ -1469,7 +1469,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-
 rm -f /boot/overlays/*\
 mkdir -p /boot/overlays\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
-%if %{_target_cpu} == armv7hl\
+%if "%{_target_cpu}" == "armv7hl"\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /boot/\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2710* /boot/\
 %else\
@@ -1649,6 +1649,10 @@ fi
 
 
 %changelog
+* Fri Apr 03 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.113-2.rpi
+- Fix syntax for rpm 4.16
+- Fix syntax in python macro
+
 * Fri Apr 03 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.113-1.rpi
 - Update to stable kernel patch v4.19.113
 - Sync RPi patch to git revision: a75a01501330a9be188561b0e9da1da6da372eea
