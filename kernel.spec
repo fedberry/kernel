@@ -69,10 +69,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 4
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 2fab54c74
+%global rpi_gitshort a75a01501
 
 %global fedora_build %{baserelease}
 
@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 108
+%define stable_update 113
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1649,6 +1649,10 @@ fi
 
 
 %changelog
+* Fri Apr 03 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.113-1.rpi
+- Update to stable kernel patch v4.19.113
+- Sync RPi patch to git revision: a75a01501330a9be188561b0e9da1da6da372eea
+
 * Fri Mar 20 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-4.rpi4
 - Fix linking with binutils >=2.34 for >=f32
 - Fix multiple definition of `traceid_list' for >=f32
