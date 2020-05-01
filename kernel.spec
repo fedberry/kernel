@@ -69,10 +69,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort a75a01501
+%global rpi_gitshort b13fc60b5
 
 %global fedora_build %{baserelease}
 
@@ -84,8 +84,8 @@
 
 %if %{enable_preempt}
 # Real-Time kernel defines
-%global rtgitsnap a4b8f1f27
-%global rtrelease 29
+%global rtgitsnap b13fc60b5
+%global rtrelease 50
 
 %if %{with_rt_preempt}
 %global fedora_build %{baserelease}.rt%{rtrelease}
@@ -115,7 +115,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 113
+%define stable_update 115
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1649,6 +1649,10 @@ fi
 
 
 %changelog
+* Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-1.rpi
+- Update to stable kernel patch v4.19.115
+- Sync RPi patch to git revision: b13fc60b529fe9e4fee4a7a5caf73d582003abfa
+
 * Fri Apr 03 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.113-2.rpi
 - Fix syntax for rpm 4.16
 - Fix syntax in python macro
