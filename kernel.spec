@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort b13fc60b5
@@ -363,7 +363,6 @@ Patch100: bcm270x-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 #FedBerry logo
 Patch200: video-logo-fedberry.patch
 Patch300: perf-cs-etm-gcc-10-fix.patch
-Patch400: Fix-multiple-definitions-of-cpu_count.patch
 
 # Needs to be applied only for binutils >=2.34 (>F31)
 Source3100: Fix-linking-with-binutils-2.34.patch
@@ -1649,6 +1648,9 @@ fi
 
 
 %changelog
+* Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-2.rpi
+- Drop Fix-multiple-definitions-of-cpu_count.patch
+
 * Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-1.rpi
 - Update to stable kernel patch v4.19.115
 - Sync RPi patch to git revision: b13fc60b529fe9e4fee4a7a5caf73d582003abfa
