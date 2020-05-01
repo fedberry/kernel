@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 3
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort b13fc60b5
@@ -78,18 +78,9 @@
 
 %global zipmodules 1
 
-# Enable rt preempt build support
-# Only enable with a useable upstream patch
-%global enable_preempt 0
-
-%if %{enable_preempt}
-# Real-Time kernel defines
-%global rtgitsnap b13fc60b5
-%global rtrelease 50
-
 %if %{with_rt_preempt}
-%global fedora_build %{baserelease}.rt%{rtrelease}
-%endif
+%global rtrelease rt49
+%global rtvariant -rt
 %endif
 
 %if %{with_lpae}
@@ -216,7 +207,7 @@
 %define initrd_prereq  dracut
 
 
-Name: kernel%{?variant}
+Name: kernel%{?variant}%{?rtvariant:}
 License: GPLv2 and Redistributable, no modification permitted
 %if !%{bcm270x}
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
@@ -267,6 +258,10 @@ BuildRequires: redhat-rpm-config
 BuildRequires: tar
 BuildRequires: xz
 
+%if %{with_rt_preempt}
+BuildRequires: quilt
+%endif
+
 %if %{with_perf}
 BuildRequires: elfutils-devel
 BuildRequires: zlib-devel
@@ -315,12 +310,11 @@ Source1000: config-bcm27xx.cfg
 Source1100: config-bcm283x.cfg
 Source1200: config-lpae.cfg
 
-# rt kernel patch
-%if %{enable_preempt}
-Source1500: linux-rpi-4.%{base_sublevel}.y-rt%{rtrelease}-%{rtgitsnap}.patch.xz
-%endif
+%if %{with_rt_preempt}
 # rt kernel config modification
+Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-%{rpmversion}-%{rtrelease}.tar.xz
 Source1501: config-rt.cfg
+%endif
 
 # Sources for kernel-tools
 Source2000: cpupower.service
@@ -859,6 +853,14 @@ cd linux-%{KVERREL}
 xzcat %{SOURCE1} | patch -p1 -F1 -s
 %endif
 
+%if %{with_rt_preempt}
+# apply rt kernel patches
+unxz -c %{SOURCE1500} | tar -xf - -C .
+# we don't want to use the localversion.patch
+sed -i 's/\(localversion.patch\)/# \1/g' patches/series
+quilt push -a
+%endif
+
 #
 # misc small stuff to make things compile
 #
@@ -879,11 +881,6 @@ for i in %{patches}; do
     fi
 %endif
 done
-
-%if %{with_rt_preempt}
-# apply rt kernel patches
-xzcat %{SOURCE1500} | patch -p1 -F1 -s
-%endif
 
 %if 0%{?fedora} > 31
   ApplyPatch %{SOURCE3100}
@@ -1648,6 +1645,9 @@ fi
 
 
 %changelog
+* Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-3.rpi
+-  Re-add support for building RT PREEMPT kernel version
+
 * Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-2.rpi
 - Drop Fix-multiple-definitions-of-cpu_count.patch
 
