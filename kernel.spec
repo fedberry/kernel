@@ -69,7 +69,12 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 4
+%if %{with_rt_preempt}
+%global rtrelease rt50
+%global rtvariant -rt
+%endif
+
+%global baserelease 5%{?rtrelease:}
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort b13fc60b5
@@ -77,11 +82,6 @@
 %global fedora_build %{baserelease}
 
 %global zipmodules 1
-
-%if %{with_rt_preempt}
-%global rtrelease rt50
-%global rtvariant -rt
-%endif
 
 %if %{with_lpae}
 %global variant -lpae
@@ -1645,6 +1645,9 @@ fi
 
 
 %changelog
+* Sat May 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-5.rpi
+- Add rtrelease suffix
+
 * Sat May 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-4.rpi
 - Update to RT 4.19.115-rt50
 
