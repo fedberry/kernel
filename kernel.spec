@@ -69,7 +69,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 3
+%global baserelease 4
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort b13fc60b5
@@ -79,7 +79,7 @@
 %global zipmodules 1
 
 %if %{with_rt_preempt}
-%global rtrelease rt49
+%global rtrelease rt50
 %global rtvariant -rt
 %endif
 
@@ -1645,6 +1645,9 @@ fi
 
 
 %changelog
+* Sat May 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-4.rpi
+- Update to RT 4.19.115-rt50
+
 * Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-3.rpi
 -  Re-add support for building RT PREEMPT kernel version
 
