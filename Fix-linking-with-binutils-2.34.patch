@@ -1,0 +1,38 @@
+From 3b85a6f3755ba9bf22101079bf6e97eb9d7474d5 Mon Sep 17 00:00:00 2001
+From: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
+Date: Fri, 20 Mar 2020 17:53:10 +0100
+Subject: [PATCH] Fix linking with binutils >=2.34
+
+Fixes the following linking errors in tools/perf/util/:
+ - srcline.c:198: undefined reference to `bfd_get_section_flags'
+ - srcline.c:202: undefined reference to `bfd_get_section_vma'
+ - srcline.c:203: undefined reference to `bfd_get_section_size'
+
+Signed-off-by: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
+---
+ tools/perf/util/srcline.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index af3f9b9f1e8b..7c3c0aa6dfd7 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -195,12 +195,12 @@ static void find_address_in_section(bfd *abfd, asection *section, void *data)
+ 	if (a2l->found)
+ 		return;
+ 
+-	if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0)
++	if ((bfd_section_flags(section) & SEC_ALLOC) == 0)
+ 		return;
+ 
+ 	pc = a2l->addr;
+-	vma = bfd_get_section_vma(abfd, section);
+-	size = bfd_get_section_size(section);
++	vma = bfd_section_vma(section);
++	size = bfd_section_size(section);
+ 
+ 	if (pc < vma || pc >= vma + size)
+ 		return;
+-- 
+2.24.1
+

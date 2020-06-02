@@ -1,0 +1,33 @@
+From 67b855f0f2b76eee32c709f4a1b3290d85505b52 Mon Sep 17 00:00:00 2001
+From: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
+Date: Tue, 10 Mar 2020 12:20:25 +0100
+Subject: [PATCH] Fix linking error for gcc-10
+
+Fixes the following error:
+ HOSTLD  scripts/dtc/dtc
+ /usr/bin/ld: scripts/dtc/dtc-parser.tab.o: in function `.LANCHOR0':
+ dtc-parser.tab.c:(.bss+0xc): multiple definition of `yylloc';
+ scripts/dtc/dtc-lexer.lex.o:dtc-lexer.lex.c:(.bss+0x1c): first defined here
+collect2: error: ld returned 1 exit status
+
+Signed-off-by: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
+---
+ scripts/dtc/dtc-lexer.l | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
+index 615b7ec6588f..a26c7636c704 100644
+--- a/scripts/dtc/dtc-lexer.l
++++ b/scripts/dtc/dtc-lexer.l
+@@ -38,7 +38,7 @@ LINECOMMENT	"//".*\n
+ #include "srcpos.h"
+ #include "dtc-parser.tab.h"
+ 
+-YYLTYPE yylloc;
++extern YYLTYPE yylloc;
+ extern bool treesource_error;
+ 
+ /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+-- 
+2.24.1
+

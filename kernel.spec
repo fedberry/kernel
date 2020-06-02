@@ -69,28 +69,19 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%if %{with_rt_preempt}
+%global rtrelease rt52
+%global rtvariant -rt
+%endif
+
+%global baserelease 1%{?rtrelease:}
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 65cd47913
+%global rpi_gitshort 9da67d732
 
 %global fedora_build %{baserelease}
 
 %global zipmodules 1
-
-# Enable rt preempt build support
-# Only enable with a useable upstream patch
-%global enable_preempt 0
-
-%if %{enable_preempt}
-# Real-Time kernel defines
-%global rtgitsnap a4b8f1f27
-%global rtrelease 29
-
-%if %{with_rt_preempt}
-%global fedora_build %{baserelease}.rt%{rtrelease}
-%endif
-%endif
 
 %if %{with_lpae}
 %global variant -lpae
@@ -115,7 +106,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 102
+%define stable_update 120
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -216,13 +207,13 @@
 %define initrd_prereq  dracut
 
 
-Name: kernel%{?variant}
+Name: kernel%{?variant}%{?rtvariant:}
 License: GPLv2 and Redistributable, no modification permitted
 %if !%{bcm270x}
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
 URL: http://www.kernel.org
 %else
-%if %{_target_cpu} == armv7hl
+%if "%{_target_cpu}" == "armv7hl"
 %if %{with_rpi4}
 Summary: The BCM2711 Linux kernel port for the Raspberry Pi 4 Model B
 %else
@@ -266,6 +257,10 @@ BuildRequires: perl-generators
 BuildRequires: redhat-rpm-config
 BuildRequires: tar
 BuildRequires: xz
+
+%if %{with_rt_preempt}
+BuildRequires: quilt
+%endif
 
 %if %{with_perf}
 BuildRequires: elfutils-devel
@@ -315,12 +310,11 @@ Source1000: config-bcm27xx.cfg
 Source1100: config-bcm283x.cfg
 Source1200: config-lpae.cfg
 
-# rt kernel patch
-%if %{enable_preempt}
-Source1500: linux-rpi-4.%{base_sublevel}.y-rt%{rtrelease}-%{rtgitsnap}.patch.xz
-%endif
+%if %{with_rt_preempt}
 # rt kernel config modification
+Source1500: https://www.kernel.org/pub/linux/kernel/projects/rt/4.%{base_sublevel}/older/patches-%{rpmversion}-%{rtrelease}.tar.xz
 Source1501: config-rt.cfg
+%endif
 
 # Sources for kernel-tools
 Source2000: cpupower.service
@@ -362,6 +356,10 @@ Patch100: bcm270x-linux-rpi-4.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 ## Patches for both builds (bcm270x & bcm283x)
 #FedBerry logo
 Patch200: video-logo-fedberry.patch
+Patch300: perf-cs-etm-gcc-10-fix.patch
+
+# Needs to be applied only for binutils >=2.34 (>F31)
+Source3100: Fix-linking-with-binutils-2.34.patch
 
 # END OF PATCH DEFINITIONS
 %endif
@@ -387,7 +385,6 @@ Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
 Suggests: linux-firmware\
 Requires(pre): bcm283x-firmware\
-Requires(pre): raspberrypi-vc-utils\
 Requires(preun): systemd\
 Conflicts: xorg-x11-drv-vmmouse\
 %{expand:%%{?kernel%{?1:_%{1}}_conflicts:Conflicts: %%{kernel%{?1:_%{1}}_conflicts}}}\
@@ -460,7 +457,7 @@ The python2-perf package contains a module that permits applications
 written in the Python programming language to use the interface
 to manipulate perf events.
 
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 
 %package -n python2-perf-debuginfo
@@ -647,7 +644,7 @@ Provides: installonlypkg(kernel)\
 
 # The main -core package
 %if %{bcm270x}
-%if %{_target_cpu} == armv7hl
+%if "%{_target_cpu}" == "armv7hl"
 %if %{with_rpi4}
 %define variant_summary The Linux kernel for the Raspberry Pi 4 Model B
 %else
@@ -856,6 +853,14 @@ cd linux-%{KVERREL}
 xzcat %{SOURCE1} | patch -p1 -F1 -s
 %endif
 
+%if %{with_rt_preempt}
+# apply rt kernel patches
+unxz -c %{SOURCE1500} | tar -xf - -C .
+# we don't want to use the localversion.patch
+sed -i 's/\(localversion.patch\)/# \1/g' patches/series
+quilt push -a
+%endif
+
 #
 # misc small stuff to make things compile
 #
@@ -877,9 +882,8 @@ for i in %{patches}; do
 %endif
 done
 
-%if %{with_rt_preempt}
-# apply rt kernel patches
-xzcat %{SOURCE1500} | patch -p1 -F1 -s
+%if 0%{?fedora} > 31
+  ApplyPatch %{SOURCE3100}
 %endif
 
 # END OF PATCH APPLICATIONS
@@ -892,7 +896,7 @@ mv COPYING COPYING-%{version}
 # This Prevents scripts/setlocalversion from mucking with our version numbers.
 touch .scmversion
 
-%define make make %{?cross_opts}
+%define make make %{?cross_opts} HOSTCFLAGS="-fcommon" HOSTLDFLAGS="-z common" V=1
 
 # get rid of unwanted files resulting from patch fuzz
 find . \( -name "*.orig" -o -name "*~" \) -exec rm -f {} \; >/dev/null
@@ -975,7 +979,7 @@ BuildKernel() {
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1100}
     %endif
     %if %{bcm270x}
-    %if %{_target_cpu} == armv7hl
+    %if "%{_target_cpu}" == "armv7hl"
     %if %{with_rpi4}
     make bcm2711_defconfig
     %else
@@ -1249,7 +1253,7 @@ cd linux-%{KVERREL}
 BuildKernel %make_target %kernel_image %{?Flavour}
 
 %global perf_make \
-  make EXTRA_CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf V=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
+  %{make} EXTRA_CFLAGS="%{optflags} -fcommon" EXTRA_LDFLAGS="-z common" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/perf NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 WERROR=0 NO_LIBUNWIND=1 HAVE_CPLUS_DEMANGLE=1 NO_GTK2=1 NO_STRLCPY=1 NO_BIONIC=1 NO_JVMTI=1 prefix=%{_prefix}
 
 %if %{with_perf}
 # perf
@@ -1446,7 +1450,7 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
-%if %{_target_cpu} == armv7hl\
+%if "%{_target_cpu}" == "armv7hl"\
 %if %{with_rpi4}\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/kernel7l.img\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2711* /boot/\
@@ -1461,7 +1465,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/vmlinuz /%{image_install_path}/vmlinuz-
 rm -f /boot/overlays/*\
 mkdir -p /boot/overlays\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /boot/overlays/\
-%if %{_target_cpu} == armv7hl\
+%if "%{_target_cpu}" == "armv7hl"\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /boot/\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2710* /boot/\
 %else\
@@ -1641,6 +1645,62 @@ fi
 
 
 %changelog
+* Mon May 18 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.120-1.rpi
+- Update to stable kernel patch v4.19.120
+- Sync RPi patch to git revision: 9da67d7329873623bd5c13fae5835d76d5be8806
+- Update to RT 4.19.120-rt52
+
+* Sat May 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-5.rpi
+- Add rtrelease suffix
+
+* Sat May 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-4.rpi
+- Update to RT 4.19.115-rt50
+
+* Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-3.rpi
+-  Re-add support for building RT PREEMPT kernel version
+
+* Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-2.rpi
+- Drop Fix-multiple-definitions-of-cpu_count.patch
+
+* Fri May 01 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.115-1.rpi
+- Update to stable kernel patch v4.19.115
+- Sync RPi patch to git revision: b13fc60b529fe9e4fee4a7a5caf73d582003abfa
+
+* Fri Apr 03 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.113-2.rpi
+- Fix syntax for rpm 4.16
+- Fix syntax in python macro
+
+* Fri Apr 03 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.113-1.rpi
+- Update to stable kernel patch v4.19.113
+- Sync RPi patch to git revision: a75a01501330a9be188561b0e9da1da6da372eea
+
+* Fri Mar 20 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-4.rpi4
+- Fix linking with binutils >=2.34 for >=f32
+- Fix multiple definition of `traceid_list' for >=f32
+- Fix multiple definition of `cpu_count' for >=f32
+- Add "-z common" to {EXTRA_,HOST}LDFLAGS= to let it compile with gcc-10 for >=f32
+
+* Fri Mar 13 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-3.rpi4
+- Add -fcommon to HOSTCFLAGS= to let it compile with gcc-10 for >=f32
+
+* Tue Mar 10 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-2.rpi4
+- Fix multiple definition of `yylloc' linking error for >=f32
+
+* Mon Mar 09 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.108-1.rpi
+- Update to stable kernel patch v4.19.108
+- Sync RPi patch to git revision: 2fab54c74bf956951e61c6d4fe473995e8d07010
+
+* Mon Mar 09 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.106-2.rpi
+- Remove Requires(pre): raspberrypi-vc-utils
+
+* Thu Mar 05 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.106-1.rpi
+- Update to stable kernel patch v4.19.106
+- Sync RPi patch to git revision: ecb440abef61d198478b6e598b3510ff6680090a
+
+* Fri Feb 21 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.105-1.rpi
+- Update to stable kernel patch v4.19.105
+- Sync RPi patch to git revision: 9634b843e28cae9df42b08ea37e136822c339a3f
+
 * Thu Feb 13 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.102-1.rpi
 - Update to stable kernel patch v4.19.102
 - Sync RPi patch to git revision: 65cd479134433363e1235a3aee4e41e281384cf6
