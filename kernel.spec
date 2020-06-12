@@ -70,14 +70,14 @@
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
 %if %{with_rt_preempt}
-%global rtrelease rt52
+%global rtrelease rt54
 %global rtvariant -rt
 %endif
 
 %global baserelease 1%{?rtrelease:}
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 9da67d732
+%global rpi_gitshort abaa3760d
 
 %global fedora_build %{baserelease}
 
@@ -106,7 +106,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 120
+%define stable_update 127
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1645,6 +1645,11 @@ fi
 
 
 %changelog
+* Fri Jun 12 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.127-1.rpi
+- Update to stable kernel patch v4.19.127
+- Sync RPi patch to git revision: abaa3760da89d6fb38e55473fffc9a31dd0b1d7a
+- Update to RT 4.19.127-rt54
+
 * Mon May 18 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 4.19.120-1.rpi
 - Update to stable kernel patch v4.19.120
 - Sync RPi patch to git revision: 9da67d7329873623bd5c13fae5835d76d5be8806
