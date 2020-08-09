@@ -111,7 +111,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 3
+%define stable_update 51
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -961,7 +961,7 @@ BuildKernel() {
     make -s mrproper
     %if !%{bcm270x}
     make multi_v7_defconfig
-    # merge fedberry kernel config fragments
+    # merge kernel config fragments
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1100}
     %endif
     %if %{bcm270x}
@@ -978,7 +978,7 @@ BuildKernel() {
     %else
     make bcmrpi_defconfig
     %endif
-    # merge fedberry kernel config fragments
+    # merge kernel config fragments
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1000}
     %endif
 
@@ -1646,6 +1646,22 @@ fi
 
 
 %changelog
+* Sun Aug 09 2020 Vaughan <devel at agrez dot net> - 5.4.51-1
+- Update to stable kernel patch v5.4.51
+- Sync RPi patch to git revision: f2f7e4b23d8788e96f81a7522b2f703e51c53e70
+- Cherry pick commits from 4.19.x branch:
+    Add aarch64 build support
+    More python2 purging (EPEL)
+    fedora_build ----> build_release (EPEL)
+    Only copy required files to boot/efi (RPi bootloader support)
+    Fix dtb-KVERREL creation under /boot
+    Fix .hmac file naming
+    Drop mkknlimg support (now depreciated upstream)
+    Add perf build fix patch for epel8 (Patch 150)
+    For aarch64, kernel image name should be vmlinux (its uncompressed)
+    Update video logo patch
+    Enable CONFIG_EFI_VARS
+
 * Thu Jan 02 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.3-1.rpi
 - Rebase to 5.4 kernel branch
 - Update to stable kernel patch v5.4.3
