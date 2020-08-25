@@ -68,7 +68,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort f2f7e4b23
+%global rpi_gitshort 8afdcbe5d
 
 %global build_release %{baserelease}
 
@@ -111,7 +111,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 51
+%define stable_update 59
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -372,6 +372,7 @@ Patch150: 0001-perf-build-fix-epel8.patch
 
 #Centberry logo
 Patch200: video-logo-centberry.patch
+Patch300: perf-cs-etm-gcc-10-fix.patch
 # END OF PATCH DEFINITIONS
 %endif
 
@@ -1646,6 +1647,11 @@ fi
 
 
 %changelog
+* Tue Aug 25 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-1.rpi
+- Update to stable kernel patch v5.4.59
+- Sync RPi patch to git revision: 8afdcbe5d0c68640ffc222e129a01b0689ce431d
+- Fix multiple definition of `traceid_list' for >=f32
+
 * Sun Aug 09 2020 Vaughan <devel at agrez dot net> - 5.4.51-1
 - Update to stable kernel patch v5.4.51
 - Sync RPi patch to git revision: f2f7e4b23d8788e96f81a7522b2f703e51c53e70
