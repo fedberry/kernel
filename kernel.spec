@@ -65,10 +65,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 3
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 8afdcbe5d
+%global rpi_gitshort 0be0e0854
 
 %global build_release %{baserelease}
 
@@ -1647,6 +1647,17 @@ fi
 
 
 %changelog
+* Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-3.rpi
+- Sync RPi patch to git revision: 0be0e0854876b7d724c473242d6ff44077d18da9
+
+* Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-2.rpi
+- Fix post install scripts errors (No such file or directory) on:
+    cp: cannot create regular file '/boot/efi/kernel7l.img'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm2709*'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm2709*'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm271*'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm271*'
+
 * Tue Aug 25 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-1.rpi
 - Update to stable kernel patch v5.4.59
 - Sync RPi patch to git revision: 8afdcbe5d0c68640ffc222e129a01b0689ce431d
