@@ -65,7 +65,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 3
+%global baserelease 4
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 0be0e0854
@@ -232,7 +232,7 @@ License: GPLv2 and Redistributable, no modification permitted
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
 URL: http://www.kernel.org
 %else
-%if %{_target_cpu} != armv6hl
+%if "%{_target_cpu}" != "armv6hl"
 %if %{with_rpi4}
 Summary: The BCM2711 Linux kernel port for the Raspberry Pi 4 Model B
 %else
@@ -640,7 +640,7 @@ Provides: installonlypkg(kernel)\
 
 # The main -core package
 %if %{bcm270x}
-%if %{_target_cpu} == armv7hl
+%if "%{_target_cpu}" == "armv7hl"
 %if %{with_rpi4}
 %define variant_summary The Linux kernel for the Raspberry Pi 4 Model B
 %else
@@ -966,7 +966,7 @@ BuildKernel() {
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1100}
     %endif
     %if %{bcm270x}
-    %if %{_target_cpu} != armv6hl
+    %if "%{_target_cpu}" != "armv6hl"
     %if %{with_rpi4}
     make bcm2711_defconfig
     %else
@@ -1442,7 +1442,7 @@ fi\
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
 mkdir -p /%{image_install_path}/efi/overlays\
-%if %{_target_cpu} != armv6hl\
+%if "%{_target_cpu}" != "armv6hl"\
 %if %{with_rpi4}\
 %ifarch aarch64\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/efi/kernel8.img\
@@ -1460,7 +1460,7 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/
 rm -f /%{image_install_path}/efi/overlays/*\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /%{image_install_path}/efi/overlays/\
 mkdir -p /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}\
-%if %{_target_cpu} != armv6hl\
+%if "%{_target_cpu}" != "armv6hl"\
 %ifarch aarch64\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/efi/\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
@@ -1647,6 +1647,9 @@ fi
 
 
 %changelog
+* Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-4.rpi
+- Fix bare words for >f32
+
 * Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-3.rpi
 - Sync RPi patch to git revision: 0be0e0854876b7d724c473242d6ff44077d18da9
 
