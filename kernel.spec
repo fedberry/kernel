@@ -1441,6 +1441,7 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
+mkdir -p /%{image_install_path}/efi/overlays\
 %if %{_target_cpu} != armv6hl\
 %if %{with_rpi4}\
 %ifarch aarch64\
@@ -1457,22 +1458,21 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/%{install_name}-%{KVERREL}%{?1:+%{1}}\
 %if %{bcm270x}\
 rm -f /%{image_install_path}/efi/overlays/*\
-mkdir -p /%{image_install_path}/efi/overlays\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /%{image_install_path}/efi/overlays/\
 mkdir -p /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}\
 %if %{_target_cpu} != armv6hl\
 %ifarch aarch64\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2709* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2709* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2708* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2708* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2708* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2708* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
 %endif\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /%{image_install_path}/efi/\
