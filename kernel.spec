@@ -65,10 +65,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 4
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort f2f7e4b23
+%global rpi_gitshort 0be0e0854
 
 %global build_release %{baserelease}
 
@@ -111,7 +111,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 51
+%define stable_update 59
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -232,7 +232,7 @@ License: GPLv2 and Redistributable, no modification permitted
 Summary: The Linux kernel for the Raspberry Pi (BCM283x)
 URL: http://www.kernel.org
 %else
-%if %{_target_cpu} != armv6hl
+%if "%{_target_cpu}" != "armv6hl"
 %if %{with_rpi4}
 Summary: The BCM2711 Linux kernel port for the Raspberry Pi 4 Model B
 %else
@@ -372,6 +372,7 @@ Patch150: 0001-perf-build-fix-epel8.patch
 
 #Centberry logo
 Patch200: video-logo-centberry.patch
+Patch300: perf-cs-etm-gcc-10-fix.patch
 # END OF PATCH DEFINITIONS
 %endif
 
@@ -639,7 +640,7 @@ Provides: installonlypkg(kernel)\
 
 # The main -core package
 %if %{bcm270x}
-%if %{_target_cpu} == armv7hl
+%if "%{_target_cpu}" == "armv7hl"
 %if %{with_rpi4}
 %define variant_summary The Linux kernel for the Raspberry Pi 4 Model B
 %else
@@ -965,7 +966,7 @@ BuildKernel() {
     scripts/kconfig/merge_config.sh -m -r .config %{SOURCE1100}
     %endif
     %if %{bcm270x}
-    %if %{_target_cpu} != armv6hl
+    %if "%{_target_cpu}" != "armv6hl"
     %if %{with_rpi4}
     make bcm2711_defconfig
     %else
@@ -1440,7 +1441,8 @@ fi\
 %define kernel_variant_posttrans() \
 %{expand:%%posttrans %{?1:%{1}-}core}\
 /sbin/depmod -a %{KVERREL}%{?1:+%{1}}\
-%if %{_target_cpu} != armv6hl\
+mkdir -p /%{image_install_path}/efi/overlays\
+%if "%{_target_cpu}" != "armv6hl"\
 %if %{with_rpi4}\
 %ifarch aarch64\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/efi/kernel8.img\
@@ -1456,22 +1458,21 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/%{install_name} /%{image_install_path}/%{install_name}-%{KVERREL}%{?1:+%{1}}\
 %if %{bcm270x}\
 rm -f /%{image_install_path}/efi/overlays/*\
-mkdir -p /%{image_install_path}/efi/overlays\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /%{image_install_path}/efi/overlays/\
 mkdir -p /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}\
-%if %{_target_cpu} != armv6hl\
+%if "%{_target_cpu}" != "armv6hl"\
 %ifarch aarch64\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2709* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2709* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
 %endif\
 %else\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2708* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm2708* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2708* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2708* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
 %endif\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm28* /%{image_install_path}/efi/\
@@ -1646,6 +1647,25 @@ fi
 
 
 %changelog
+* Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-4.rpi
+- Fix bare words for >f32
+
+* Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-3.rpi
+- Sync RPi patch to git revision: 0be0e0854876b7d724c473242d6ff44077d18da9
+
+* Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-2.rpi
+- Fix post install scripts errors (No such file or directory) on:
+    cp: cannot create regular file '/boot/efi/kernel7l.img'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm2709*'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm2709*'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm271*'
+    cp: cannot stat '/lib/modules/5.4.59-1.rpi4.fc32.armv7hl/dtb/broadcom/bcm271*'
+
+* Tue Aug 25 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-1.rpi
+- Update to stable kernel patch v5.4.59
+- Sync RPi patch to git revision: 8afdcbe5d0c68640ffc222e129a01b0689ce431d
+- Fix multiple definition of `traceid_list' for >=f32
+
 * Sun Aug 09 2020 Vaughan <devel at agrez dot net> - 5.4.51-1
 - Update to stable kernel patch v5.4.51
 - Sync RPi patch to git revision: f2f7e4b23d8788e96f81a7522b2f703e51c53e70
