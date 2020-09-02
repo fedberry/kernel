@@ -65,7 +65,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 4
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort d83700d2c
@@ -111,7 +111,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 59
+%define stable_update 61
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1647,6 +1647,11 @@ fi
 
 
 %changelog
+* Wed Sep 02 2020 Vaughan <devel at agrez dot net> - 5.4.61-1
+- Update to stable kernel patch v5.4.61
+- Sync RPi patch to git revision: d83700d2cbf594de8d28dfc7ed54f9858c23d987
+- Partially revert install script changes for Centos aarch64 build
+
 * Sun Aug 30 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.59-4.rpi
 - Fix bare words for >f32
 
