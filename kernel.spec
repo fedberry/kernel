@@ -1462,8 +1462,8 @@ cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/overlays/* /%{image_install_path}/e
 mkdir -p /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}\
 %if "%{_target_cpu}" != "armv6hl"\
 %ifarch aarch64\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/efi/\
-cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/efi/\
+cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/broadcom/bcm271* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
 %else\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /%{image_install_path}/efi/\
 cp -f /lib/modules/%{KVERREL}%{?1:+%{1}}/dtb/bcm2709* /%{image_install_path}/dtb-%{KVERREL}%{?1:+%{1}}/\
