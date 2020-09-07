@@ -65,7 +65,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 2ce8c3ab0
@@ -1647,6 +1647,10 @@ fi
 
 
 %changelog
+* Mon Sep 07 2020 Vaughan <devel at agrez dot net> - 5.4.61-2
+- Sync RPi patch to git revision: 2ce8c3ab0f9d1ffb67310ffd200be82d80a8d13d
+- Ensure selinux support is enabled by default (update config-bcm27xx.cfg)
+
 * Wed Sep 02 2020 Vaughan <devel at agrez dot net> - 5.4.61-1
 - Update to stable kernel patch v5.4.61
 - Sync RPi patch to git revision: d83700d2cbf594de8d28dfc7ed54f9858c23d987
