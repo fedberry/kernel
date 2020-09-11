@@ -1,6 +1,9 @@
 # We have to override the new %%install behavior because, well... the kernel is special.
 %global __spec_install_pre %{___build_pre}
 
+# For Fedora >=33 to disable LTO optimization of perf tools
+%define _lto_cflags %{nil}
+
 # What parts do we want to build?  We must build at least one kernel.
 # These are the kernels that are built IF the architecture allows it.
 # All should default to 1 (enabled) and be flipped to 0 (disabled)
@@ -65,10 +68,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 2ce8c3ab0
+%global rpi_gitshort 65caf603f
 
 %global build_release %{baserelease}
 
@@ -111,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 61
+%define stable_update 64
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1647,6 +1650,11 @@ fi
 
 
 %changelog
+* Fri Sep 11 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.64-1.rpi
+- Update to stable kernel patch v5.4.64
+- Sync RPi patch to git revision: 65caf603f3b1c43f4c92939f7fbb7149e054f486
+- Disable LTO for >=f33
+
 * Mon Sep 07 2020 Vaughan <devel at agrez dot net> - 5.4.61-2
 - Sync RPi patch to git revision: 2ce8c3ab0f9d1ffb67310ffd200be82d80a8d13d
 - Ensure selinux support is enabled by default (update config-bcm27xx.cfg)
