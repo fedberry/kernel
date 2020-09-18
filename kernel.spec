@@ -17,9 +17,9 @@
 # kernel-headers
 %define with_headers   %{?_without_headers:   0} %{?!_without_headers:   1}
 # perf
-%define with_perf      %{?_without_perf:      0} %{?!_without_perf:      1}
+%define with_perf      %{?_without_perf:      1} %{?!_without_perf:      0}
 # tools
-%define with_tools     %{?_without_tools:     0} %{?!_without_tools:     1}
+%define with_tools     %{?_without_tools:     1} %{?!_without_tools:     0}
 # kernel-debuginfo
 %define with_debuginfo %{?_without_debuginfo: 1} %{?!_without_debuginfo: 0}
 
@@ -71,7 +71,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 65caf603f
+%global rpi_gitshort 8cefadb9b
 
 %global build_release %{baserelease}
 
@@ -108,13 +108,13 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 4
+%define base_sublevel 8
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 64
+%define stable_update 9
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -375,7 +375,6 @@ Patch150: 0001-perf-build-fix-epel8.patch
 
 #Centberry logo
 Patch200: video-logo-centberry.patch
-Patch300: perf-cs-etm-gcc-10-fix.patch
 # END OF PATCH DEFINITIONS
 %endif
 
@@ -1571,6 +1570,7 @@ fi
 %{_bindir}/lsgpio
 %{_bindir}/gpio-hammer
 %{_bindir}/gpio-event-mon
+%{_bindir}/gpio-watch
 %{_mandir}/man1/kvm_stat*
 %{_bindir}/kvm_stat
 %{_datadir}/bash-completion/completions/cpupower
@@ -1650,6 +1650,12 @@ fi
 
 
 %changelog
+* Fri Sep 18 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.8.9-1.rpi
+- Update to stable kernel patch v5.8.9
+- Sync RPi patch to git revision: 8cefadb9b258ee2920e012eaa0065f5834d0c57f
+- Drop perf-cs-etm-gcc-10-fix.patch patch
+- Disable building kernel-tools and perf package
+
 * Fri Sep 11 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.64-1.rpi
 - Update to stable kernel patch v5.4.64
 - Sync RPi patch to git revision: 65caf603f3b1c43f4c92939f7fbb7149e054f486
