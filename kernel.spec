@@ -17,9 +17,9 @@
 # kernel-headers
 %define with_headers   %{?_without_headers:   0} %{?!_without_headers:   1}
 # perf
-%define with_perf      %{?_without_perf:      0} %{?!_without_perf:      1}
+%define with_perf      %{?_without_perf:      1} %{?!_without_perf:      0}
 # tools
-%define with_tools     %{?_without_tools:     0} %{?!_without_tools:     1}
+%define with_tools     %{?_without_tools:     1} %{?!_without_tools:     0}
 # kernel-debuginfo
 %define with_debuginfo %{?_without_debuginfo: 1} %{?!_without_debuginfo: 0}
 
