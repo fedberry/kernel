@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 64
+%define stable_update 68
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1659,6 +1659,12 @@ fi
 
 
 %changelog
+* Wed Sep 30 2020 Vaughan <devel at agrez dot net> - 5.4.68-1
+- Update to stable kernel patch v5.4.68
+- Sync RPi patch to git revision: 461113036fd827aecfd8afe15342097ccf9b92b8
+- Ensure Fedora/CentOS patches are only applied to Fedora/CentOS builds
+- Disable EFI_BOOTLOADER_CONTROL
+
 * Fri Sep 11 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.4.64-1.rpi
 - Update to stable kernel patch v5.4.64
 - Sync RPi patch to git revision: 65caf603f3b1c43f4c92939f7fbb7149e054f486
