@@ -371,11 +371,20 @@ Source1: https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.%{base_sublevel}-g
 Patch100: bcm270x-linux-rpi-5.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 
 ## Patches for both builds (bcm270x & bcm283x)
-Patch150: 0001-perf-build-fix-epel8.patch
+
+# perf build fix for CentOS 8
+%if 0%{?rhel} >= 8
+Patch150: epel8-perf-build-fix.patch
+%endif
 
 #Centberry logo
 Patch200: video-logo-centberry.patch
-Patch300: perf-cs-etm-gcc-10-fix.patch
+
+#Fix multiple definition of `traceid_list' for Fedora >= 32
+%if 0%{?fedora} >= 32
+Patch300: fedora32-perf-cs-etm-gcc-10-fix.patch
+%endif
+
 # END OF PATCH DEFINITIONS
 %endif
 
