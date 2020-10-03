@@ -373,8 +373,8 @@ Patch100: bcm270x-linux-rpi-5.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 ## Patches for both builds (bcm270x & bcm283x)
 Patch150: 0001-perf-build-fix-epel8.patch
 
-#Centberry logo
-Patch200: video-logo-centberry.patch
+# Custom bootup logo
+Patch200: bootup-logo.patch
 # END OF PATCH DEFINITIONS
 %endif
 
