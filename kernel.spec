@@ -377,8 +377,8 @@ Patch100: bcm270x-linux-rpi-5.%{base_sublevel}.y-%{rpi_gitshort}.patch.xz
 Patch150: epel8-perf-build-fix.patch
 %endif
 
-#Centberry logo
-Patch200: video-logo-centberry.patch
+# Custom bootup logo
+Patch200: bootup-logo.patch
 
 #Fix multiple definition of `traceid_list' for Fedora >= 32
 %if 0%{?fedora} >= 32
