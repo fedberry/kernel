@@ -71,7 +71,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 8cefadb9b
+%global rpi_gitshort e573167ee
 
 %global build_release %{baserelease}
 
@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 9
+%define stable_update 14
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,14 @@ fi
 
 
 %changelog
+* Sat Oct 10 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.8.14-1.rpi
+- Update to stable kernel patch v5.8.14
+- Sync RPi patch to git revision: e573167ee4d6c91a05ed1555742dabf7b302d2b0
+- Merge patches from 5.4.y branch:
+    - Update bootup logo
+    - Disable EFI_BOOTLOADER_CONTROL
+    - More config-bcm27xx.cfg refactoring
+
 * Fri Sep 18 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.8.9-1.rpi
 - Update to stable kernel patch v5.8.9
 - Sync RPi patch to git revision: 8cefadb9b258ee2920e012eaa0065f5834d0c57f
