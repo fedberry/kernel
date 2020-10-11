@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 69
+%define stable_update 70
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1659,6 +1659,10 @@ fi
 
 
 %changelog
+* Sun Oct 11 2020 Vaughan <devel at agrez dot net> - 5.4.70-1
+- Update to stable kernel patch v5.4.70
+- Sync RPi patch to git revision: b2ba07ef46c655e03ac2a869e65ed4ff7d247aac
+
 * Sat Oct 03 2020 Vaughan <devel at agrez dot net> - 5.4.69-1
 - Update to stable kernel patch v5.4.69
 - Sync RPi patch to git revision: 69b14a2e6d4e840c7609370dbf0bac847c3bb15c
