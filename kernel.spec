@@ -68,7 +68,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort b1f47573c
@@ -1081,7 +1081,7 @@ BuildKernel() {
     fi
 
     # We need module.lds to compile out-of-tree modules
-    cp -a --parents arch/%{asmarch}/kernel/module.lds %{buildroot}/lib/modules/$KernelVer/build/
+    cp -a --parents arch/%{asmarch}/kernel/module.lds %{buildroot}/lib/modules/$KernelVer/build/ || :
 
     %ifarch aarch64
     # arch/arm64/include/asm/xen references arch/arm
@@ -1650,6 +1650,9 @@ fi
 
 
 %changelog
+* Wed Dec 23 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.2-2.rpi
+- Do not fail if the module.lds is not available
+
 * Wed Dec 23 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.2-1.rpi
 - Update to stable kernel patch v5.10.2
 - Sync RPi patch to git revision: b1f47573c1fc640d360349f767568ff3a84e778d
