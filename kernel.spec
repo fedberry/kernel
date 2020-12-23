@@ -71,7 +71,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort e573167ee
+%global rpi_gitshort b1f47573c
 
 %global build_release %{baserelease}
 
@@ -108,13 +108,13 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 8
+%define base_sublevel 10
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 14
+%define stable_update 2
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,12 @@ fi
 
 
 %changelog
+* Wed Dec 23 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.2-1.rpi
+- Update to stable kernel patch v5.10.2
+- Sync RPi patch to git revision: b1f47573c1fc640d360349f767568ff3a84e778d
+- Merge patches from 5.4.y branch:
+    - Fix aarch64 bcmrpi3_defconfig (update config-bcm27xx.cfg)
+
 * Sat Oct 10 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.8.14-1.rpi
 - Update to stable kernel patch v5.8.14
 - Sync RPi patch to git revision: e573167ee4d6c91a05ed1555742dabf7b302d2b0
