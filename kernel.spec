@@ -68,10 +68,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort b1f47573c
+%global rpi_gitshort 900790847
 
 %global build_release %{baserelease}
 
@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 2
+%define stable_update 10
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,11 @@ fi
 
 
 %changelog
+* Mon Jan 25 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.10-1.rpi
+- Update to stable kernel patch v5.10.10
+- Sync RPi patch to git revision: 900790847a10954e7dcaeb4fe86d37ba0d7e73a2
+- Enable CONFIG_CMA_DEBUGFS=y
+
 * Wed Dec 23 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.2-2.rpi
 - Do not fail if the module.lds is not available
 
