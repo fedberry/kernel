@@ -68,7 +68,7 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 
 # RaspberryPi foundation git snapshot (short)
 %global rpi_gitshort 900790847
@@ -1650,6 +1650,9 @@ fi
 
 
 %changelog
+* Wed Feb 03 2021 Peter Oliver <rpm@mavit.org.uk> - 5.10.10-2.rpi
+- Allow EFI boot used by Fedora IoT edition.
+
 * Mon Jan 25 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.10-1.rpi
 - Update to stable kernel patch v5.10.10
 - Sync RPi patch to git revision: 900790847a10954e7dcaeb4fe86d37ba0d7e73a2
