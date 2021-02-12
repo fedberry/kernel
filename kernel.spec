@@ -68,10 +68,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 900790847
+%global rpi_gitshort 656dc8295
 
 %global build_release %{baserelease}
 
@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 10
+%define stable_update 14
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,10 @@ fi
 
 
 %changelog
+* Fri Feb 12 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.14-1.rpi
+- Update to stable kernel patch v5.10.14
+- Sync RPi patch to git revision: 656dc8295f67e3c4c475f76f10426fc358a952d0
+
 * Wed Feb 03 2021 Peter Oliver <rpm@mavit.org.uk> - 5.10.10-2.rpi
 - Allow EFI boot used by Fedora IoT edition.
 
