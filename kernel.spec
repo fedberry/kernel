@@ -71,7 +71,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 7ca8526c5
+%global rpi_gitshort 11d7babee
 
 %global build_release %{baserelease}
 
@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 22
+%define stable_update 25
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,10 @@ fi
 
 
 %changelog
+* Thu Mar 25 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.25-1.rpi
+- Update to stable kernel patch v5.10.25
+- Sync RPi patch to git revision: 11d7babee19ce8ea0c25aef8801e4e18568781ba
+
 * Fri Mar 12 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.22-1.rpi
 - Enable CONFIG_FW_LOADER_COMPRESS=y
 - Update to stable kernel patch v5.10.22
