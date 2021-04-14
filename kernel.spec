@@ -71,7 +71,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 11d7babee
+%global rpi_gitshort 41aaea1d7
 
 %global build_release %{baserelease}
 
