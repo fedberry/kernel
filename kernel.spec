@@ -71,7 +71,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort ad26fd4e0
+%global rpi_gitshort a2d265da7
 
 %global build_release %{baserelease}
 
@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 35
+%define stable_update 39
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,10 @@ fi
 
 
 %changelog
+* Mon May 31 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.39-1.rpi
+- Update to stable kernel patch v5.10.39
+- Sync RPi patch to git revision: a2d265da70816783255d7f450d065c6e1100185c
+
 * Wed May 12 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.35-1.rpi
 - Update to stable kernel patch v5.10.35
 - Sync RPi patch to git revision: ad26fd4e03cd2add0b63b86467a76b373b7f28ca
