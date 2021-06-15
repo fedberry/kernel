@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 39
+%define stable_update 43
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,10 @@ fi
 
 
 %changelog
+* Tue Jun 15 2021 Vaughan <devel at agrez dot net> - 5.10.43-1.rpi
+- Update to stable kernel patch v5.10.43
+- Sync RPi patch to git revision: 86b1bed34352428d0826dff892b3ac06a9016cef
+
 * Mon May 31 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.39-1.rpi
 - Update to stable kernel patch v5.10.39
 - Sync RPi patch to git revision: a2d265da70816783255d7f450d065c6e1100185c
