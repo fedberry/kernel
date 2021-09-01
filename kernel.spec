@@ -68,10 +68,10 @@
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 109751e91
+%global rpi_gitshort e4cb65cf2
 
 %global build_release %{baserelease}
 
@@ -114,7 +114,7 @@
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 52
+%define stable_update 60
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -1650,6 +1650,10 @@ fi
 
 
 %changelog
+* Wed Sep 01 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.60-1.rpi
+- Update to stable kernel patch v5.10.60
+- Sync RPi patch to git revision: e4cb65cf23c78b4912786aaf8467aa215d4e1d88
+
 * Thu Aug 05 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.52-2.rpi
 - Add CEPH support
 - Sync RPi patch to git revision: 109751e91ee091a452d92df38e73b1d37b93e4b4
