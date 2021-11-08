@@ -71,7 +71,7 @@
 %global baserelease 1
 
 # RaspberryPi foundation git snapshot (short)
-%global rpi_gitshort 132e8f214
+%global rpi_gitshort 4937752e1
 
 %global build_release %{baserelease}
 
@@ -108,13 +108,13 @@
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 10
+%define base_sublevel 15
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 74
+%define stable_update 0
 
 # Set rpm version accordingly
 %if 0%{?stable_update}
@@ -997,7 +997,7 @@ BuildKernel() {
 
     echo USING ARCH=$Arch
     #make ARCH=$Arch oldnoconfig >/dev/null
-    make ARCH=$Arch oldconfig
+    make ARCH=$Arch olddefconfig
     %{make} ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
     %{make} ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
 
@@ -1650,6 +1650,10 @@ fi
 
 
 %changelog
+* Fri Nov 05 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.15.0-1.rpi
+- Update to stable kernel patch v5.15.0
+- Sync RPi patch to git revision: 4937752e1a7e0969d01114b875dc41ed6ad3e5ad
+
 * Thu Oct 21 2021 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 5.10.74-1.rpi
 - Update to stable kernel patch v5.10.74
 - Sync RPi patch to git revision: 132e8f214f8e94a5ca8c269bd453f0a82b147311
